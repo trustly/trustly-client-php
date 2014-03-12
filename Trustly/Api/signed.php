@@ -1,6 +1,7 @@
 <?php
 
 class Trustly_Api_Signed extends Trustly_Api {
+	var $merchant_privatekey = NULL;
 
 	function __construct($merchant_privatekeyfile, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
 
@@ -8,9 +9,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 
 		$this->api_username = $username;
 		$this->api_password  = $password;
-		if($this->loadMerchantPrivateKey($merchant_privatekeyfile) === FALSE) {
+		if($merchant_privatekeyfile != NULL) {
+			if($this->loadMerchantPrivateKey($merchant_privatekeyfile) === FALSE) {
 
-			throw new InvalidArgumentException('Cannot load merchant private key file ' . $merchant_privatekeyfile);
+				throw new InvalidArgumentException('Cannot load merchant private key file ' . $merchant_privatekeyfile);
+			}
 		}
 	}
 
@@ -18,6 +21,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Inializes the internal openssl certificate needed for the signing */
 	public function loadMerchantPrivateKey($filename) {
 		$cert = file_get_contents($filename);
+		return $this->useMerchantPrivateKey($cert);
+	}
+
+	public function useMerchantPrivateKey($cert) {
 		if($cert !== NULL) {
 			$this->merchant_privatekey = openssl_pkey_get_private($cert);
 			return TRUE;
@@ -28,6 +35,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	/* Create a signature string suitable for including as the signature in an 
 	 * outgoing request */
 	public function signMerchantRequest($request) {
+		if(!isset($this->merchant_privatekey)) {
+			throw new Trustly_SignatureException('No private key has been loaded for signing');
+		}
 
 		$method = $request->getMethod();
 		if($method === NULL) {
