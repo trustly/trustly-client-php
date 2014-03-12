@@ -17,6 +17,11 @@ abstract class Trustly_Api {
 		if($this->loadTrustlyPublicKey() === FALSE) {
 			throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile);
 		}
+
+		/* Make sure the curl extension is loaded so we can open URL's */
+		if(!in_array('curl', get_loaded_extensions())) {
+			throw new Trustly_ConnectionException('curl is not installed. We cannot call the API, bailing');
+		}
 	}
 
 	/* Load the public key used for for verifying incoming data responses from 
