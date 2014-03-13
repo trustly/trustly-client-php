@@ -33,15 +33,15 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 	}
 
 	public function getErrorCode() {
-		if($this->isError() && isset($this->result['data']['code'])) {
-			return $this->result['data']['code'];
+		if($this->isError() && isset($this->result['error']['code'])) {
+			return $this->result['error']['code'];
 		}
 		return NULL;
 	}
 
 	public function getErrorMessage() {
-		if($this->isError() && isset($this->result['data']['message'])) {
-			return $this->result['data']['message'];
+		if($this->isError() && isset($this->result['error']['message'])) {
+			return $this->result['error']['message'];
 		}
 		return NULL;
 	}
