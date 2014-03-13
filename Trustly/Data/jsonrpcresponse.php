@@ -15,6 +15,23 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 		}
 	}
 
+	public function getData($name=NULL) {
+		$data = NULL;
+		if(isset($this->payload['result']['data'])) {
+			$data = $this->payload['result']['data'];
+		}else {
+			return NULL;
+		}
+
+		if(isset($name)) {
+			if(isset($data[$name])) {
+				return $data[$name];
+			}
+		} else {
+			return $data;
+		}
+	}
+
 	public function getErrorCode() {
 		if($this->isError() && isset($this->result['data']['code'])) {
 			return $this->result['data']['code'];
