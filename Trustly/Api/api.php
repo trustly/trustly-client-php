@@ -56,8 +56,7 @@ abstract class Trustly_Api {
 
 	/* Given all the components to verify and work with, check if the given 
 	 * signature has been used to sign the data */
-	protected function verifyTrustlySignedData($method, $uuid, $signature, 
-		$data) {
+	protected function verifyTrustlySignedData($method, $uuid, $signature, $data) {
 		if($method === NULL) {
 			$method = '';
 		}
