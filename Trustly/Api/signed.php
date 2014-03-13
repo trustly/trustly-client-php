@@ -136,7 +136,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	public function deposit($notificationurl, $enduserid, $messageid, 
 		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL, 
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, 
-		$nationalidentificationnumber=NULL, $shopperstatement=NULL) {
+		$nationalidentificationnumber=NULL, $shopperstatement=NULL,
+		$ip=NULL, $successurl=NULL, $failurl=NULL, $templateurl=NULL,
+		$urltarget=NULL, $suggestedminamount=NULL, $suggestedmaxacount=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -154,6 +156,13 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'Lastname' => $lastname, 
 				'NationalIdentificationNumber' => $nationalidentificationnumber, 
 				'ShopperStatement' => $shopperstatement,
+				'IP' => $ip,
+				'SuccessURL' => $successurl, 
+				'FailURL' => $failurl,
+				'TemplateURL' => $templateurl,
+				'URLTarget' => $urltarget,
+				'SuggestedMinAmount' => $suggestedminamount,
+				'SuggestedMaxAmount' => $suggestedmaxamount
 			);
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
