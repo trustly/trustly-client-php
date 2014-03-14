@@ -15,7 +15,8 @@ abstract class Trustly_Api {
 		$this->api_is_https = $is_https;
 
 		if($this->loadTrustlyPublicKey() === FALSE) {
-			throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile);
+			$error = openssl_error_string();
+			throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile .(isset($error)?", error $error":''));
 		}
 
 		/* Make sure the curl extension is loaded so we can open URL's */
@@ -32,6 +33,9 @@ abstract class Trustly_Api {
 		$cert = file_get_contents($filename);
 		if($cert !== NULL) {
 			$this->trustly_publickey = openssl_pkey_get_public($cert);
+			if(!$this->trustly_publickey) {
+				return FALSE;
+			}
 			return TRUE;
 		}
 		return FALSE;
@@ -106,7 +110,8 @@ abstract class Trustly_Api {
 		if(isset($host)) {
 			$this->api_host = $host;
 			if($this->loadTrustlyPublicKey() === FALSE) {
-				throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile);
+				$error = openssl_error_string();
+				throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile .(isset($error)?", error $error":''));
 			}
 		}
 		if(isset($port)) {
@@ -172,7 +177,7 @@ abstract class Trustly_Api {
 		$request = new Trustly_Data_JSONRPCNotificationRequest($httpbody);
 
 		if($this->verifyTrustlySignedNotification($request) !== TRUE) {
-			throw new Trustly_SignatureException('Incomming notification signature is not valid');
+			throw new Trustly_SignatureException('Incomming notification signature is not valid', $httpbody);
 		}
 
 		return $request;
