@@ -16,7 +16,7 @@ abstract class Trustly_Api {
 
 		if($this->loadTrustlyPublicKey() === FALSE) {
 			$error = openssl_error_string();
-			throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile .(isset($error)?", error $error":''));
+			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
 		}
 
 		/* Make sure the curl extension is loaded so we can open URL's */
@@ -111,7 +111,7 @@ abstract class Trustly_Api {
 			$this->api_host = $host;
 			if($this->loadTrustlyPublicKey() === FALSE) {
 				$error = openssl_error_string();
-				throw new InvalidArgumentException('Cannot load Trustly public key file ' . $trustly_publickeyfile .(isset($error)?", error $error":''));
+				throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
 			}
 		}
 		if(isset($port)) {
