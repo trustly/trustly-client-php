@@ -30,8 +30,9 @@ abstract class Trustly_Api {
 	 * and should be named to match the host under $PWD/HOSTNAME.public.pem */
 	public function loadTrustlyPublicKey() {
 		$filename = sprintf('%s/keys/%s.public.pem', __DIR__, $this->api_host);
-		$cert = file_get_contents($filename);
-		if($cert !== NULL) {
+
+		$cert = @file_get_contents($filename);
+		if($cert !== FALSE) {
 			$this->trustly_publickey = openssl_pkey_get_public($cert);
 			if(!$this->trustly_publickey) {
 				return FALSE;

@@ -20,12 +20,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 	/* Load up the merchants key for signing data from the supplied filename. 
 	 * Inializes the internal openssl certificate needed for the signing */
 	public function loadMerchantPrivateKey($filename) {
-		$cert = file_get_contents($filename);
+		$cert = @file_get_contents($filename);
 		return $this->useMerchantPrivateKey($cert);
 	}
 
 	public function useMerchantPrivateKey($cert) {
-		if($cert !== NULL) {
+		if($cert !== FALSE) {
 			$this->merchant_privatekey = openssl_pkey_get_private($cert);
 			return TRUE;
 		}
