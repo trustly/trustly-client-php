@@ -303,7 +303,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 	public function p2p($notificationurl, $enduserid, $messageid, $ip,
             $authorizeonly=NULL, $templatedata=NULL, $successurl=NULL,
 			$method=NULL, $lastname=NULL, $firstname=NULL, $urltarget=NULL,
-			$locale=NULL, $amount=NULL, $currency=NULL, $templateurl=NULL) {
+			$locale=NULL, $amount=NULL, $currency=NULL, $templateurl=NULL,
+			$displaycurrency=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -325,6 +326,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'Amount' => $amount,
 				'TemplateURL' => $templateurl,
 				'Currency' => $currency,
+				'DisplayCurrency' => $displaycurrency,
 				'IP' => $ip
 			);
 
