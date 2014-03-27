@@ -238,6 +238,7 @@ abstract class Trustly_Api {
 	abstract public function handleResponse($request, $body, $curl);
 
 	abstract public function insertCredentials($request);
+
 }
 
 ?>
