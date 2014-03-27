@@ -6,7 +6,7 @@ class Trustly_JSONRPCVersionException extends Exception { }
 
 class Trustly_SignatureException extends Exception {
 
-	public function __construct($message, $data) {
+	public function __construct($message, $data=NULL) {
 		parent::__construct($message);
 		$this->signature_data = $data;
 	}
