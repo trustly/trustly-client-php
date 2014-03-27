@@ -361,6 +361,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 			$request = new Trustly_Data_JSONRPCRequest('Void', $data, $attributes);
 			return $this->call($request);
 	}
+
+	public function hello() {
+			# The hello call is not signed, use an unsigned API to do the request and then void it
+		$api = new Trustly_Api_Unsigned($this->api_username, $this->api_password, $this->api_host, $this->api_port, $this->api_is_https);
+		return $api->hello();
+	}
 }
 
 ?>

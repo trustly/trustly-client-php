@@ -101,5 +101,15 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 
 		return parent::call($request);
 	}
+
+	public function hello() {
+		$request = new Trustly_Data_JSONRPCRequest('Hello');
+			/* Call parent directly here we never want to get a new session 
+			 * uuid for just this single call, if we have it use it, but 
+			 * otherwise just live happliy */
+		$response = parent::call($request);
+
+		return $response;
+	}
 }
 ?>
