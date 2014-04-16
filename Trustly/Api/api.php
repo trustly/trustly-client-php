@@ -29,7 +29,7 @@ abstract class Trustly_Api {
 	 * trustly. The keys are distributed as a part of the source code package 
 	 * and should be named to match the host under $PWD/HOSTNAME.public.pem */
 	public function loadTrustlyPublicKey() {
-		$filename = sprintf('%s/keys/%s.public.pem', __DIR__, $this->api_host);
+		$filename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $this->api_host);
 
 		$cert = @file_get_contents($filename);
 		if($cert !== FALSE) {
