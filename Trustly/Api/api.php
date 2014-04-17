@@ -75,8 +75,11 @@ abstract class Trustly_Api {
 
 		$serial_data = $method . $uuid . $this->serializeData($data);
 		$raw_signature = base64_decode($signature);
-
-		return (boolean)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey, OPENSSL_ALGO_SHA1);
+		if (version_compare(phpversion(), '5.2.0', '<')) {
+			return (boolean)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey);
+		} else {
+			return (boolean)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey, OPENSSL_ALGO_SHA1);
+		}
 	}
 
 	/* Check to make sure that the given response (instance of 
@@ -137,11 +140,15 @@ abstract class Trustly_Api {
 		curl_setopt($cu, CURLOPT_PORT, $this->api_port);
 
 		if($this->api_is_https) {
-			curl_setopt($cu, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
+				curl_setopt($cu, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+			}
 			curl_setopt($cu, CURLOPT_SSL_VERIFYHOST, 2);
 			curl_setopt($cu, CURLOPT_SSL_VERIFYPEER, TRUE);
 		} else {
-			curl_setopt($cu, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
+				curl_setopt($cu, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+			}
 		}
 		if(isset($postdata)) {
 			curl_setopt($cu, CURLOPT_POSTFIELDS, $postdata);
