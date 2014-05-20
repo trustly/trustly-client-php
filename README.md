@@ -75,7 +75,7 @@ Example deposit call
                             NULL
                         );
 
-    $iframe_url= $deposit->getResult('data')['url'];
+    $iframe_url= $deposit->getData('url');
 
 Example notification processing
 -------------------------------
