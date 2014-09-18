@@ -261,8 +261,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	}
 
 	/* Make a select account call */
-	public function selectAccount($notificationurl, $enduserid, $messageid, 
-		$locale=NULL, $country=NULL, $firstname=NULL, $lastname=NULL) {
+	public function selectAccount($notificationurl, $enduserid, $messageid,
+		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
+		$mobilephone=NULL, $firstname=NULL, $lastname=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -271,9 +272,13 @@ class Trustly_Api_Signed extends Trustly_Api {
 			);
 
 			$attributes = array(
-				'Locale' => $locale, 
-				'Country' => $country, 
-				'Firstname' => $firstname, 
+				'Locale' => $locale,
+				'Country' => $country,
+				'IP' => $ip,
+				'SuccessURL' => $successurl,
+				'URLTarget' => $urltarget,
+				'MobilePhone' => $mobilephone,
+				'Firstname' => $firstname,
 				'Lastname' => $lastname, 
 			);
 
