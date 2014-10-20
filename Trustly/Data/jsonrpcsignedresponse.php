@@ -23,54 +23,82 @@
  * THE SOFTWARE.
  */
 
-class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
-
+class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	public function __construct($response_body, $curl) {
 		parent::__construct($response_body, $curl);
 
-		$version = (string)$this->get('version');
-		if($version !== '1.1') {
-			throw new Trustly_JSONRPCVersionException("JSON RPC Version $version is not supported. " . json_encode($this->payload));
-		}
-
-			/* An unsigned JSON RPC Error result basically looks like this:
+			/* A signed JSON RPC Error result basically looks like this:
 			 * {
-			 *		"version": "1.1",
+			 *	"version": "1.1",
+			 *	"error": {
 			 *		"error": {
-			 *			"name": "JSONRPCError",
-			 *			"code": 620,
-			 *			"message": "ERROR_UNKNOWN"
-			 *		}
+			 *			"signature": "...",
+			 *			"data": {
+			 *				"code": 620,
+			 *				"message": "ERROR_UNKNOWN"
+			 *			},
+			 *			"method": "...",
+			 *			"uuid": "..."
+			 *		},
+			 *		"name": "JSONRPCError",
+			 *		"code": 620,
+			 *		"message": "ERROR_UNKNOWN"
 			 *	}
-			 *
-			 * And a unsigned result will be on the form:
-			 * {
-			 *		"version": "1.1",
-			 *		"result": {
-			 *			"now": "...",
-			 *			"data": []
-			 *		}
 			 * }
 			 *
-			 * We want response_result to always be the result of the
-			 * operation, The Trustly_Data will point response_result /result
-			 * or /error respectivly, we need to do nothing extra here
+			 *	A good signed result will be on the form:
+			 *	{
+			 *		"version": "1.1",
+			 *		"result": {
+			 *			"signature": "...",
+			 *			"method": "...",
+			 *			"data": {
+			 *				"url": "...",
+			 *				"orderid": "..."
+			 *			},
+			 *			"uuid": "...",
+			 *		}
+			 *  }
+			 *
+			 * The Trustly_Data will point response_result /result or /error respectivly, we need to take care of the signed part here only.
 			 * */
+		if($this->isError()) {
+			$this->response_result = $this->response_result['error'];
+		}
+	}
+
+	public function getData($name=NULL) {
+		$data = NULL;
+
+		if(isset($this->response_result['data'])) {
+			$data = $this->response_result['data'];
+		}else {
+			return NULL;
+		}
+
+		if(isset($name)) {
+			if(isset($data[$name])) {
+				return $data[$name];
+			}
+		} else {
+			return $data;
+		}
 	}
 
 	public function getErrorCode() {
-		if($this->isError() && isset($this->response_result['code'])) {
-			return $this->response_result['code'];
+		if($this->isError() && isset($this->response_result['data']['code'])) {
+			return $this->response_result['data']['code'];
 		}
 		return NULL;
 	}
 
 	public function getErrorMessage() {
-		if($this->isError() && isset($this->response_result['message'])) {
-			return $this->response_result['message'];
+		if($this->isError() && isset($this->response_result['data']['message'])) {
+			return $this->response_result['data']['message'];
 		}
 		return NULL;
 	}
 }
 
 ?>
+

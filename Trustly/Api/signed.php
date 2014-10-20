@@ -100,7 +100,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	}
 
 	public function handleResponse($request, $body, $curl) {
-		$response = new Trustly_Data_JSONRPCResponse($body, $curl);
+		$response = new Trustly_Data_JSONRPCSignedResponse($body, $curl);
 
 		if($this->verifyTrustlySignedResponse($response) !== TRUE) {
 			throw new Trustly_SignatureException('Incomming message signature is not valid', $response);

@@ -29,6 +29,7 @@ require_once('Trustly/Data/request.php');
 require_once('Trustly/Data/jsonrpcrequest.php');
 require_once('Trustly/Data/response.php');
 require_once('Trustly/Data/jsonrpcresponse.php');
+require_once('Trustly/Data/jsonrpcsignedresponse.php');
 require_once('Trustly/Data/jsonrpcnotificationrequest.php');
 require_once('Trustly/Data/jsonrpcnotificationresponse.php');
 

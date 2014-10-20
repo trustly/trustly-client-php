@@ -112,10 +112,7 @@ abstract class Trustly_Api {
 		$method = $response->getMethod();
 		$uuid = $response->getUUID();
 		$signature = $response->getSignature();
-		$data = $response->getResult();
-		if($data !== NULL) {
-			$data = $data['data'];
-		}
+		$data = $response->getData();
 
 		return $this->verifyTrustlySignedData($method, $uuid, $signature, $data);
 	}
