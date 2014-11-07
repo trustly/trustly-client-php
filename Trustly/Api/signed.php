@@ -107,7 +107,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		}
 
 		if($response->getUUID() !== $request->getUUID()) {
-			throw new Trustly_DataError('Incoming message is not related to request. UUID mismatch');
+			throw new Trustly_DataException('Incoming message is not related to request. UUID mismatch');
 		}
 
 		return $response;
