@@ -26,7 +26,7 @@
 class Trustly_Api_Signed extends Trustly_Api {
 	var $merchant_privatekey = NULL;
 
-	function __construct($merchant_privatekeyfile, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($merchant_privatekeyfile, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
 
 		parent::__construct($host, $port, $is_https);
 

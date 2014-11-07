@@ -32,7 +32,7 @@ abstract class Trustly_Api {
 	/* The data of the last request performed. */
 	var $last_request = NULL;
 
-	function __construct($host, $port, $is_https) {
+	public function __construct($host, $port, $is_https) {
 		$this->api_host = $host;
 		$this->api_port = $port;
 		$this->api_is_https = $is_https;
