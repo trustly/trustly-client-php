@@ -242,7 +242,11 @@ abstract class Trustly_Api {
 		}
 
 		if($this->api_is_https) {
-			$ssl_result = curl_getinfo($curl, CURLINFO_SSL_VERIFYRESULT); #FIXME
+            $ssl_result = curl_getinfo($curl, CURLINFO_SSL_VERIFYRESULT);
+            if($ssl_result !== 0) {
+                $error = 'Failed to connect to the Trusly API. SSL Verification error ' . $ssl_result;
+                throw new Trustly_ConnectionException($error);
+            }
 		}
 		$result = $this->handleResponse($request, $body, $curl);
 		curl_close($curl);
