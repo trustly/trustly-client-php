@@ -82,8 +82,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 		}
 
 		throw new Trustly_SignatureException('Failed to sign the outgoing merchant request. '. openssl_error_string());
-
-		return FALSE;
 	}
 
 	public function insertCredentials($request) {
