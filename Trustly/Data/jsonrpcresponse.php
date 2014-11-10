@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB

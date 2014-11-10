@@ -1,19 +1,19 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2014 Trustly Group AB
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,19 +28,19 @@ class Trustly_Data_Response extends Trustly_Data {
 	var $response_body = NULL;
 		/* The response HTTP code */
 	var $response_code = NULL;
-		/* Shortcut to the part of the result being actually interesting. The 
+		/* Shortcut to the part of the result being actually interesting. The
 		 * guts will contain all returned data. */
 	var $response_result = NULL;
 
 	public function __construct($response_body, $curl) {
 
-		$this->response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE); 
+		$this->response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		$this->response_body = $response_body;
 
 		$payload = json_decode($response_body, TRUE);
 		if($payload === FALSE) {
-			/* Only throw the connection error exception here if we did not 
-			 * receive a valid JSON response, if we did recive one we will use 
+			/* Only throw the connection error exception here if we did not
+			 * receive a valid JSON response, if we did recive one we will use
 			 * the error information in that response instead. */
 			if($this->response_code !== 200) {
 				throw new Trustly_ConnectionException('HTTP ' . $this->response_code);
@@ -50,8 +50,8 @@ class Trustly_Data_Response extends Trustly_Data {
 		}
 		parent::__construct($payload);
 
-			/* Attempt to detect the type of the response. A successful call 
-				* will have a 'result' on toplevel in the payload, while an 
+			/* Attempt to detect the type of the response. A successful call
+				* will have a 'result' on toplevel in the payload, while an
 				* failure will have a 'error' on the tyoplevel */
 		$this->response_result = &$this->payload['result'];
 		if($this->response_result === NULL) {

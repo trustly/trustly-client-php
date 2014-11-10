@@ -1,19 +1,19 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2014 Trustly Group AB
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -60,7 +60,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 
 	}
 
-		/* Three functions for getting, setting, or getting and removing value 
+		/* Three functions for getting, setting, or getting and removing value
 		 * in the 'params' section of the request payload */
 	public function setParam($name, $value) {
 		$this->payload['params'][$name] = Trustly_Data::ensureUTF8($value);
@@ -103,7 +103,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return $this->get('method');
 	}
 
-		/* Two utility function for setting or getting data from the 
+		/* Two utility function for setting or getting data from the
 		 * 'params'->'Data' part of the payload. */
 	public function setData($name, $value) {
 		if(!isset($this->payload['params']['Data'])) {
@@ -126,7 +126,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return NULL;
 	}
 
-		/* Two utility function for setting or getting data from the 
+		/* Two utility function for setting or getting data from the
 		 * 'params'->'Data'->'Attributes' part of the payload. */
 	public function setAttribute($name, $value) {
 		if(!isset($this->payload['params']['Data'])) {

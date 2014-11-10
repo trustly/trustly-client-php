@@ -1,19 +1,19 @@
 <?php
-/*
+/**
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2014 Trustly Group AB
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,8 +48,8 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Load the public key used for for verifying incoming data responses from 
-	 * trustly. The keys are distributed as a part of the source code package 
+	/* Load the public key used for for verifying incoming data responses from
+	 * trustly. The keys are distributed as a part of the source code package
 	 * and should be named to match the host under $PWD/HOSTNAME.public.pem */
 	public function loadTrustlyPublicKey() {
 		$filename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $this->api_host);
@@ -82,7 +82,7 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Given all the components to verify and work with, check if the given 
+	/* Given all the components to verify and work with, check if the given
 	 * signature has been used to sign the data */
 	protected function verifyTrustlySignedData($method, $uuid, $signature, $data) {
 		if($method === NULL) {
@@ -105,8 +105,8 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Check to make sure that the given response (instance of 
-	 * Trustly_Data_Response) has been signed with the correct key when 
+	/* Check to make sure that the given response (instance of
+	 * Trustly_Data_Response) has been signed with the correct key when
 	 * originating from the host */
 	public function verifyTrustlySignedResponse($response) {
 		$method = $response->getMethod();
@@ -117,8 +117,8 @@ abstract class Trustly_Api {
 		return $this->verifyTrustlySignedData($method, $uuid, $signature, $data);
 	}
 
-	/* Check to make sure that the given notification (instance of 
-	 * Trustly_Data_JSONRPCNotificationRequest) has been signed with the 
+	/* Check to make sure that the given notification (instance of
+	 * Trustly_Data_JSONRPCNotificationRequest) has been signed with the
 	 * correct key originating from the host */
 	public function verifyTrustlySignedNotification($notification) {
 		$method = $notification->getMethod();
@@ -146,9 +146,9 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Do note that that if you are going to POST JSON you need to set the 
-	 * content-type of the transfer AFTER you set the postfields, this is done 
-	 * if you provide the postdata here, if not, take care to do it or the 
+	/* Do note that that if you are going to POST JSON you need to set the
+	 * content-type of the transfer AFTER you set the postfields, this is done
+	 * if you provide the postdata here, if not, take care to do it or the
 	 * content-type will be wrong */
 	public function connect($url=NULL, $postdata=NULL) {
 		$cu = curl_init();
@@ -173,8 +173,8 @@ abstract class Trustly_Api {
 		if(isset($postdata)) {
 			curl_setopt($cu, CURLOPT_POSTFIELDS, $postdata);
 		}
-		curl_setopt($cu, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8')); 
-		curl_setopt($cu, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($cu, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
+		curl_setopt($cu, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($cu, CURLOPT_URL, $url);
 		return $cu;
 	}
@@ -196,10 +196,10 @@ abstract class Trustly_Api {
 		return $this->last_request;
 	}
 
-	/* Given the http body of an (presumed) notification from trustly. Verify 
-	 * signatures and build a Trustly_Data_JSONRPCNotificationRequest object 
-	 * from the incoming data. This should ALWAYS be the first steps when 
-	 * accessing data in the notification, a noficiation with a poor or invalid 
+	/* Given the http body of an (presumed) notification from trustly. Verify
+	 * signatures and build a Trustly_Data_JSONRPCNotificationRequest object
+	 * from the incoming data. This should ALWAYS be the first steps when
+	 * accessing data in the notification, a noficiation with a poor or invalid
 	 * signature should be discarded. */
 	public function handleNotification($httpbody) {
 		$request = new Trustly_Data_JSONRPCNotificationRequest($httpbody);
@@ -212,7 +212,7 @@ abstract class Trustly_Api {
 	}
 
 
-	/* Given an object from an incoming notification request build a response 
+	/* Given an object from an incoming notification request build a response
 	 * object that can be used to respond to trustly with */
 	public function notificationResponse($request, $success=TRUE) {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
@@ -231,7 +231,6 @@ abstract class Trustly_Api {
 		$url = $this->url($request);
 		$curl = $this->connect($url, $jsonstr);
 
-
 		$body = curl_exec($curl);
 		if($body === FALSE) {
 			$error = curl_error($curl);
@@ -242,11 +241,11 @@ abstract class Trustly_Api {
 		}
 
 		if($this->api_is_https) {
-            $ssl_result = curl_getinfo($curl, CURLINFO_SSL_VERIFYRESULT);
-            if($ssl_result !== 0) {
-                $error = 'Failed to connect to the Trusly API. SSL Verification error ' . $ssl_result;
-                throw new Trustly_ConnectionException($error);
-            }
+			$ssl_result = curl_getinfo($curl, CURLINFO_SSL_VERIFYRESULT);
+			if($ssl_result !== 0) {
+				$error = 'Failed to connect to the Trusly API. SSL Verification error ' . $ssl_result;
+				throw new Trustly_ConnectionException($error);
+			}
 		}
 		$result = $this->handleResponse($request, $body, $curl);
 		curl_close($curl);
