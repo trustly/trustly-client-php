@@ -100,5 +100,3 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	}
 }
 
-?>
-

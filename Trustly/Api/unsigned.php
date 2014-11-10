@@ -135,4 +135,3 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		return $response;
 	}
 }
-?>

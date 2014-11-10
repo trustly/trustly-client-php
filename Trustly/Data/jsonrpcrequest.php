@@ -147,4 +147,3 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return NULL;
 	}
 }
-?>

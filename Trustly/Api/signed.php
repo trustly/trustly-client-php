@@ -396,5 +396,3 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $api->hello();
 	}
 }
-
-?>

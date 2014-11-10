@@ -84,5 +84,3 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		return $this->get('version');
 	}
 }
-
-?>
