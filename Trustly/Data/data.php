@@ -128,5 +128,3 @@ class Trustly_Data {
 	}
 
 }
-
-?>

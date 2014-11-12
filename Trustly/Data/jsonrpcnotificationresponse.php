@@ -123,5 +123,3 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	}
 }
 
-
-?>

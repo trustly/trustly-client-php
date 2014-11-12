@@ -36,4 +36,3 @@ require_once('Trustly/Data/jsonrpcnotificationresponse.php');
 require_once('Trustly/Api/api.php');
 require_once('Trustly/Api/signed.php');
 require_once('Trustly/Api/unsigned.php');
-?>

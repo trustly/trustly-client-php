@@ -128,5 +128,3 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 }
-
-?>

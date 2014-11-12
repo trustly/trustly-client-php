@@ -42,5 +42,3 @@ class Trustly_SignatureException extends Exception {
 class Trustly_DataException extends Exception { }
 
 class Trustly_AuthentificationException extends Exception { }
-
-?>

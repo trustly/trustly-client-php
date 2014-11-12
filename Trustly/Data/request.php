@@ -53,5 +53,3 @@ class Trustly_Data_Request extends Trustly_Data {
 		$this->method = $method;
 	}
 }
-
-?>

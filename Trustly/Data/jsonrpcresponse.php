@@ -73,4 +73,3 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 	}
 }
 
-?>

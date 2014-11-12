@@ -267,5 +267,3 @@ abstract class Trustly_Api {
 	abstract public function insertCredentials($request);
 
 }
-
-?>
