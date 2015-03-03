@@ -85,3 +85,16 @@ Example notification processing
     $notifyresponse = $api->notificationResponse($request, TRUE);
 
     echo $notifyresponse->json();
+
+Example implementation
+----------------------
+
+In the example/ subdirectory is a simple implementation of a client that uses
+the code to make a deposit call to Trustly and processes incoming
+notifications. The code is well commented and contains information about what
+to calls that needs to be made and some caveats while doing so.
+
+The code is runnable on Linux/OSX with Apache v2.4. Use the
+`example/example.sh` script to control the example environment. You need to
+amend `example/www/php/example.php` and `example/example.private.pem` to
+contain your processing account information before giving it a test spin.
