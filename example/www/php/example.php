@@ -57,20 +57,20 @@ function respond_json($http_response = 200, $data = NULL) {
 }
 
 function check_extensions() {
-    /* Just a prerequisite test that all the modules we need is loaded */
-    $data = [
-        'bcmath' => false,
-        'openssl' => false,
-        'curl' => false,
-        'mbstring' => false,
-        'json' => false
-    ];
+    /* Just a prerequisite test that all the modules we need is loaded
+     * Of course responding in JSON without the JSON extension will be
+     * "difficult" so hard code this json structure */
 
-    foreach($data as $extension => $foo) {
-        $data[$extension] = extension_loaded($extension);
-    }
-    /* Of course responding in JSON without the JSON extension will be "difficult" ... */
-    respond_json(200, ['result' => 'ok', 'extensions' => $data]);
+    _http_response_code(200);
+    header('Content-type: application/json; charset=UTF-8');
+
+    printf('{"bcmath": %s, "openssl": %s, "curl": %s, "mbstring": %s, "json": %s}',
+        (extension_loaded('bcmath')?'true':'false'),
+        (extension_loaded('openssl')?'true':'false'),
+        (extension_loaded('curl')?'true':'false'),
+        (extension_loaded('mbstring')?'true':'false'),
+        (extension_loaded('json')?'true':'false')
+    );
 }
 
 function orders() {
