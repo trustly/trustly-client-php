@@ -41,8 +41,17 @@ $trustly_rsa_private_key = $_SERVER['REGRESSDIR'] . '/example.private.pem';
 $trustly_username = 'USERNAME';
 $trustly_password = 'PASSWORD';
 
+
+function _http_response_code($code) {
+    if(function_exists('http_response_code')) {
+        http_response_code($code);
+    } else {
+        header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code);
+    }
+}
+
 function respond_json($http_response = 200, $data = NULL) {
-    http_response_code($http_response);
+    _http_response_code($http_response);
     header('Content-type: application/json; charset=UTF-8');
     print json_encode($data);
 }
@@ -423,7 +432,7 @@ if($path == '/orders') {
 } elseif($path == '/extensions') {
     check_extensions();
 } else {
-    http_response_code(404);
+    _http_response_code(404);
 }
 
 exit(0);
