@@ -62,7 +62,7 @@ case "$cmd" in
         if [ $cmd = 'reload' ]; then
             cmd='graceful'
         fi
-        $apachebin -f "$configfile" -C "Define REGRESSDIR $REGRESSDIR" -k $cmd
+        $apachebin -f "$configfile" -k $cmd
         exitcode=$?
 
         if [ $cmd = 'start' -a $exitcode -eq 0 ]; then
