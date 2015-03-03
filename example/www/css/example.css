@@ -1,0 +1,80 @@
+.trustly-logo {
+    margin-bottom: 20px;
+}
+
+.row {
+    margin-top: 20px;
+}
+
+.iframe_container iframe {
+    width: 600px;
+    height: 600px;
+    box-sizing: content-box;
+
+    border: 1px solid #333;
+}
+
+.failure .failing {
+    margin-right: 10px;
+}
+
+.orders table {
+    width: 100%;
+}
+
+.orders table td {
+    vertical-align: top;
+}
+
+.orders table dl dd > dl {
+    margin-left: 10px;
+}
+
+.orders table tr td > dl {
+    display: none;
+}
+
+.orders table tr.show-extra td > dl {
+    display: block !important;
+}
+
+.orders .orderid {
+    width: 12%;
+}
+
+.orders .amount {
+    width: 10%;
+}
+
+.orders .created,
+.orders .account,
+.orders .cancel,
+.orders .credit,
+.orders .debit,
+.orders .pending {
+    width: 13%;
+}
+
+body.success {
+    background-color: #11dd11;
+}
+
+body.failure {
+    background-color: #dd1111;
+}
+
+body.success div.glyphicon, body.failure div.glyphicon {
+    font-size: 30em;
+    color: black;
+    margin: auto;
+    width: 1.1em;
+    height: 1em;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    line-height: 0.6;
+    overflow: visible;
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset=utf-8 />
+	<title>Trustly payment</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script type="text/javascript" src="/js/example.js"></script>
+	<link rel="stylesheet" href="/css/example.css">
+</head>
+<body>
+
+<div class="row">
+	<div class="col-md-offset-2 col-md-8">
+		<img alt="Trustly logo" class="trustly-logo" src="https://static.trustly.com/logotype/footer/trustly_300.png">
+	</div>
+</div>
+
+<div class="row extensions-not-ok hidden">
+	<div class="col-md-offset-2 col-md-8">
+		<div id="missing-modules" class="alert alert-danger" role="alert">
+			<strong>Your PHP installation is missing some of the required modules!</strong>
+			<ul>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="row extensions-ok">
+	<div class="col-md-offset-2 col-md-8">
+		<p>Use the form below to make a deposit call against the Trustly test system. Leave the amount field blank to select the actual amount to deposit in the iframe or enter an amount to make a deposit of a specific amount.</p>
+		<p>Make sure your account information in the PHP example.php file is correct before attempting to make a deposit call.</p>
+	</div>
+</div>
+
+<div class="row extensions-ok">
+	<div class="col-md-offset-2 col-md-8">
+		<form class="form-inline">
+			<div class="form-group">
+				<label for="amount">Amount</label>
+				<input type="text" class="form-control" id="amount" placeholder="SEK">
+			</div>
+			<select id="currency" class="form-control">
+			  <option SELECTED>SEK</option>
+			  <option>USD</option>
+			  <option>EUR</option>
+			  <option>NOK</option>
+			  <option>DKK</option>
+			</select>
+			<button id="deposit-button" type="button" class="btn btn-default">Deposit</button>
+		</form>
+	</div>
+</div>
+
+<div class="row failure hidden">
+	<div class="col-md-offset-2 col-md-8">
+		<div class="alert alert-danger" role="alert">
+			<strong class="failing"></strong><span class="errortext"></span>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-offset-2">
+		<div class="iframe_container hidden">
+			<iframe src="javascript:false" name="0" id="0"></iframe>
+		</div>
+	</div>
+</div>
+
+<div class="row orders hidden">
+	<div class="col-md-offset-2 col-md-8">
+		<p>All the orders we have created here with information about the notifications from Trustly for that order.</p>
+		<p>Click on the individual rows to see all data for the notifications for that order.</p>
+		<p>Use the "Clear order data" button below to purge all information about the orders.</p>
+		<table class="table-striped">
+			<tr class="header">
+				<th class="orderid">OrderID</th>
+				<th class="amount">Amount</th>
+				<th class="created">Created</th>
+				<th class="account">account</th>
+				<th class="pending">pending</th>
+				<th class="credit">credit</th>
+				<th class="cancel">cancel</th>
+				<th class="debit">debit</th>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="row orders hidden">
+	<div class="col-md-offset-2 col-md-8">
+		<div class="pull-right">
+			<button id="clear-order-data-button" type="button" class="btn btn-danger">Clear order data</button>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</div>
+
+</body>
+</html>
