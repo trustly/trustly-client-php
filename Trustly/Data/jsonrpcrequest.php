@@ -147,3 +147,4 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return NULL;
 	}
 }
+/* vim: set noet cindent ts=4 ts=4 sw=4: */

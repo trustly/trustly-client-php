@@ -128,3 +128,4 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 }
+/* vim: set noet cindent ts=4 ts=4 sw=4: */

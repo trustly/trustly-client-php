@@ -53,3 +53,4 @@ class Trustly_Data_Request extends Trustly_Data {
 		$this->method = $method;
 	}
 }
+/* vim: set noet cindent ts=4 ts=4 sw=4: */

@@ -394,3 +394,4 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $api->hello();
 	}
 }
+/* vim: set noet cindent ts=4 ts=4 sw=4: */

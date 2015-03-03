@@ -135,3 +135,4 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		return $response;
 	}
 }
+/* vim: set noet cindent ts=4 ts=4 sw=4: */

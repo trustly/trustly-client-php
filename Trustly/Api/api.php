@@ -312,3 +312,4 @@ abstract class Trustly_Api {
 	abstract public function insertCredentials($request);
 
 }
+/* vim: set noet cindent ts=4 ts=4 sw=4: */
