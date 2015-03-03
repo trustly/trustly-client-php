@@ -89,7 +89,7 @@ function orders() {
             array_push($orders, $data);
         }
     }
-    respond_json(200, ['result' => 'ok', 'orders' => $orders]);
+    respond_json(200, Array('result' => 'ok', 'orders' => $orders));
 }
 
 function clear_orders() {
@@ -99,7 +99,7 @@ function clear_orders() {
     foreach(glob("$order_info_dir/*.order.json") as $orderfile) {
         unlink($orderfile);
     }
-    respond_json(200, ['result' => 'ok']);
+    respond_json(200, Array('result' => 'ok'));
 }
 
 function save_order_data($orderid, $data) {
@@ -168,9 +168,9 @@ function get_api() {
         /* If there is a problem with your supplied data (problem reading the 
          * key file for instance) you will be rewarded with an 
          * InvalidArgumentException */
-        respond_json(200, ['result' => 'error', 'error' => 'InvalidArgumentException ' . string($a)]);
+        respond_json(200, Array('result' => 'error', 'error' => 'InvalidArgumentException ' . string($a)));
     } catch(Exception $e) {
-        respond_json(200, ['result' => 'error', 'error' => 'Exception ' . string($a)]);
+        respond_json(200, Array('result' => 'error', 'error' => 'Exception ' . string($a)));
     }
     return NULL;
 }
@@ -206,7 +206,7 @@ function deposit() {
         }
         $currency = $_GET['currency'];
         if(empty($currency)) {
-            respond_json(200, ['result' => 'error', 'error' => 'No currency given']);
+            respond_json(200, Array('result' => 'error', 'error' => 'No currency given'));
             return ;
         }
 
@@ -283,15 +283,15 @@ function deposit() {
              * establish a secure connection to the Trustly servers (failed to 
              * connect or failed to verify the server certificate for instance 
              * */
-            respond_json(200, ['result' => 'error', 'error' => 'Trustly_ConnectionException ' . $a]);
+            respond_json(200, Array('result' => 'error', 'error' => 'Trustly_ConnectionException ' . $a));
         } catch(Trustly_DataException $e) {
             /* A data exception will be thrown if we fail to properly sign the 
              * outgoing request, if the response does not seem related to our 
              * query or if the response data is not in the format we would 
              * expect */
-            respond_json(200, ['result' => 'error', 'error' => 'Trustly_DataException ' . $a]);
+            respond_json(200, Array('result' => 'error', 'error' => 'Trustly_DataException ' . $a));
         } catch(Exception $e) {
-            respond_json(200, ['result' => 'error', 'error' => 'Exception ' .$a]);
+            respond_json(200, Array('result' => 'error', 'error' => 'Exception ' .$a));
         }
 
         if(isset($deposit)) {
@@ -302,16 +302,16 @@ function deposit() {
                  * will return all of the data */
                 $orderid = $deposit->getData('orderid');
 
-                save_order_data($orderid, [
+                save_order_data($orderid, Array(
                     'amount' => $amount,
                     'currency' => $currency,
                     'created' => @strftime('%F %T')
-                ]);
-                respond_json(200, [
+                ));
+                respond_json(200, Array(
                     'result' => 'ok',
                     'url' => $deposit->getData('url'),
                     'orderid' => $orderid
-                    ]);
+                    ));
             } else {
                 /* getErrorCode() and getErrorMessage() will reveal the problem 
                  * with the call. getErrorCode() will return an integer error 
@@ -322,7 +322,7 @@ function deposit() {
                  * user.
                  * */
                 $errormessage = sprintf('Error: %s (%s)', $response->getErrorCode(), $response->getErrorMessage());
-                respond_json(200, ['result' => 'error', 'error' => $errormessage]);
+                respond_json(200, Array('result' => 'error', 'error' => $errormessage));
             }
         }
     }
@@ -392,9 +392,9 @@ function notification() {
 
 
             $data['datestamp'] = @strftime('%F %T');
-            save_order_data($orderid, [
+            save_order_data($orderid, Array(
                 $method => $data,
-            ]);
+            ));
             /* Once you have acted upon the data in the notification you should 
              * respond in the same HTTP request that you have received it and 
              * processed it. If you processed the request successfully (by 
