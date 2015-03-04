@@ -321,7 +321,7 @@ function deposit() {
                  * in a form for logging, not something to present to the end 
                  * user.
                  * */
-                $errormessage = sprintf('Error: %s (%s)', $response->getErrorCode(), $response->getErrorMessage());
+                $errormessage = sprintf('Error: %s (%s)', $deposit->getErrorCode(), $deposit->getErrorMessage());
                 respond_json(200, Array('result' => 'error', 'error' => $errormessage));
             }
         }
