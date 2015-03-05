@@ -73,6 +73,24 @@ function check_extensions() {
     );
 }
 
+function _orders_sort_orders_callback($a, $b) {
+    if(isset($a['created']) && isset($b['created'])) {
+        if($a['created'] == $b['created']) {
+            return 0;
+        }
+        return $a['created'] < $b['created'] ? 1 : -1 ;
+    } elseif(isset($a['created'])) {
+        return 1;
+    } elseif(isset($b['created'])) {
+        return -1;
+    } else {
+        if($a['orderid'] == $b['orderid']) {
+            return 0;
+        }
+        return $a['orderid'] < $b['orderid'] ? 1 : -1 ;
+    }
+}
+
 function orders() {
     global $order_info_dir;
 
@@ -89,6 +107,9 @@ function orders() {
             array_push($orders, $data);
         }
     }
+    # For presentation, sort the orders according to their creation time, 
+    # newest first.
+    usort($orders, '_orders_sort_orders_callback');
     respond_json(200, Array('result' => 'ok', 'orders' => $orders));
 }
 
