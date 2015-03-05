@@ -136,6 +136,7 @@ function save_order_data($orderid, $data) {
         $data['orderid'] = $orderid;
 
         ftruncate($fh, 0);
+        rewind($fh);
         fwrite($fh, json_encode($data));
         fflush($fh);
         flock($fh, LOCK_UN);
