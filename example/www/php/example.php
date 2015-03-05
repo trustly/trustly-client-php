@@ -256,7 +256,7 @@ function deposit() {
              * troubleshooting only. 
              */
             $deposit = $api->deposit(
-                "$base_url/example.php/notification",       /* NotificationURL */
+                "$base_url/php/example.php/notification",   /* NotificationURL */
                 'john.doe@example.com',                     /* EndUserID */
                 $messageid,                                 /* MessageID */
                 'en_US',                                    /* Locale */
