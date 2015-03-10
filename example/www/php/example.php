@@ -190,9 +190,9 @@ function get_api() {
         /* If there is a problem with your supplied data (problem reading the 
          * key file for instance) you will be rewarded with an 
          * InvalidArgumentException */
-        respond_json(200, Array('result' => 'error', 'error' => 'InvalidArgumentException ' . string($a)));
+        respond_json(200, Array('result' => 'error', 'error' => 'InvalidArgumentException ' . $e->getMessage()));
     } catch(Exception $e) {
-        respond_json(200, Array('result' => 'error', 'error' => 'Exception ' . string($a)));
+        respond_json(200, Array('result' => 'error', 'error' => 'Exception ' . $e->getMessage()));
     }
     return NULL;
 }
