@@ -160,7 +160,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$nationalidentificationnumber=NULL, $shopperstatement=NULL,
 		$ip=NULL, $successurl=NULL, $failurl=NULL, $templateurl=NULL,
 		$urltarget=NULL, $suggestedminamount=NULL, $suggestedmaxamount=NULL,
-		$integrationmodule=NULL) {
+		$integrationmodule=NULL, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -188,6 +188,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'IntegrationModule' => $integrationmodule
 			);
 
+			if(isset($holdnotifications)) {
+				$attributes['HoldNotifications'] = 1;
+			}
+
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
 			return $this->call($request);
 	}
@@ -210,7 +214,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$locale=NULL, $currency=NULL, $country=NULL,
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
 		$nationalidentificationnumber=NULL, $clearinghouse=NULL,
-		$banknumber=NULL, $accountnumber=NULL) {
+		$banknumber=NULL, $accountnumber=NULL, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -231,6 +235,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'BankNumber' => $banknumber,
 				'AccountNumber' => $accountnumber,
 			);
+
+			if(isset($holdnotifications)) {
+				$attributes['HoldNotifications'] = 1;
+			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Withdraw', $data, $attributes);
 			return $this->call($request);
@@ -261,7 +269,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	/* Make a select account call */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
-		$mobilephone=NULL, $firstname=NULL, $lastname=NULL) {
+		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -279,6 +287,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'Firstname' => $firstname,
 				'Lastname' => $lastname,
 			);
+
+			if(isset($holdnotifications)) {
+				$attributes['HoldNotifications'] = 1;
+			}
 
 			$request = new Trustly_Data_JSONRPCRequest('SelectAccount', $data, $attributes);
 			return $this->call($request);
@@ -308,7 +320,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	}
 
 	public function accountPayout($notificationurl, $accountid, $enduserid,
-		$messageid, $amount, $currency) {
+		$messageid, $amount, $currency, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -322,6 +334,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 			$attributes = array(
 			);
 
+			if(isset($holdnotifications)) {
+				$attributes['HoldNotifications'] = 1;
+			}
+
 			$request = new Trustly_Data_JSONRPCRequest('AccountPayout', $data, $attributes);
 			return $this->call($request);
 	}
@@ -330,7 +346,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 			$authorizeonly=NULL, $templatedata=NULL, $successurl=NULL,
 			$method=NULL, $lastname=NULL, $firstname=NULL, $urltarget=NULL,
 			$locale=NULL, $amount=NULL, $currency=NULL, $templateurl=NULL,
-			$displaycurrency=NULL) {
+			$displaycurrency=NULL, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -355,6 +371,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'DisplayCurrency' => $displaycurrency,
 				'IP' => $ip
 			);
+
+			if(isset($holdnotifications)) {
+				$attributes['HoldNotifications'] = 1;
+			}
 
 			$request = new Trustly_Data_JSONRPCRequest('P2P', $data, $attributes);
 			return $this->call($request);
