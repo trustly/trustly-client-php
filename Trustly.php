@@ -37,4 +37,4 @@ require_once('Trustly/Api/api.php');
 require_once('Trustly/Api/signed.php');
 require_once('Trustly/Api/unsigned.php');
 
-/* vim: set noet cindent ts=4 ts=4 sw=4: */
+/* vim: set noet cindent sts=4 ts=4 sw=4: */

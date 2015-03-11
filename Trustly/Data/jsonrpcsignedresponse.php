@@ -99,4 +99,4 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 		return NULL;
 	}
 }
-/* vim: set noet cindent ts=4 ts=4 sw=4: */
+/* vim: set noet cindent sts=4 ts=4 sw=4: */

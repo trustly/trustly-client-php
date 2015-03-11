@@ -122,4 +122,4 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		return $this->getResult('uuid');
 	}
 }
-/* vim: set noet cindent ts=4 ts=4 sw=4: */
+/* vim: set noet cindent sts=4 ts=4 sw=4: */

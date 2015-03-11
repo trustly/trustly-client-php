@@ -84,4 +84,4 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		return $this->get('version');
 	}
 }
-/* vim: set noet cindent ts=4 ts=4 sw=4: */
+/* vim: set noet cindent sts=4 ts=4 sw=4: */
