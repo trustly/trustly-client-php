@@ -394,6 +394,9 @@ function notification() {
         } catch(Trustly_JSONRPCVersionException $e) {
             error_log('Got incoming notification with bad JSONRPC version');
             return ;
+        } catch(Trustly_DataException $e) {
+            error_log('Got incoming notification null');
+            return;
         }
 
         if(isset($notification)) {
