@@ -31,6 +31,10 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		$this->notification_body = $notification_body;
 		$payload = json_decode($notification_body, TRUE);
 
+		if(is_null($payload)) {
+			throw new Trustly_DataException('Empty notification');
+		}
+
 		parent::__construct($payload);
 
 		if($this->getVersion() != '1.1') {

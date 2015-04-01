@@ -81,7 +81,6 @@ Example notification processing
 -------------------------------
 
     $request = $api->handleNotification($notification_body);
-        # FIXME Handle the incoming notification data here
     $notifyresponse = $api->notificationResponse($request, TRUE);
 
     echo $notifyresponse->json();
