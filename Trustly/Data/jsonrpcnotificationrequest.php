@@ -29,7 +29,20 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	public function __construct($notification_body) {
 
 		$this->notification_body = $notification_body;
+
+		if(empty($notification_body)) {
+			throw new Trustly_DataException('Empty notification body');
+		}
+
 		$payload = json_decode($notification_body, TRUE);
+
+		if(is_null($payload)) {
+			$error = '';
+			if(function_exists('json_last_error_msg')) {
+				$error = ': ' . json_last_error_msg();
+			}
+			throw new Trustly_DataException('Failed to parse JSON' . $error);
+		}
 
 		parent::__construct($payload);
 
