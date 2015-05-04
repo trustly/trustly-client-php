@@ -33,6 +33,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	var $response_result = NULL;
 
 	public function __construct($response_body, $response_code=NULL) {
+		parent::__construct();
 
 		$this->response_code = $response_code;
 		$this->response_body = $response_body;
@@ -48,7 +49,10 @@ class Trustly_Data_Response extends Trustly_Data {
 				throw new Trustly_DataException('Failed to decode response JSON, reason code ' . json_last_error());
 			}
 		}
-		parent::__construct($payload);
+
+		if(isset($payload)) {
+			$this->payload = $payload;
+		}
 
 			/* Attempt to detect the type of the response. A successful call
 				* will have a 'result' on toplevel in the payload, while an

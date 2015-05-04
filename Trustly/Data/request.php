@@ -28,8 +28,12 @@ class Trustly_Data_Request extends Trustly_Data {
 	var $method = NULL;
 
 	public function __construct($method=NULL, $payload=NULL) {
+		parent::__construct();
 
-		parent::__construct($payload);
+		$vpayload = $this->vacuum($payload);
+		if(isset($vpayload)) {
+			$this->payload = $vpayload;
+		}
 
 		$this->method = $method;
 	}

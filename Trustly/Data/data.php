@@ -26,13 +26,8 @@
 class Trustly_Data {
 	var $payload = NULL;
 
-	public function __construct($payload=NULL) {
-
-		$this->payload = $this->vacuum($payload);
-
-		if($this->payload === NULL) {
+	public function __construct() {
 			$this->payload = array();
-		}
 	}
 
 	/* Utility function to vacuum the supplied data end remove unset
