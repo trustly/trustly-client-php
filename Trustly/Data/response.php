@@ -32,9 +32,9 @@ class Trustly_Data_Response extends Trustly_Data {
 		 * guts will contain all returned data. */
 	var $response_result = NULL;
 
-	public function __construct($response_body, $curl) {
+	public function __construct($response_body, $response_code=NULL) {
 
-		$this->response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		$this->response_code = $response_code;
 		$this->response_body = $response_body;
 
 		$payload = json_decode($response_body, TRUE);
@@ -42,7 +42,7 @@ class Trustly_Data_Response extends Trustly_Data {
 			/* Only throw the connection error exception here if we did not
 			 * receive a valid JSON response, if we did recive one we will use
 			 * the error information in that response instead. */
-			if($this->response_code !== 200) {
+			if(isset($this->response_code) and $this->response_code !== 200) {
 				throw new Trustly_ConnectionException('HTTP ' . $this->response_code);
 			} else {
 				throw new Trustly_DataException('Failed to decode response JSON, reason code ' . json_last_error());

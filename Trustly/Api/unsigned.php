@@ -45,7 +45,8 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 
 	public function handleResponse($request, $body, $curl) {
 			/* No signature here, just build the response object */
-		return new Trustly_Data_JSONRPCResponse($body, $curl);
+		$response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		return new Trustly_Data_JSONRPCResponse($body, $response_code);
 	}
 
 	public function insertCredentials($request) {
