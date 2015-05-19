@@ -50,7 +50,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		$status = 'OK';
 
 		if(isset($success) && $success !== TRUE) {
-			$status = 'FAILURE';
+			$status = 'FAILED';
 		}
 		$this->setData('status', $status);
 		return $success;
