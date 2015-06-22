@@ -58,22 +58,36 @@ Example deposit call
 
     require_once('Trustly.php');
 
-    $api = new Trustly_Api_Signed('/opt/application/private.pem', 'username', 'password');
+    /* Change 'test.trustly.com' to 'trustly.com' below to use the live environment */
+    $api = new Trustly_Api_Signed(
+                    $trustly_rsa_private_key,
+                    $trustly_username,
+                    $trustly_password,
+                    'test.trustly.com'
+                );
 
     $deposit = $api->deposit(
-                            'https://example.com/trustlynotification',
-                            'user@email.com',
-                            'abb424decb1',
-                            'sv_SE',
-                            '12.34',
-                            'EUR',
-                            'SE',
-                            '+460812345678',
-                            'John',
-                            'Doe',
-                            'SE770807-5622',
-                            NULL
-                        );
+                    "$base_url/php/example.php/notification",   /* NotificationURL */
+                    'john.doe@example.com',                     /* EndUserID */
+                    $messageid,                                 /* MessageID */
+                    'en_US',                                    /* Locale */
+                    $amount,                                    /* Amount */
+                    $currency,                                  /* Currency */
+                    'SE',                                       /* Country */
+                    NULL,                                       /* MobilePhone */
+                    NULL,                                       /* FirstName */
+                    NULL,                                       /* LastName */
+                    NULL,                                       /* NationalIdentificationNumber */
+                    'Test',                                     /* ShopperStatement */
+                    $ip,                                        /* IP */
+                    "$base_url/success.html",                   /* SuccessURL */
+                    "$base_url/fail.html",                      /* FailURL */
+                    NULL,                                       /* TemplateURL */
+                    "0",                                        /* URLTarget */
+                    NULL,                                       /* SuggestedMinAmount */
+                    NULL,                                       /* SuggestedMaxAmount */
+                    'trustly-client-php example/1.0'            /* IntegrationModule */
+                );
 
     $iframe_url= $deposit->getData('url');
 
