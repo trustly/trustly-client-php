@@ -1,14 +1,14 @@
 {
-    "name": "trustly/trustly-client-php",
+	"name": "trustly/trustly-client-php",
 	"description": "Implementation of communications with Trustly public API for Online bank e-payments. See https://trustly.com for more information",
-    "type": "library",
-    "homepage": "http://github.com/trustly/trustly-client-php",
-    "licence": "MIT",
-    "keywords": [
-        "payment",
-        "trustly"
-	    ],
-    "require": {
+	"type": "library",
+	"homepage": "http://github.com/trustly/trustly-client-php",
+	"licence": "MIT",
+	"keywords": [
+		"payment",
+		"trustly"
+	],
+	"require": {
 		"ext-json": "*",
 		"ext-bcmath": "*",
 		"ext-openssl": "*",
