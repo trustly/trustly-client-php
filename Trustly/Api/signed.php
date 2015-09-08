@@ -139,11 +139,24 @@ class Trustly_Api_Signed extends Trustly_Api {
 	}
 
 	protected function generateUUID() {
-		/* Not the classiest implementation, but to reduce the dependency of
-		 * non standard libraries we build it this way.  The risk of
-		 * collisions is low enough with a MD5 */
-		$md5 = md5(uniqid('', true));
-		return substr($md5, 0, 8).'-'.substr($md5, 8, 4).'-'.substr($md5, 12, 4).'-'.substr($md5, 16, 4).'-'.substr($md5, 20, 12);
+		/*
+		http://php.net/manual/en/function.uniqid.php#94959
+		*/
+	 	return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+		      // 32 bits for "time_low"
+		      mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+		      // 16 bits for "time_mid"
+		      mt_rand(0, 0xffff),
+		      // 16 bits for "time_hi_and_version",
+		      // four most significant bits holds version number 4
+		      mt_rand(0, 0x0fff) | 0x4000,
+		      // 16 bits, 8 bits for "clk_seq_hi_res",
+		      // 8 bits for "clk_seq_low",
+		      // two most significant bits holds zero and one for variant DCE1.1
+		      mt_rand(0, 0x3fff) | 0x8000,
+		      // 48 bits for "node"
+		      mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+		    );	
 	}
 
 	public function call($request) {
