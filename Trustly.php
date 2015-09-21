@@ -1,6 +1,14 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Main include file for working with the trustly-client-php code. This file
+ * contains to code, instead it includes all of the files needed for
+ * communicating with the API.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *

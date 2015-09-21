@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Api class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,15 +29,63 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Abstract base class for all the API's.
+ *
+ * Implements all of the basic communication, key handling, signature
+ * verification and creation as well as defining some common stubs for the
+ * class implementations to implements.
+ */
 abstract class Trustly_Api {
-	/* Hostname, port and protocol information about how to reach the API  */
-	var $api_host = NULL;
-	var $api_port = NULL;
-	var $api_is_https = TRUE;
+	/**
+	 * API host used for communication. This also controls which host key file
+	 * that is loaded to verify the communications from the API.
+	 *
+	 * @var string FQHN
+	 */
+	protected $api_host = NULL;
+	/**
+	 * API port used for communication.
+	 *
+	 * @var integer Normally either 443 (https) or 80 (http)
+	 */
+	protected $api_port = NULL;
+	/**
+	 * Inidicator wether the API host is communicating using https
+	 *
+	 * @var bool
+	 */
+	protected $api_is_https = TRUE;
 
-	/* The data of the last request performed. */
-	var $last_request = NULL;
+	/**
+	 * The data in the last request made. Kept for diagnostics usage mostly.
+	 *
+	 * @see Trustly_Api::getLastRequest()
+	 *
+	 * @var array Last API call in data form.
+	 */
+	protected $last_request = NULL;
 
+	/**
+	 * API Constructor
+	 *
+	 * @throws InvalidArgumentException If the public key for the API host
+	 *		cannot be loaded.
+	 *
+	 * @throws Trustly_ConnectionException If the curl library is not
+	 *		available.
+	 *
+	 * @param string $host API host used for communication. Fully qualified
+	 *		hostname. When integrating with our public API this is typically
+	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *
+	 * @param integer $port Port on API host used for communicaiton. Normally
+	 *		443 for https, or 80 for http.
+	 *
+	 * @param bool $is_https Indicator wether the port on the API host expects
+	 *		https.
+	 */
 	public function __construct($host, $port, $is_https) {
 		$this->api_host = $host;
 		$this->api_port = $port;
@@ -48,9 +102,13 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Load the public key used for for verifying incoming data responses from
+	/**
+	 * Load the public key used for for verifying incoming data responses from
 	 * trustly. The keys are distributed as a part of the source code package
-	 * and should be named to match the host under $PWD/HOSTNAME.public.pem */
+	 * and should be named to match the host under $PWD/HOSTNAME.public.pem
+	 *
+	 * @return boolean Indicating success or failure of loading the key for the current host.
+	 */
 	public function loadTrustlyPublicKey() {
 		$filename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $this->api_host);
 
@@ -65,6 +123,15 @@ abstract class Trustly_Api {
 		return FALSE;
 	}
 
+	/**
+	 * Serializes the given data in a form suitable for creating a signature.
+	 *
+	 * @link https://trustly.com/en/developer/api#/signature
+	 *
+	 * @param array $data Input data to serialize
+	 *
+	 * @return array The input data in a serialized form
+	 */
 	public function serializeData($data) {
 		if(is_array($data)) {
 			ksort($data);
@@ -82,8 +149,24 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Given all the components to verify and work with, check if the given
-	 * signature has been used to sign the data */
+	/**
+	 * Given that the communication is from the host configured for this API,
+	 * verify if the $signature is indeed valid for the $method, $uuid and
+	 * $data.
+	 *
+	 * @link https://trustly.com/en/developer/api#/signature
+	 *
+	 * @param string $method Method in the API call
+	 *
+	 * @param string $uuid UUID in the API call
+	 *
+	 * @param string $signature in the API call
+	 *
+	 * @param string $data in the API call
+	 *
+	 * @return boolean Indicating wether or not the host key was used for
+	 *		signing this data.
+	 */
 	protected function verifyTrustlySignedData($method, $uuid, $signature, $data) {
 		if($method === NULL) {
 			$method = '';
@@ -105,9 +188,17 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Check to make sure that the given response (instance of
+	/**
+	 * Check to make sure that the given response (instance of
 	 * Trustly_Data_Response) has been signed with the correct key when
-	 * originating from the host */
+	 * originating from the host
+	 *
+	 * @param Trustly_Data_Response $response Response from the API call.
+	 *
+	 * @return boolean Indicating if the data was indeed properly signed by the
+	 *		API we think we are talking to
+	 */
+
 	public function verifyTrustlySignedResponse($response) {
 		$method = $response->getMethod();
 		$uuid = $response->getUUID();
@@ -117,9 +208,16 @@ abstract class Trustly_Api {
 		return $this->verifyTrustlySignedData($method, $uuid, $signature, $data);
 	}
 
-	/* Check to make sure that the given notification (instance of
+	/**
+	 * Check to make sure that the given notification (instance of
 	 * Trustly_Data_JSONRPCNotificationRequest) has been signed with the
-	 * correct key originating from the host */
+	 * correct key originating from the host
+	 *
+	 * @param Trustly_Data_JSONRPCNotificationRequest incoming notification
+	 *
+	 * @return boolean Indicating if the data was indeed properly signed by the
+	 *		API we think we are talking to
+	 */
 	public function verifyTrustlySignedNotification($notification) {
 		$method = $notification->getMethod();
 		$uuid = $notification->getUUID();
@@ -129,7 +227,22 @@ abstract class Trustly_Api {
 		return $this->verifyTrustlySignedData($method, $uuid, $signature, $data);
 	}
 
-	/* Update the current host settings, leave out any parameter to leave as is  */
+	/**
+	 * Update the host settings within the API. Use this method to switch API peer.
+	 *
+	 * @throws InvalidArgumentException If the public key for the API host
+	 *		cannot be loaded.
+	 *
+	 * @param string $host API host used for communication. Fully qualified
+	 *		hostname. When integrating with our public API this is typically
+	 *		either 'test.trustly.com' or 'trustly.com'. NULL means do not change.
+	 *
+	 * @param integer $port Port on API host used for communicaiton. Normally
+	 *		443 for https, or 80 for http. NULL means do not change.
+	 *
+	 * @param bool $is_https Indicator wether the port on the API host expects
+	 *		https. NULL means do not change.
+	 */
 	public function setHost($host=NULL, $port=NULL, $is_https=NULL) {
 		if(isset($host)) {
 			$this->api_host = $host;
@@ -146,11 +259,20 @@ abstract class Trustly_Api {
 		}
 	}
 
-	/* Do note that that if you are going to POST JSON you need to set the
-	 * content-type of the transfer AFTER you set the postfields, this is done
-	 * if you provide the postdata here, if not, take care to do it or the
-	 * content-type will be wrong */
+	/**
+	 * Setup and return a curl handle for submitting data to the API peer.
+	 *
+	 * @param string $url The URL to communicate with
+	 *
+	 * @param string $postdata The (optional) data to post.
+	 *
+	 * @return resource Curl handle.
+	 */
 	public function connect($url=NULL, $postdata=NULL) {
+		/* Do note that that if you are going to POST JSON you need to set the
+		 * content-type of the transfer AFTER you set the postfields, this is done
+		 * if you provide the postdata here, if not, take care to do it or the
+		 * content-type will be wrong */
 		$cu = curl_init();
 		curl_setopt($cu, CURLOPT_FAILONERROR, FALSE);
 		curl_setopt($cu, CURLOPT_FOLLOWLOCATION, FALSE);
@@ -179,6 +301,11 @@ abstract class Trustly_Api {
 		return $cu;
 	}
 
+	/**
+	 * Return a properly formed url to communicate with this API.
+	 *
+	 * @return URL pointing to the API peer.
+	 */
 	public function baseURL() {
 		if($this->api_is_https) {
 			$url = 'https://' . $this->api_host . ($this->api_port != 443?':'.$this->api_port:'');
@@ -188,19 +315,43 @@ abstract class Trustly_Api {
 		return $url;
 	}
 
+	/**
+	 * Return a URL to the API to the given request path.
+	 *
+	 * @param Trustly_Data_Request $request Data to send in the request
+	 *
+	 * @return URL to the API peer with the given query path.
+	 */
 	public function url($request=NULL) {
 		return $this->baseURL() . $this->urlPath($request);
 	}
 
+
+	/**
+	 * Return the last request that we attempted to make via this API
+	 *
+	 * @return array Last request data structure.
+	 */
 	public function getLastRequest() {
 		return $this->last_request;
 	}
 
-	/* Given the http body of an (presumed) notification from trustly. Verify
-	 * signatures and build a Trustly_Data_JSONRPCNotificationRequest object
-	 * from the incoming data. This should ALWAYS be the first steps when
+	/**
+	 * Given the http(s) body of an (presumed) notification from Trustly. Verify
+	 * that signatures are valid and build a
+	 * Trustly_Data_JSONRPCNotificationRequest object from the incoming data.
+	 *
+	 * This should ALWAYS be the first steps when
 	 * accessing data in the notification, a noficiation with a poor or invalid
-	 * signature should be discarded. */
+	 * signature should be discarded.
+	 *
+	 * @throws Trustly_SignatureException When signature holds an invalid
+	 *		signature.
+	 *
+	 * @param string $httpbody Incoming raw notification body.
+	 *
+	 * @return Trustly_Data_JSONRPCNotificationRequest of the notification.
+	 */
 	public function handleNotification($httpbody) {
 		$request = new Trustly_Data_JSONRPCNotificationRequest($httpbody);
 
@@ -212,14 +363,35 @@ abstract class Trustly_Api {
 	}
 
 
-	/* Given an object from an incoming notification request build a response
-	 * object that can be used to respond to trustly with */
+	/**
+	 * Given an object from an incoming notification request build a response
+	 * object that can be used to respond to trustly with
+	 *
+	 * @param Trustly_Data_JSONRPCNotificationRequest $request
+	 *
+	 * @param boolean $success Indicator if we should respond with processing
+	 *		success or failure to the notification.
+	 *
+	 * @return Trustly_Data_JSONRPCNotificationResponse response object.
+	 */
 	public function notificationResponse($request, $success=TRUE) {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
 		return $response;
 	}
 
-	/* Call the trustly API with the given request. */
+
+	/**
+	 * Call the trustly API with the given request.
+	 *
+	 * @throws Trustly_DataException Upon failure to add all the communication
+	 *		parameters to the data.
+	 *
+	 * @throws Trustly_ConnectionException When failing to communicate with the
+	 *		API.
+	 *
+	 * @param Trustly_Data_Request $request Outgoing data request.
+	 *
+	 */
 	public function call($request) {
 		if($this->insertCredentials($request) !== TRUE) {
 			throw new Trustly_DataException('Unable to add authorization criterias to outgoing request');
@@ -294,6 +466,13 @@ abstract class Trustly_Api {
 		return $result;
 	}
 
+	/**
+	 * Return a boolean value formatted for communicating with the API.
+	 *
+	 * @param boolean $value Boolean value to encode
+	 *
+	 * @return API encoded boolean value
+	 */
 	protected function apiBool($value) {
 		if(isset($value)) {
 			if($value) {
@@ -305,11 +484,44 @@ abstract class Trustly_Api {
 		return NULL;
 	}
 
-	abstract public function urlPath($request=NULL);
+	/**
+	 * Returns the PATH portion of the URL for communicating with the API. The
+	 * API endpoint will typically differ with the type of te API we are
+	 * communicating with.
+	 *
+	 * See specific class implementing the call for more information.
+	 *
+	 * @param Trustly_Data_Request $request Data to send in the request
+	 *
+	 * @return string The URL path
+	 */
+	abstract protected function urlPath($request=NULL);
 
-	abstract public function handleResponse($request, $body, $curl);
+	/**
+	 * Callback for handling the response from an API call. This call is
+	 * expected to take the input data and create an instance of a response
+	 * object.
+	 *
+	 * See specific class implementing the call for more information.
+	 *
+	 * @param Trustly_Data_Request $request Outgoing request
+	 *
+	 * @param string $body The body recieved in response to the request
+	 *
+	 * @param resource $curl the CURL resource used for the call
+	 */
+	abstract protected function handleResponse($request, $body, $curl);
 
-	abstract public function insertCredentials($request);
+	/**
+	 * Callback for populating the outgoing request with the criterias needed
+	 * for communication. This can be username/password as well as a signature.
+	 *
+	 * See specific class implementing the call for more information.
+	 *
+	 * @param Trustly_Data_Request $request Request to be used in the outgoing
+	 *		call
+	 */
+	abstract protected function insertCredentials($request);
 
 }
 /* vim: set noet cindent sts=4 ts=4 sw=4: */

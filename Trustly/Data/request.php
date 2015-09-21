@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Data_Request class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,10 +29,24 @@
  * THE SOFTWARE.
  */
 
-class Trustly_Data_Request extends Trustly_Data {
 
+/**
+ * Data base class for outgoing API requests
+ */
+class Trustly_Data_Request extends Trustly_Data {
+	/**
+	 * Call method name
+	 * @var string
+	 */
 	var $method = NULL;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $method Method name for the call
+	 *
+	 * @param array $payload Call payload
+	 */
 	public function __construct($method=NULL, $payload=NULL) {
 		parent::__construct();
 
@@ -38,6 +58,12 @@ class Trustly_Data_Request extends Trustly_Data {
 		$this->method = $method;
 	}
 
+
+	/**
+	 * Convenience function for getting the uuid from the call
+	 *
+	 * @return string uuid
+	 */
 	public function getUUID() {
 		if(isset($this->payload['uuid'])) {
 			return $this->payload['uuid'];
@@ -45,14 +71,32 @@ class Trustly_Data_Request extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Convenience function for setting the uuid in the call
+	 *
+	 * @param string uuid
+	 */
 	public function setUUID($uuid) {
 		$this->set('uuid', $uuid);
 	}
 
+
+	/**
+	 * Get the method in the outgoing call
+	 *
+	 * @return string method name
+	 */
 	public function getMethod() {
 		return $this->method;
 	}
 
+
+	/**
+	 * Set the medhod in the call
+	 *
+	 * @param string method name
+	 */
 	public function setMethod($method) {
 		$this->method = $method;
 	}

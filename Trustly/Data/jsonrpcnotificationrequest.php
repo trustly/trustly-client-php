@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Data_JSONRPCNotificationRequest class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,9 +29,31 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Class implementing the interface to the data in a notification request from
+ * the Trustly API.
+ */
 class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
+
+	/**
+	 * The RAW incoming notification body
+	 * @var string
+	 */
 	var $notification_body = NULL;
 
+
+	/**
+	 * Constructor.
+	 *
+	 * @throws Trustly_DataException When the incoming data is invalid.
+	 *
+	 * @throws Trustly_JSONRPCVersionException When the incoming notification
+	 *		request seems to be valid but is for a JSON RPC version we do not
+	 *		support.
+	 *
+	 * @param string $notification RAW incoming notification body
+	 */
 	public function __construct($notification_body) {
 		parent::__construct();
 
@@ -52,6 +80,16 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		}
 	}
 
+
+	/**
+	 * Get value from or the entire params payload.
+	 *
+	 * @param string $name Name of the params parameter to obtain. Leave blank
+	 *		to get the entire payload
+	 *
+	 * @return mixed The value for the params parameter or the entire payload
+	 *		depending on $name
+	 */
 	public function getParams($name=NULL) {
 		if(!isset($this->payload['params'])) {
 			return NULL;
@@ -67,6 +105,17 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Get the value of a parameter in the params->data section of the
+	 * notification response.
+	 *
+	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 *		entire payload.
+	 *
+	 * @return mixed The value sought after or the entire payload depending on
+	 *		$name.
+	 */
 	public function getData($name=NULL) {
 		if(!isset($this->payload['params']['data'])) {
 			return NULL;
@@ -82,18 +131,42 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Get the UUID from the request.
+	 *
+	 * @return string The UUID value
+	 */
 	public function getUUID() {
 		return $this->getParams('uuid');
 	}
 
+
+	/**
+	 * Get the Method from the request.
+	 *
+	 * @return string The Method value.
+	 */
 	public function getMethod() {
 		return $this->get('method');
 	}
 
+
+	/**
+	 * Get the Signature from the request.
+	 *
+	 * @return string The Signature value.
+	 */
 	public function getSignature() {
 		return $this->getParams('signature');
 	}
 
+
+	/**
+	 * Get the JSON RPC version from the request.
+	 *
+	 * @return string The Version.
+	 */
 	public function getVersion() {
 		return $this->get('version');
 	}

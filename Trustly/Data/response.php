@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Data_Response class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,15 +29,43 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Base class for incoming responses from the API
+ */
 class Trustly_Data_Response extends Trustly_Data {
-		/* Raw copy of the incoming response body */
+
+	/**
+	 * Raw copy of the incoming response body
+	 * @var integer
+	 */
 	var $response_body = NULL;
-		/* The response HTTP code */
+
+	/**
+	 * The response HTTP code
+	 * @var integer
+	 */
 	var $response_code = NULL;
-		/* Shortcut to the part of the result being actually interesting. The
-		 * guts will contain all returned data. */
+
+	/**
+	 * Shortcut to the part of the result being actually interesting. The guts will contain all returned data.
+	 * @var mixed
+	 */
 	var $response_result = NULL;
 
+
+	/**
+	 * Constructor.
+	 *
+	 * @throws Trustly_ConnectionException When the response was invalid and
+	 *		the HTTP response code indicates an error.
+	 *
+	 * @throws Trustly_DataException When the response is not valid.
+	 *
+	 * @param string $response_body RAW response body from the API call
+	 *
+	 * @param integer $response_code HTTP response code from the API call
+	 */
 	public function __construct($response_body, $response_code=NULL) {
 		parent::__construct();
 
@@ -54,9 +88,10 @@ class Trustly_Data_Response extends Trustly_Data {
 			$this->payload = $payload;
 		}
 
-			/* Attempt to detect the type of the response. A successful call
-				* will have a 'result' on toplevel in the payload, while an
-				* failure will have a 'error' on the tyoplevel */
+		/* Attempt to detect the type of the response. A successful call will
+		 * have a 'result' on toplevel in the payload, while an failure will
+		 * have a 'error' on the tyoplevel
+		 */
 		$this->response_result = &$this->payload['result'];
 		if($this->response_result === NULL) {
 			$this->response_result = &$this->payload['error'];
@@ -66,6 +101,15 @@ class Trustly_Data_Response extends Trustly_Data {
 		}
 	}
 
+
+	/**
+	 * Return basic status revealing wether or not he the API call resulted in
+	 * an error. Do note that this does not nessecarily imply that the call was
+	 * a success, just that the response did not include a proper error
+	 * response.
+	 *
+	 * @return boolean revealing if the response had an error element in it.
+	 */
 	public function isError() {
 		if($this->get('error') === NULL) {
 			return FALSE;
@@ -73,6 +117,13 @@ class Trustly_Data_Response extends Trustly_Data {
 		return TRUE;
 	}
 
+
+	/**
+	 * Return basic status revealing wether or not the API response has a
+	 * result indicating success.
+	 *
+	 * @return boolean revealing if the response has a result element in it
+	 */
 	public function isSuccess() {
 		if($this->get('result') === NULL) {
 			return FALSE;
@@ -80,6 +131,12 @@ class Trustly_Data_Response extends Trustly_Data {
 		return TRUE;
 	}
 
+
+	/**
+	 * Get error message (if any) from the API response
+	 *
+	 * @return string The error message
+	 */
 	public function getErrorMessage() {
 		if($this->isError()) {
 			if(isset($this->response_result['message'])) {
@@ -89,6 +146,12 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Get error code (if any) from the API response
+	 *
+	 * @return integer The error code (numerical)
+	 */
 	public function getErrorCode() {
 		if($this->isError()) {
 			if(isset($this->response_result['code'])) {
@@ -98,6 +161,16 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Get data from the result section of the response
+	 *
+	 * @param string $name Name of the result parameter to fetch. NULL value
+	 *		will return entire result section.
+	 *
+	 * @return mixed The value for parameter $name or the entire result block
+	 *		if no name was given
+	 */
 	public function getResult($name=NULL) {
 		if($name === NULL) {
 				# An array is always copied
@@ -111,6 +184,12 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Convenience function for getting the uuid in the response
+	 *
+	 * @param string uuid
+	 */
 	public function getUUID() {
 		if(isset($this->response_result['uuid'])) {
 			return $this->response_result['uuid'];
@@ -118,6 +197,12 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Get the method from the response
+	 *
+	 * @return string method name
+	 */
 	public function getMethod() {
 		if(isset($this->response_result['method'])) {
 			return $this->response_result['method'];
@@ -125,6 +210,12 @@ class Trustly_Data_Response extends Trustly_Data {
 		return NULL;
 	}
 
+
+	/**
+	 * Get the signature from the response
+	 *
+	 * @return string signature
+	 */
 	public function getSignature() {
 		if(isset($this->response_result['signature'])) {
 			return $this->response_result['signature'];

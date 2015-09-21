@@ -1,6 +1,12 @@
 <?php
-/*
- * The MIT License (MIT)
+/**
+ * Trustly_Data_JSONRPCSignedResponse class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,7 +29,19 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Class implementing the structure for a signed response from the API.
+ */
 class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $response_body RAW response from HTTP call
+	 *
+	 * @param resource $curl cURL resource handle from the call
+	 */
 	public function __construct($response_body, $curl) {
 		parent::__construct($response_body, $curl);
 
@@ -60,13 +78,24 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 			 *		}
 			 *  }
 			 *
-			 * The Trustly_Data will point response_result /result or /error respectivly, we need to take care of the signed part here only.
-			 * */
+			 * The Trustly_Data will point response_result /result or /error
+			 * respectivly, we need to take care of the signed part here only.
+			 */
 		if($this->isError()) {
 			$this->response_result = $this->response_result['error'];
 		}
 	}
 
+
+	/**
+	 * Get data from the data section of the response
+	 *
+	 * @param string $name Name of the data parameter to fetch. NULL value will
+	 *		return entire data section.
+	 *
+	 * @return mixed The value for parameter $name or the entire data block if
+	 *		no name was given
+	 */
 	public function getData($name=NULL) {
 		$data = NULL;
 
@@ -85,6 +114,12 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 		}
 	}
 
+
+	/**
+	 * Get error code (if any) from the API call
+	 *
+	 * @return integer The error code (numerical)
+	 */
 	public function getErrorCode() {
 		if($this->isError() && isset($this->response_result['data']['code'])) {
 			return $this->response_result['data']['code'];
@@ -92,6 +127,12 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 		return NULL;
 	}
 
+
+	/**
+	 * Get error message (if any) from the API call
+	 *
+	 * @return string The error message
+	 */
 	public function getErrorMessage() {
 		if($this->isError() && isset($this->response_result['data']['message'])) {
 			return $this->response_result['data']['message'];

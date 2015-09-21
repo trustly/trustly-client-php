@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Data_JSONRPCRequest class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,8 +29,26 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Class implementing the structure for data used in the signed API calls
+ */
 class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 
+	/**
+	 * Constructor.
+	 *
+	 * @throws Trustly_DataException If the combination of $data and
+	 *		$attributes is invalid
+	 *
+	 * @param string $method Outgoing call API method
+	 *
+	 * @param mixed $data Outputgoing call Data (if any). This can be either an
+	 *		array or a simple non-complex value.
+	 *
+	 * @param mixed $attributes Outgoing call attributes if any. If attributes
+	 *		is set then $data needs to be an array.
+	 */
 	public function __construct($method=NULL, $data=NULL, $attributes=NULL) {
 		$payload = NULL;
 
@@ -60,13 +84,29 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 
 	}
 
-		/* Three functions for getting, setting, or getting and removing value
-		 * in the 'params' section of the request payload */
+
+	/**
+	 * Set a value in the params section of the request
+	 *
+	 * @param string $name Name of parameter
+	 *
+	 * @param mixed $value Value of parameter
+	 *
+	 * @return mixed $value
+	 */
 	public function setParam($name, $value) {
 		$this->payload['params'][$name] = Trustly_Data::ensureUTF8($value);
 		return $value;
 	}
 
+
+	/**
+	 * Get the value of a params parameter in the request
+	 *
+	 * @param string $name Name of parameter of which to obtain the value
+	 *
+	 * @return mixed The value
+	 */
 	public function getParam($name) {
 		if(isset($this->payload['params'][$name])) {
 			return $this->payload['params'][$name];
@@ -74,6 +114,15 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return NULL;
 	}
 
+
+	/**
+	 * Pop the value of a params parameter in the request. I.e. get the value
+	 * and then remove the value from the params.
+	 *
+	 * @param string $name Name of parameter of which to obtain the value
+	 *
+	 * @return mixed The value
+	 */
 	public function popParam($name) {
 		$v = NULL;
 		if(isset($this->payload['params'][$name])) {
@@ -83,11 +132,25 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return $v;
 	}
 
+
+	/**
+	 * Set the UUID value in the outgoing call.
+	 *
+	 * @param string $uuid The UUID
+	 *
+	 * @return string $uuid
+	 */
 	public function setUUID($uuid) {
 		$this->payload['params']['UUID'] = Trustly_Data::ensureUTF8($uuid);
 		return $uuid;
 	}
 
+
+	/**
+	 * Get the UUID value from the outgoing call.
+	 *
+	 * @return string The UUID value
+	 */
 	public function getUUID() {
 		if(isset($this->payload['params']['UUID'])) {
 			return $this->payload['params']['UUID'];
@@ -95,16 +158,37 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return NULL;
 	}
 
+	/**
+	 * Set the Method value in the outgoing call.
+	 *
+	 * @param string $method The name of the API method this call is for
+	 *
+	 * @return string $method
+	 */
 	public function setMethod($method) {
 		return $this->set('method', $method);
 	}
 
+
+	/**
+	 * Get the Method value from the outgoing call.
+	 *
+	 * @return string The Method value.
+	 */
 	public function getMethod() {
 		return $this->get('method');
 	}
 
-		/* Two utility function for setting or getting data from the
-		 * 'params'->'Data' part of the payload. */
+
+	/**
+	 * Set a value in the params->Data part of the payload.
+	 *
+	 * @param string $name The name of the Data parameter to set
+	 *
+	 * @param mixed $value The value of the Data parameter to set
+	 *
+	 * @return mixed $value
+	 */
 	public function setData($name, $value) {
 		if(!isset($this->payload['params']['Data'])) {
 			$this->payload['params']['Data'] = array();
@@ -113,6 +197,16 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return $value;
 	}
 
+
+	/**
+	 * Get the value of one parameter in the params->Data section of the
+	 * request. Or the entire Data section if no name is given.
+	 *
+	 * @param string $name Name of the Data param to obtain. Leave as NULL to
+	 *		get the entire structure.
+	 *
+	 * @return mixed The value or the entire Data depending on $name
+	 */
 	public function getData($name=NULL) {
 		if(isset($name)) {
 			if(isset($this->payload['params']['Data'][$name])) {
@@ -126,8 +220,16 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return NULL;
 	}
 
-		/* Two utility function for setting or getting data from the
-		 * 'params'->'Data'->'Attributes' part of the payload. */
+
+	/**
+	 * Set a value in the params->Data->Attributes part of the payload.
+	 *
+	 * @param string $name The name of the Attributes parameter to set
+	 *
+	 * @param mixed $value The value of the Attributes parameter to set
+	 *
+	 * @return mixed $value
+	 */
 	public function setAttribute($name, $value) {
 		if(!isset($this->payload['params']['Data'])) {
 			$this->payload['params']['Data'] = array();
@@ -140,6 +242,16 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		return $value;
 	}
 
+
+	/**
+	 * Get the value of one parameter in the params->Data->Attributes section
+	 * of the request. Or the entire Attributes section if no name is given.
+	 *
+	 * @param string $name Name of the Attributes param to obtain. Leave as NULL to
+	 *		get the entire structure.
+	 *
+	 * @return mixed The value or the entire Attributes depending on $name
+	 */
 	public function getAttribute($name) {
 		if(isset($this->payload['params']['Data']['Attributes'][$name])) {
 			return $this->payload['params']['Data']['Attributes'][$name];

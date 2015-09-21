@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Data_JSONRPCNotificationResponse class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,8 +29,22 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Class implementing the interface to data in the response to a notification
+ * from the Trustly API.
+ */
 class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 
+	/**
+	 * Constructor.
+	 *
+	 * @param Trustly_Data_JSONRPCNotificationRequest $request Incoming
+	 *		notification request to which we are responding
+	 *
+	 * @param boolean $success Set to true to indicate that the notification
+	 *		was successfully processed.
+	 */
 	public function __construct($request, $success=NULL) {
 
 		parent::__construct();
@@ -46,6 +66,15 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		$this->set('version', '1.1');
 	}
 
+
+	/**
+	 * Set the success status in the response.
+	 *
+	 * @param boolean $success Set to true to indicate that the notification
+	 *		was successfully processed.
+	 *
+	 * @return $success
+	 */
 	public function setSuccess($success=NULL) {
 		$status = 'OK';
 
@@ -56,10 +85,28 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		return $success;
 	}
 
+
+	/**
+	 * Set the signature in the response.
+	 *
+	 * @param string $signature Signature of the outgoing data.
+	 *
+	 * @return string $signature
+	 */
 	public function setSignature($signature) {
 		$this->setResult('signature', $signature);
 	}
 
+
+	/**
+	 * Set a parameter in the result section of the notification response.
+	 *
+	 * @param string $name The name of the parameter to set
+	 *
+	 * @param mixed $value The value of the parameter
+	 *
+	 * @return mixed $value
+	 */
 	public function setResult($name, $value) {
 		if(!isset($this->payload['result'])) {
 			$this->payload['result'] = array();
@@ -68,6 +115,17 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		return $value;
 	}
 
+
+	/**
+	 * Get the value of a parameter in the result section of the notification
+	 * response.
+	 *
+	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 *		entire payload.
+	 *
+	 * @return mixed The value sought after or the entire payload depending on
+	 *		$name.
+	 */
 	public function getResult($name=NULL) {
 		$result = NULL;
 		if(isset($this->payload['result'])) {
@@ -85,6 +143,17 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		}
 	}
 
+
+	/**
+	 * Get the value of a parameter in the result->data section of the
+	 * notification response.
+	 *
+	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 *		entire payload.
+	 *
+	 * @return mixed The value sought after or the entire payload depending on
+	 *		$name.
+	 */
 	public function getData($name=NULL) {
 		$data = NULL;
 		if(isset($this->payload['result']['data'])) {
@@ -102,6 +171,17 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		}
 	}
 
+
+	/**
+	 * Set a parameter in the result->data section of the notification
+	 * response.
+	 *
+	 * @param string $name The name of the parameter to set
+	 *
+	 * @param mixed $value The value of the parameter
+	 *
+	 * @return mixed $value
+	 */
 	public function setData($name, $value) {
 		if(!isset($this->payload['result'])) {
 			$this->payload['result'] = array();
@@ -114,10 +194,22 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 		return $value;
 	}
 
+
+	/**
+	 * Get the Method value from the response.
+	 *
+	 * @return string The Method value.
+	 */
 	public function getMethod() {
 		return $this->getResult('method');
 	}
 
+
+	/**
+	 * Get the UUID value from the response.
+	 *
+	 * @return string The UUID value
+	 */
 	public function getUUID() {
 		return $this->getResult('uuid');
 	}

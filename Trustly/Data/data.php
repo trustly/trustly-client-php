@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Data class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,16 +29,35 @@
  * THE SOFTWARE.
  */
 
-class Trustly_Data {
-	var $payload = NULL;
 
+/**
+ * Class implementing a basic datastructure that is either in response or in a
+ * a JSON data request.
+ */
+class Trustly_Data {
+	/**
+	 * Data payload
+	 * @var array
+	 */
+	protected $payload = NULL;
+
+	/**
+	 * Constructur.
+	 */
 	public function __construct() {
 			$this->payload = array();
 	}
 
-	/* Utility function to vacuum the supplied data end remove unset
+
+	/**
+	 * Utility function to vacuum the supplied data end remove unset
 	 * values. This is used to keep the requests cleaner rather then
-	 * supplying NULL values in the payload */
+	 * supplying NULL values in the payload
+	 *
+	 * @param array $data data to clean
+	 *
+	 * @return array cleaned data
+	 */
 	public function vacuum($data) {
 		if(is_null($data)) {
 			return NULL;
@@ -53,8 +78,16 @@ class Trustly_Data {
 		}
 	}
 
-	/* Get the specific data value from the payload or the full payload if
-	 * no value is supplied */
+
+	/**
+	 * Get the specific data value from the payload or the full payload if
+	 * no value is supplied
+	 *
+	 * @param string $name The optional data parameter to get. If NULL then the
+	 * entire payload will be returned.
+	 *
+	 * @return mixed value
+	 */
 	public function get($name=NULL) {
 		if($name === NULL) {
 			return $this->payload;
@@ -66,8 +99,15 @@ class Trustly_Data {
 		return NULL;
 	}
 
-	/* Funciton to ensure that the given value is in UTF8. Used to make sure
-	 * all outgoing data is properly encoded in the call */
+
+	/**
+	 * Function to ensure that the given value is in UTF8. Used to make sure
+	 * all outgoing data is properly encoded in the call
+	 *
+	 * @param string $str String to process
+	 *
+	 * @return string UTF-8 variant of string
+	 */
 	public static function ensureUTF8($str) {
 		if($str == NULL) {
 			return NULL;
@@ -81,12 +121,27 @@ class Trustly_Data {
 		return $str;
 	}
 
-		/* Set a value in the payload to a given value */
+
+	/**
+	 * Set a value in the payload to a given value.
+	 *
+	 * @param string $name
+	 *
+	 * @param mixed $value
+	 */
 	public function set($name, $value) {
 		$this->payload[$name] = Trustly_Data::ensureUTF8($value);
 	}
 
-		/* Get and remove a value from the payload. */
+
+	/**
+	 * pop a value from the payload, i.e. fetch value and clear it in the
+	 * payload.
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed The value
+	 */
 	public function pop($name) {
 		$v = NULL;
 		if(isset($this->payload[$name])) {
@@ -96,7 +151,15 @@ class Trustly_Data {
 		return $v;
 	}
 
-		/* Get JSON copy of the payload */
+
+	/**
+	 * Get the payload in JSON form.
+	 *
+	 * @param boolean $pretty Format the output in a prettified easy-to-read
+	 *		formatting
+	 *
+	 * @return string The current payload in JSON
+	 */
 	public function json($pretty=FALSE) {
 		if($pretty) {
 			$sorted = $this->payload;
@@ -107,9 +170,16 @@ class Trustly_Data {
 		}
 	}
 
-		/* Extremely naivly done and does not by far handle all cases, but
-		 * handles the case it should, i.e. sort the data for the json
-		 * pretty printer */
+
+	/**
+	 * Sort the data in the payload.
+	 *
+	 * Extremely naivly done and does not by far handle all cases, but
+	 * handles the case it should, i.e. sort the data for the json
+	 * pretty printer
+	 *
+	 * @param mixed $data Payload to sort. Will be sorted in place
+	 * */
 	private function sortRecursive(&$data) {
 		if(is_array($data)) {
 			foreach($data as $k => $v) {
@@ -121,6 +191,5 @@ class Trustly_Data {
 			ksort($data);
 		}
 	}
-
 }
 /* vim: set noet cindent sts=4 ts=4 sw=4: */

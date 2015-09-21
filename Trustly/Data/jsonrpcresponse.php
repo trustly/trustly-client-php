@@ -1,5 +1,12 @@
 <?php
 /**
+ * Trustly_Data_JSONRPCResponse class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
@@ -23,8 +30,19 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Class implementing a basic response for a JSON RPC call to the Trustly API
+ */
 class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $response_body RAW response body from the API
+	 *
+	 * @param resource $curl cURL resource handle used for the request
+	 */
 	public function __construct($response_body, $curl) {
 		parent::__construct($response_body, $curl);
 
@@ -58,6 +76,12 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 			 * */
 	}
 
+
+	/**
+	 * Get error code (if any) from the API response
+	 *
+	 * @return integer The error code (numerical)
+	 */
 	public function getErrorCode() {
 		if($this->isError() && isset($this->response_result['code'])) {
 			return $this->response_result['code'];
@@ -65,6 +89,11 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 		return NULL;
 	}
 
+	/**
+	 * Get error message (if any) from the API response
+	 *
+	 * @return string The error message
+	 */
 	public function getErrorMessage() {
 		if($this->isError() && isset($this->response_result['message'])) {
 			return $this->response_result['message'];

@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Api_Signed class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,9 +29,40 @@
  * THE SOFTWARE.
  */
 
-class Trustly_Api_Signed extends Trustly_Api {
-	var $merchant_privatekey = NULL;
 
+/**
+ * Communication class for communicating with the Trustly signed API. This is
+ * the API used for all payments, deposits and refunds.
+ */
+class Trustly_Api_Signed extends Trustly_Api {
+	/**
+	 * Loaded merchant private key resource
+	 * @var resource from openssl with the loaded privatekey
+	 */
+	private $merchant_privatekey = NULL;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $merchant_privatekeyfile File containing the merchant
+	 *		private RSA key, used for signing outgoing requests. You can leave
+	 *		this blank here and instead use the useMerchantPrivateKey()
+	 *		function to set a key if the key is not obtained from a file.
+	 *
+	 * @param string $username Username for the processing account used at Trustly.
+	 *
+	 * @param string $password Password for the processing account used at Trustly.
+	 *
+	 * @param string $host API host used for communication. Fully qualified
+	 *		hostname. When integrating with our public API this is typically
+	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *
+	 * @param integer $port Port on API host used for communicaiton. Normally
+	 *		443 for https, or 80 for http.
+	 *
+	 * @param bool $is_https Indicator wether the port on the API host expects
+	 *		https.
+	 */
 	public function __construct($merchant_privatekeyfile, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
 
 		parent::__construct($host, $port, $is_https);
@@ -40,13 +77,28 @@ class Trustly_Api_Signed extends Trustly_Api {
 		}
 	}
 
-	/* Load up the merchants key for signing data from the supplied filename.
-	 * Inializes the internal openssl certificate needed for the signing */
+
+	/**
+	 * Load up the merchants key for signing data from the supplied filename.
+	 * Inializes the internal openssl certificate needed for the signing
+	 *
+	 * @param string $filename Filename containing the private key to load.
+	 *
+	 * @return boolean indicating success.
+	 */
 	public function loadMerchantPrivateKey($filename) {
 		$cert = @file_get_contents($filename);
 		return $this->useMerchantPrivateKey($cert);
 	}
 
+
+	/**
+	 * Use this RSA private key for signing outgoing requests.
+	 *
+	 * @see https://trustly.com/en/developer/api#/signature
+	 *
+	 * @param string $cert Loaded private RSA key as a string
+	 */
 	public function useMerchantPrivateKey($cert) {
 		if($cert !== FALSE) {
 			$this->merchant_privatekey = openssl_pkey_get_private($cert);
@@ -55,8 +107,15 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return FALSE;
 	}
 
-	/* Create a signature string suitable for including as the signature in an
-	 * outgoing request */
+
+	/**
+	 * Insert a signature into the outgoing request.
+	 *
+	 * @throws Trustly_SignatureException if private key has not been loaded
+	 *		yet or if we for some other reason fail to sign the request.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Request to sign.
+	 */
 	public function signMerchantRequest($request) {
 		if(!isset($this->merchant_privatekey)) {
 			throw new Trustly_SignatureException('No private key has been loaded for signing');
@@ -84,7 +143,15 @@ class Trustly_Api_Signed extends Trustly_Api {
 		throw new Trustly_SignatureException('Failed to sign the outgoing merchant request. '. openssl_error_string());
 	}
 
-	public function insertCredentials($request) {
+
+	/**
+	 * Callback for populating the outgoing request with the criterias needed
+	 * for communication. Username/password as well as a signature.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Request to be used in the outgoing
+	 *		call
+	 */
+	protected function insertCredentials($request) {
 		$request->setData('Username', $this->api_username);
 		$request->setData('Password', $this->api_password);
 
@@ -97,7 +164,26 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return TRUE;
 	}
 
-	public function handleResponse($request, $body, $curl) {
+
+	/**
+	 * Callback for handling the response from an API call. Takes
+	 * the input data and create an instance of a response object.
+	 *
+	 * @throws Trustly_SignatureException If the incoming message has an
+	 *		invalid signature
+	 *
+	 * @throws Trustly_DataException If the incoming message fails the sanity
+	 *		checks.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
+	 *
+	 * @param string $body The body recieved in response to the request
+	 *
+	 * @param resource $curl the CURL resource used for the call
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
+	protected function handleResponse($request, $body, $curl) {
 		$response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		$response = new Trustly_Data_JSONRPCSignedResponse($body, $response_code);
 
@@ -112,6 +198,18 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $response;
 	}
 
+
+	/**
+	 * Given an object from an incoming notification request build a response
+	 * object that can be used to respond to trustly with
+	 *
+	 * @param Trustly_Data_JSONRPCNotificationRequest $request
+	 *
+	 * @param boolean $success Indicator if we should respond with processing
+	 *		success or failure to the notification.
+	 *
+	 * @return Trustly_Data_JSONRPCNotificationResponse response object.
+	 */
 	public function notificationResponse($request, $success=TRUE) {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
 
@@ -124,11 +222,27 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $response;
 	}
 
-	public function urlPath($request=NULL) {
+
+	/**
+	 * Returns the PATH portion of the URL for communicating with the API. The
+	 * API endpoint will typically differ with the type of te API we are
+	 * communicating with.
+	 *
+	 * See specific class implementing the call for more information.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
+	 *
+	 * @return string The URL path
+	 */
+	protected function urlPath($request=NULL) {
 		$url = '/api/1';
 		return $url;
 	}
 
+
+	/**
+	 * Quirks mode implementation of clearing all pending openssl error messages.
+	 */
 	private function clearOpenSSLError() {
 		/* Not really my favourite part of this library implementation. As
 		 * openssl queues error messages a single call to openssl_error_string
@@ -138,9 +252,16 @@ class Trustly_Api_Signed extends Trustly_Api {
 		while ($err = openssl_error_string());
 	}
 
+
+	/**
+	 * Generate a somewhat unique outgoing message id
+	 *
+	 * @see http://php.net/manual/en/function.uniqid.php#94959
+	 *
+	 * @return string "UUID v4"
+	 */
 	protected function generateUUID() {
 		/*
-		http://php.net/manual/en/function.uniqid.php#94959
 		*/
 	 	return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 		      // 32 bits for "time_low"
@@ -156,9 +277,27 @@ class Trustly_Api_Signed extends Trustly_Api {
 		      mt_rand(0, 0x3fff) | 0x8000,
 		      // 48 bits for "node"
 		      mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-		    );	
+		    );
 	}
 
+
+	/**
+	 * Call the API with the prepared request
+	 *
+	 * @throws Trustly_DataException Upon failure to add all the communication
+	 *		parameters to the data or if the incoming data fails the basic
+	 *		sanity checks
+	 *
+	 * @throws Trustly_ConnectionException When failing to communicate with the
+	 *		API.
+	 *
+	 * @throws Trustly_SignatureException If the incoming message has an
+	 *		invalid signature
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse Response from the API.
+	 */
 	public function call($request) {
 		$uuid = $request->getUUID();
 		if($uuid === NULL) {
@@ -167,7 +306,97 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return parent::call($request);
 	}
 
-	/* Make a deposit call */
+
+	/**
+	 * Call the Deposit API Method.
+	 *
+	 * Initiates a new deposit by generating a new OrderID and returning the
+	 * url where the end-user can complete the deposit.
+	 *
+	 * @see https://trustly.com/en/developer/api#/deposit
+	 *
+	 * @param string $notificationurl The URL to which notifications for this
+	 *		payment should be sent to. This URL should be hard to guess and not
+	 *		contain a ? ("question mark").
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user requesting the withdrawal. Preferably the
+	 *		same ID/username as used in the merchant's own backoffice in order
+	 *		to simplify for the merchant's support department.
+	 *
+	 * @param string $messageid Your unique ID for the deposit.
+	 *
+	 * @param string $locale The end-users localization preference in the
+	 *		format [language[_territory]]. Language is the ISO 639-1 code and
+	 *		territory the ISO 3166-1-alpha-2 code.
+	 *
+	 * @param float $amount with exactly two decimals in the currency specified
+	 *		by Currency. Do not use this attribute in combination with
+	 *		SuggestedMinAmount or SuggestedMaxAmount. Only digits. Use dot (.)
+	 *		as decimal separator.
+	 *
+	 * @param string $currency The currency of the end-user's account in the
+	 *		merchant's system.
+	 *
+	 * @param string $country The ISO 3166-1-alpha-2 code of the end-user's
+	 *		country. This will be used for preselecting the correct country for
+	 *		the end-user in the iframe.
+	 *
+	 * @param string $mobilephone The mobile phonenumber to the end-user in
+	 *		international format. This is used for KYC and AML routines.
+	 *
+	 * @param string $firstname The end-user's firstname. Useful for some banks
+	 *		for identifying transactions.
+	 *
+	 * @param string $lastname The end-user's lastname. Useful for some banks
+	 *		for identifying transactions.
+	 *
+	 * @param string $nationalidentificationnumber The end-user's social
+	 *		security number / personal number / birth number / etc. Useful for
+	 *		some banks for identifying transactions and KYC/AML.
+	 *
+	 * @param string $shopperstatement The text to show on the end-user's bank
+	 *		statement.
+	 *
+	 * @param string $ip The IP-address of the end-user.
+	 *
+	 * @param string $successurl The URL to which the end-user should be
+	 *		redirected after a successful deposit. Do not put any logic on that
+	 *		page since it's not guaranteed that the end-user will in fact visit
+	 *		it.
+	 *
+	 * @param string $failurl The URL to which the end-user should be
+	 *		redirected after a failed deposit. Do not put any logic on that
+	 *		page since it's not guaranteed that the end-user will in fact visit
+	 *		it.
+	 *
+	 * @param string $templateurl The URL to your template page for the
+	 *		checkout process.
+	 *
+	 * @param string $urltarget The html target/framename of the SuccessURL.
+	 *		Only _top, _self and _parent are suported.
+	 *
+	 * @param float $suggestedminamount The minimum amount the end-user is
+	 *		allowed to deposit in the currency specified by Currency. Only
+	 *		digits. Use dot (.) as decimal separator.
+	 *
+	 * @param float $suggestedmaxamount The maximum amount the end-user is
+	 *		allowed to deposit in the currency specified by Currency. Only
+	 *		digits. Use dot (.) as decimal separator.
+	 *
+	 * @param string $integrationmodule Version information for your
+	 *		integration module. This is for informational purposes only and can
+	 *		be useful when troubleshooting problems. Should contain enough
+	 *		version information to be useful.
+	 *
+	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 *		order. This is a parameter available when using test.trustly.com
+	 *		and can be used for manually delivering notifications to your local
+	 *		system during development. Intead you can get you notifications on
+	 *		https://test.trustly.com/notifications.html
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
@@ -210,7 +439,23 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
-	/* Make a refund call */
+	/**
+	 * Call the Refund API Method.
+	 *
+	 * Refunds the customer on a previous deposit.
+	 *
+	 * @see https://trustly.com/en/developer/api#/refund
+	 *
+	 * @param integer $orderid The OrderID of the initial deposit.
+	 *
+	 * @param float $amount The amount to refund the customer with exactly two
+	 *		decimals. Only digits. Use dot (.) as decimal separator.
+	 *
+	 * @param string currency The currency of the amount to refund the
+	 *		customer.
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function refund($orderid, $amount, $currency) {
 
 		$data = array(
@@ -223,7 +468,71 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $this->call($request);
 	}
 
-	/* Make a withdraw call */
+	/**
+	 * Call the Withdraw API Method.
+	 *
+	 * Initiates a new withdrawal returning the url where the end-user can
+	 * complete the process.
+	 *
+	 * @see https://trustly.com/en/developer/api#/withdraw
+	 *
+	 * @param string $notificationurl The URL to which notifications for this
+	 *		payment should be sent to. This URL should be hard to guess and not
+	 *		contain a ? ("question mark").
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user requesting the withdrawal. Preferably the
+	 *		same ID/username as used in the merchant's own backoffice in order
+	 *		to simplify for the merchant's support department.
+	 *
+	 * @param string $messageid Your unique ID for the withdrawal.
+	 *
+	 * @param string $locale The end-users localization preference in the
+	 *		format [language[_territory]]. Language is the ISO 639-1 code and
+	 *		territory the ISO 3166-1-alpha-2 code.
+	 *
+	 * @param string $currency The currency of the end-user's account in the
+	 *		merchant's system.
+	 *
+	 * @param string $country The ISO 3166-1-alpha-2 code of the end-user's
+	 *		country. This will be used for preselecting the correct country for
+	 *		the end-user in the iframe.
+	 *
+	 * @param string $mobilephone The mobile phonenumber to the end-user in
+	 *		international format. This is used for KYC and AML routines.
+	 *
+	 * @param string $firstname The end-user's firstname. Some banks require
+	 *		the recipients name.
+	 *
+	 * @param string $lastname The end-user's lastname. Some banks require the
+	 *		recipients name.
+	 *
+	 * @param string $nationalidentificationnumber The end-user's social
+	 *		security number / personal number / birth number / etc. Useful for
+	 *		some banks for identifying transactions and KYC/AML.
+	 *
+	 * @param string $clearinghouse The clearing house of the end-user's bank
+	 *		account. Typically the name of a country in uppercase but might
+	 *		also be IBAN. This will be used to automatically fill-in the
+	 *		withdrawal form for the end-user.
+	 *
+	 * @param string $banknumber The bank number identifying the end-user's
+	 *		bank in the given clearing house. This will be used to
+	 *		automatically fill-in the withdrawal form for the end-user.
+	 *
+	 * @param string $accountnumber The account number, identifying the
+	 *		end-user's account in the bank. This will be used to automatically
+	 *		fill-in the withdrawal form for the end-user. If using Spanish
+	 *		Banks, send full IBAN number in this attribute.
+	 *
+	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 *		order. This is a parameter available when using test.trustly.com
+	 *		and can be used for manually delivering notifications to your local
+	 *		system during development. Intead you can get you notifications on
+	 *		https://test.trustly.com/notifications.html
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function withdraw($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $currency=NULL, $country=NULL,
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
@@ -258,7 +567,19 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
-	/* Make an approvewithdrawal call */
+	/**
+	 * Call the approveWithdrawal API Method.
+	 *
+	 * Approves a withdrawal prepared by the user. Please contact your
+	 * integration manager at Trustly if you want to enable automatic approval
+	 * of the withdrawals.
+	 *
+	 * @see https://trustly.com/en/developer/api#/approvwwithdrawal
+	 *
+	 * @param integer $orderid The OrderID of the withdrawal to approve.
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function approveWithdrawal($orderid) {
 
 		$data = array(
@@ -269,7 +590,19 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $this->call($request);
 	}
 
-	/* Make an denywithdrawal call */
+	/**
+	 * Call the denyWithdrawal API Method.
+	 *
+	 * Denies a withdrawal prepared by the user. Please contact your
+	 * integration manager at Trustly if you want to enable automatic approval
+	 * of the withdrawals
+	 *
+	 * @see https://trustly.com/en/developer/api#/denywithdrawal
+	 *
+	 * @param integer $orderid The OrderID of the withdrawal to deny.
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function denyWithdrawal($orderid) {
 
 		$data = array(
@@ -280,7 +613,57 @@ class Trustly_Api_Signed extends Trustly_Api {
 		return $this->call($request);
 	}
 
-	/* Make a select account call */
+	/**
+	 * Call the selectAccount API Method.
+	 *
+	 * Initiates a new order where the end-user can select and verify one of
+	 * his/her bank accounts.
+	 *
+	 * @see https://trustly.com/en/developer/api#/selectaccount
+	 *
+	 * @param string $notificationurl The URL to which notifications for this
+	 *		order should be sent to. This URL should be hard to guess and not
+	 *		contain a ? ("question mark").
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user to be identified. Preferably the same
+	 *		ID/username as used in the merchant's own backoffice in order to
+	 *		simplify for the merchant's support department.
+	 *
+	 * @param string $messageid Your unique ID for the account selection order.
+	 *		Each order you create must have an unique MessageID.
+	 *
+	 * @param string $locale The end-users localization preference in the
+	 *		format [language[_territory]]. Language is the ISO 639-1 code and
+	 *		territory the ISO 3166-1-alpha-2 code.
+	 *
+	 * @param string $country The ISO 3166-1-alpha-2 code of the end-user's
+	 *		country. This will be used for preselecting the correct country for
+	 *		the end-user in the iframe.
+	 *
+	 * @param string $ip The IP-address of the end-user.
+	 *
+	 * @param string $successurl The URL to which the end-user should be
+	 *		redirected after he/she has completed the initial identification
+	 *		process. Do not put any logic on that page since it's not
+	 *		guaranteed that the end-user will in fact visit it.
+	 *
+	 * @param string $urltarget The html target/framename of the SuccessURL. Only _top, _self and _parent are suported.
+	 *
+	 * @param string $mobilephone The mobile phonenumber to the end-user in international format.
+	 *
+	 * @param string $firstname The end-user's firstname.
+	 *
+	 * @param string $lastname The end-user's lastname.
+	 *
+	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 *		order. This is a parameter available when using test.trustly.com
+	 *		and can be used for manually delivering notifications to your local
+	 *		system during development. Intead you can get you notifications on
+	 *		https://test.trustly.com/notifications.html
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, $holdnotifications=NULL) {
@@ -310,6 +693,45 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+	/**
+	 * Call the registerAccount API Method.
+	 *
+	 * Registers and verifies the format of an account to be used in
+	 * AccountPayout.
+	 *
+	 * @see https://trustly.com/en/developer/api#/registeraccount
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user holding this account. Preferably the same
+	 *		ID/username as used in the merchant's own backoffice in order to
+	 *		simplify for the merchant's support department.
+	 *
+	 * @param string $clearinghouse The clearing house of the end-user's bank
+	 *		account. Typically the name of a country in uppercase but might
+	 *		also be IBAN.
+	 *
+	 * @param string $banknumber The bank number identifying the end-user's
+	 *		bank in the given clearing house.
+	 *
+	 * @param string $accountnumber The account number, identifying the
+	 *		end-user's account in the bank.
+	 *
+	 * @param string $firstname The account holders firstname.
+	 *
+	 * @param string $lastname The account holders lastname.
+	 *
+	 * @param string $mobilephone The mobile phonenumber to the account holder
+	 *		in international format. This is used for KYC and AML routines.
+	 *
+	 * @param string $nationalidentificationnumber The account holder's social
+	 *		security number / personal number / birth number / etc. Useful for
+	 *		some banks for identifying transactions and KYC/AML.
+	 *
+	 * @param string $address The account holders address
+	 *
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function registerAccount($enduserid, $clearinghouse, $banknumber,
 		$accountnumber, $firstname, $lastname, $mobilephone=NULL,
 		$nationalidentificationnumber=NULL, $address=NULL) {
@@ -333,6 +755,47 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+	/**
+	 * Call the accountPayout API Method.
+	 *
+	 * Creates a payout to a specific AccountID. You get the AccountID from the
+	 * account notification which is sent after a SelectAccount order has been
+	 * completed.
+	 *
+	 * @see https://trustly.com/en/developer/api#/accountpayout
+	 *
+	 * @param string $notificationurl The URL to which notifications for this
+	 *		payment should be sent to. This URL should be hard to guess and not
+	 *		contain a ? ("question mark").
+	 *
+	 * @param string $accountid The AccountID received from an account
+	 *		notification to which the money shall be sent.
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user requesting the withdrawal. Preferably the
+	 *		same ID/username as used in the merchant's own backoffice in order
+	 *		to simplify for the merchant's support department.
+
+	 * @param string $messageid Your unique ID for the payout. If the MessageID
+	 *		is a previously initiated P2P order then the payout will be
+	 *		attached to that P2P order and the amount must be equal to or lower
+	 *		than the previously deposited amount.
+	 *
+	 * @param float $amount The amount to send with exactly two decimals. Only
+	 *		digits. Use dot (.) as decimal separator. If the end-user holds a
+	 *		balance in the merchant's system then the amount must have been
+	 *		deducted from that balance before calling this method.
+	 *
+	 * @param string $currency The currency of the amount to send.
+	 *
+	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 *		order. This is a parameter available when using test.trustly.com
+	 *		and can be used for manually delivering notifications to your local
+	 *		system during development. Intead you can get you notifications on
+	 *		https://test.trustly.com/notifications.html
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
 		$messageid, $amount, $currency, $holdnotifications=NULL) {
 
@@ -356,6 +819,71 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+
+	/**
+	 * Call the P2P API Method.
+	 *
+	 * Initiates a new P2P transfer by generating a new OrderID and returning
+	 * an URL to which the end-user should be redirected.
+	 *
+	 * @see https://trustly.com/en/developer/api#/p2p
+	 *
+	 * @param string $notificationurl The URL to which notifications for this
+	 *		payment should be sent to. This URL should be hard to guess and not
+	 *		contain a ? ("question mark").
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user requesting the withdrawal. Preferably the
+	 *		same ID/username as used in the merchant's own backoffice in order
+	 *		to simplify for the merchant's support department.
+	 *
+	 * @param string $messageid Your unique ID for the deposit.
+	 *
+	 * @param string $ip The IP-address of the end-user
+	 * @param string $authorizeonly
+	 * @param string $templatedata
+	 *
+	 * @param string $successurl The URL to which the end-user should be
+	 *		redirected after a successful deposit. Do not put any logic on that
+	 *		page since it's not guaranteed that the end-user will in fact visit
+	 *		it.
+	 *
+	 * @param string $method
+	 *
+	 * @param string $lastname The end-user's lastname. Useful for some banks
+	 *		for identifying transactions.
+	 *
+	 * @param string $firstname The end-user's firstname. Useful for some banks
+	 *		for identifying transactions.
+	 *
+	 * @param string $urltarget The html target/framename of the SuccessURL.
+	 *		Only _top, _self and _parent are suported.
+	 *
+	 * @param string $locale The end-users localization preference in the
+	 *		format [language[_territory]]. Language is the ISO 639-1 code and
+	 *		territory the ISO 3166-1-alpha-2 code
+	 *
+	 * @param float $amount The amount to deposit with exactly two decimals in
+	 *		the currency specified by Currency. Do not use this attribute in
+	 *		combination with SuggestedMinAmount or SuggestedMaxAmount. Only
+	 *		digits. Use dot (.) as decimal separator.
+	 *
+	 * @param string $currency The currency of the end-user's account in the
+	 *		merchant's system.
+	 *
+	 * @param string $templateurl The URL to your template page for the
+	 *		checkout process
+	 *
+	 * @param string $displaycurrency
+	 *
+	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 *		order. This is a parameter available when using test.trustly.com
+	 *		and can be used for manually delivering notifications to your local
+	 *		system during development. Intead you can get you notifications on
+	 *		https://test.trustly.com/notifications.html
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function p2p($notificationurl, $enduserid, $messageid, $ip,
 			$authorizeonly=NULL, $templatedata=NULL, $successurl=NULL,
 			$method=NULL, $lastname=NULL, $firstname=NULL, $urltarget=NULL,
@@ -394,6 +922,26 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+
+	/**
+	 * Call the Capture API Method.
+	 *
+	 * Captures a previously completed Deposit where
+	 * Deposit.Attributes.AuthorizeOnly was set to 1
+	 *
+	 * @see https://trustly.com/en/developer/api#/capture
+	 *
+	 * @param integer $orderid The OrderID of the deposit to capture
+	 *
+	 * @param integer $amount The amount to capture with exactly two decimals.
+	 *		Only digits. Use dot (.) as decimal separator. The amount must be
+	 *		less than or equal to the authorized amount. If not specified, the
+	 *		authorized amount will be captured.
+	 *
+	 * @param integer $currency The currency of the amount
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function capture($orderid, $amount, $currency) {
 
 			$data = array(
@@ -409,6 +957,18 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+
+	/**
+	 * Call the Void API Method.
+	 *
+	 * Voids a previously completed Deposit where Deposit.Attributes.AuthorizeOnly was set to 1.
+	 *
+	 * @see https://trustly.com/en/developer/api#/void
+	 *
+	 * @param integer $orderid The OrderID of the deposit to void
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
 	public function void($orderid) {
 
 			$data = array(
@@ -422,8 +982,13 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+	/**
+	 * Basic communication test to the API.
+	 *
+	 * @return Trustly_Data_JSONRPCResponse Response from the API
+	 */
 	public function hello() {
-			# The hello call is not signed, use an unsigned API to do the request and then void it
+		/* The hello call is not signed, use an unsigned API to do the request and then void it */
 		$api = new Trustly_Api_Unsigned($this->api_username, $this->api_password, $this->api_host, $this->api_port, $this->api_is_https);
 		return $api->hello();
 	}

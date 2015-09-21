@@ -1,6 +1,12 @@
 <?php
 /**
- * The MIT License (MIT)
+ * Trustly_Api_Unsigned class.
+ *
+ * @license https://opensource.org/licenses/MIT
+ * @copyright Copyright (c) 2014 Trustly Group AB
+ */
+
+/* The MIT License (MIT)
  *
  * Copyright (c) 2014 Trustly Group AB
  *
@@ -23,15 +29,49 @@
  * THE SOFTWARE.
  */
 
+
+/**
+ * Communication class for communicating with the Trustly signed API. The
+ * unsigned API is used for communication with the backoffice and clients among
+ * other things.
+ */
 class Trustly_Api_Unsigned extends Trustly_Api {
-	/* Login criterias when using the unsigned API. Only used by the
-	 * newSessionCookie() call which is called automatically before the
-	 * first call */
-	var $api_username = NULL;
-	var $api_password = NULL;
+	/**
+	 * Login username when using the API. Used only in the first API call to
+	 * newSessionCookie after which the $session_uuid is used instead.
+	 * @var string
+	 */
+	private $api_username = NULL;
+	/**
+	 * Login password when using the API. Used only in the first API call to
+	 * newSessionCookie after which the $session_uuid is used instead.
+	 * @var string
+	 */
+	private $api_password = NULL;
+	/**
+	 * Session UUID used for authenticating calls.
+	 * @var string
+	 */
+	private $session_uuid = NULL;
 
-	var $session_uuid = NULL;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $username Username for the processing account used at Trustly.
+	 *
+	 * @param string $password Password for the processing account used at Trustly.
+	 *
+	 * @param string $host API host used for communication. Fully qualified
+	 *		hostname. When integrating with our public API this is typically
+	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *
+	 * @param integer $port Port on API host used for communicaiton. Normally
+	 *		443 for https, or 80 for http.
+	 *
+	 * @param bool $is_https Indicator wether the port on the API host expects
+	 *		https.
+	 **/
 	public function __construct($username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
 		parent::__construct($host, $port, $is_https);
 
@@ -39,16 +79,52 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		$this->api_password = $password;
 	}
 
-	public function urlPath($request=NULL) {
+
+	/**
+	 * Returns the PATH portion of the URL for communicating with the API. The
+	 * API endpoint will typically differ with the type of te API we are
+	 * communicating with.
+	 *
+	 * See specific class implementing the call for more information.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
+	 *
+	 * @return string The URL path
+	 */
+	protected function urlPath($request=NULL) {
 		return '/api/Legacy';
 	}
 
-	public function handleResponse($request, $body, $curl) {
+
+	/**
+	 * Callback for handling the response from an API call. Takes
+	 * the input data and create an instance of a response object.
+	 *
+	 * @throws Trustly_DataException If the incoming message fails the sanity
+	 *		checks.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
+	 *
+	 * @param string $body The body recieved in response to the request
+	 *
+	 * @param resource $curl the CURL resource used for the call
+	 *
+	 * @return Trustly_Data_JSONRPCResponse
+	 */
+	protected function handleResponse($request, $body, $curl) {
 			/* No signature here, just build the response object */
 		$response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		return new Trustly_Data_JSONRPCResponse($body, $response_code);
 	}
 
+
+	/**
+	 * Callback for populating the outgoing request with the criterias needed
+	 * for communication.
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $request Request to be used in the outgoing
+	 *		call
+	 */
 	public function insertCredentials($request) {
 		$request->setParam('Username', $this->api_username);
 		if(isset($this->session_uuid)) {
@@ -59,14 +135,27 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		return TRUE;
 	}
 
+
+	/**
+	 * Utility function for revealing wether or not we have a valid session UUID set
+	 *
+	 * @return boolean indicating wether we have a sessionuuid
+	 */
 	protected function hasSessionUUID() {
 		return (bool)isset($this->session_uuid);
 	}
 
-	/* Call NewSessionCookie to obtain a session cookie we can use for the rest
+
+	/**
+	 * Call NewSessionCookie to obtain a session cookie we can use for the rest
 	 * of our calls. This is automatically called when doing a call if we do
 	 * not have a session. Call manually if needed at session timeout etc.
-	 * */
+	 *
+	 * @throws Trustly_AuthentificationException If the supplied credentials
+	 *		cannot be used for communicating with the API.
+	 *
+	 * @return Trustly_Data_JSONRPCResponse Response from the API.
+	 */
 	public function newSessionCookie() {
 		$this->session_uuid = NULL;
 
@@ -86,8 +175,36 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		return $response;
 	}
 
-	/* Utility wrapper around a call() to GetViewStable to simply getting data
-	 * from a view. */
+
+	/**
+	 * Utility wrapper around a call() to GetViewStable to simply getting data
+	 * from a view.
+	 *
+	 * @param string $viewname Name of view
+	 *
+	 * @param string $dateorder 'OLDER'|'NEVER' or NULL
+	 *
+	 * @param string $datestamp Order used in relation with $dateorder
+	 *
+	 * @param array $filterkeys Array of arrays of filters to apply to the data.
+	 *		Arrays in the array consists of 1. Key name, 2. Key value, 3.
+	 *		Operator, 4. Key value 2. Operator is one of 'NOT', 'BETWEEN' (in
+	 *		which case Key value 2 must be set), 'LIKE', 'DECRYPTED', 'IN'
+	 *		,'NOT IN' or 'NULL'
+	 *
+	 * @param integer $limit Limit the number of records to fetch
+	 *
+	 * @param integer $offset Skip these many records in the start of the request
+	 *
+	 * @param string $params Parameters for the view
+	 *
+	 * @param string $sortby Column to sort by
+	 *
+	 * @param string $sortorder Sort order ASC or DESC
+	 *
+	 * @return Trustly_Data_JSONRPCResponse Response from the API.
+	 *
+	 */
 	public function getViewStable($viewname, $dateorder=NULL, $datestamp=NULL,
 		$filterkeys=NULL, $limit=100, $offset=0, $params=NULL, $sortby=NULL,
 		$sortorder=NULL) {
@@ -105,11 +222,20 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		));
 	}
 
-	/* Issue an unsigned API call. As the unsigned API contains a huge array of
+
+	/**
+	 * Issue an unsigned API call. As the unsigned API contains a huge array of
 	 * functions we will use the call() method directly for the majority of
 	 * operations. The data in params will be matched into the parameters of
 	 * the outgoing call. Take care when supplying the arguments for the call
-	 * so they match the function prototype properly. */
+	 * so they match the function prototype properly.
+	 *
+	 * @param string $method API method to call
+	 *
+	 * @param Trustly_Data_JSONRPCRequest $params Outgoing call params
+	 *
+	 * @return Trustly_Data_JSONRPCResponse Response from the API.
+	 */
 	public function call($method, $params=NULL)  {
 		$request = new Trustly_Data_JSONRPCRequest($method);
 
@@ -126,6 +252,12 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		return parent::call($request);
 	}
 
+
+	/**
+	 * Basic communication test to the API.
+	 *
+	 * @return Trustly_Data_JSONRPCResponse Response from the API
+	 */
 	public function hello() {
 		$request = new Trustly_Data_JSONRPCRequest('Hello');
 			/* Call parent directly here we never want to get a new session
