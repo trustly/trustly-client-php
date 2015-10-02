@@ -110,9 +110,13 @@ abstract class Trustly_Api {
 	 * @return boolean Indicating success or failure of loading the key for the current host.
 	 */
 	public function loadTrustlyPublicKey() {
-		$filename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $this->api_host);
+		$filename = sprintf('%s/keys/%s:%d.public.pem', realpath(dirname(__FILE__)), $this->api_host, $this->api_port);
+		$altfilename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $this->api_host);
 
 		$cert = @file_get_contents($filename);
+		if($cert === FALSE) {
+			$cert = @file_get_contents($altfilename);
+		}
 		if($cert !== FALSE) {
 			$this->trustly_publickey = openssl_pkey_get_public($cert);
 			if(!$this->trustly_publickey) {
