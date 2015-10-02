@@ -44,10 +44,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $merchant_privatekeyfile File containing the merchant
-	 *		private RSA key, used for signing outgoing requests. You can leave
-	 *		this blank here and instead use the useMerchantPrivateKey()
-	 *		function to set a key if the key is not obtained from a file.
+	 * @param string $merchant_privatekey Either a filename pointing to a File containing the merchant
+	 *		private RSA key or the key itself in string form as read from the
+	 *		file. The key is used for signing outgoing requests. You can leave
+	 *		this blank here and instead use the
+	 *		useMerchantPrivateKey()/loadMerchantPrivateKey() function to set a
+	 *		key later, but it must be defined before issuing any API calls.
 	 *
 	 * @param string $username Username for the processing account used at Trustly.
 	 *
@@ -63,16 +65,21 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 */
-	public function __construct($merchant_privatekeyfile, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($merchant_privatekey, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
 
 		parent::__construct($host, $port, $is_https);
 
 		$this->api_username = $username;
 		$this->api_password  = $password;
-		if($merchant_privatekeyfile != NULL) {
-			if($this->loadMerchantPrivateKey($merchant_privatekeyfile) === FALSE) {
-
-				throw new InvalidArgumentException('Cannot load merchant private key file ' . $merchant_privatekeyfile);
+		if($merchant_privatekey != NULL) {
+			if(strpos($merchant_privatekey, "\n") !== FALSE) {
+				if($this->useMerchantPrivateKey($merchant_privatekey) === FALSE) {
+					throw new InvalidArgumentException('Cannot use merchant private key');
+				}
+			} else {
+				if($this->loadMerchantPrivateKey($merchant_privatekey) === FALSE) {
+					throw new InvalidArgumentException('Cannot load merchant private key file ' . $merchant_privatekey);
+				}
 			}
 		}
 	}
