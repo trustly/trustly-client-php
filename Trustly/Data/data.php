@@ -45,7 +45,7 @@ class Trustly_Data {
 	 * Constructur.
 	 */
 	public function __construct() {
-			$this->payload = array();
+		$this->payload = array();
 	}
 
 
