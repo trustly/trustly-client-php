@@ -846,42 +846,68 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $messageid Your unique ID for the deposit.
 	 *
-	 * @param string $ip The IP-address of the end-user
-	 * @param string $authorizeonly
-	 * @param string $templatedata
+	 * @param string $locale The end-users localization preference in the
+	 *		format [language[_territory]]. Language is the ISO 639-1 code and
+	 *		territory the ISO 3166-1-alpha-2 code.
+	 *
+	 * @param float $amount with exactly two decimals in the currency specified
+	 *		by Currency. Do not use this attribute in combination with
+	 *		SuggestedMinAmount or SuggestedMaxAmount. Only digits. Use dot (.)
+	 *		as decimal separator.
+	 *
+	 * @param string $currency The currency of the end-user's account in the
+	 *		merchant's system.
+	 *
+	 * @param string $country The ISO 3166-1-alpha-2 code of the end-user's
+	 *		country. This will be used for preselecting the correct country for
+	 *		the end-user in the iframe.
+	 *
+	 * @param string $mobilephone The mobile phonenumber to the end-user in
+	 *		international format. This is used for KYC and AML routines.
+	 *
+	 * @param string $firstname The end-user's firstname. Useful for some banks
+	 *		for identifying transactions.
+	 *
+	 * @param string $lastname The end-user's lastname. Useful for some banks
+	 *		for identifying transactions.
+	 *
+	 * @param string $nationalidentificationnumber The end-user's social
+	 *		security number / personal number / birth number / etc. Useful for
+	 *		some banks for identifying transactions and KYC/AML.
+	 *
+	 * @param string $shopperstatement The text to show on the end-user's bank
+	 *		statement.
+	 *
+	 * @param string $ip The IP-address of the end-user.
 	 *
 	 * @param string $successurl The URL to which the end-user should be
 	 *		redirected after a successful deposit. Do not put any logic on that
 	 *		page since it's not guaranteed that the end-user will in fact visit
 	 *		it.
 	 *
-	 * @param string $method
+	 * @param string $failurl The URL to which the end-user should be
+	 *		redirected after a failed deposit. Do not put any logic on that
+	 *		page since it's not guaranteed that the end-user will in fact visit
+	 *		it.
 	 *
-	 * @param string $lastname The end-user's lastname. Useful for some banks
-	 *		for identifying transactions.
-	 *
-	 * @param string $firstname The end-user's firstname. Useful for some banks
-	 *		for identifying transactions.
+	 * @param string $templateurl The URL to your template page for the
+	 *		checkout process.
 	 *
 	 * @param string $urltarget The html target/framename of the SuccessURL.
 	 *		Only _top, _self and _parent are suported.
 	 *
-	 * @param string $locale The end-users localization preference in the
-	 *		format [language[_territory]]. Language is the ISO 639-1 code and
-	 *		territory the ISO 3166-1-alpha-2 code
-	 *
-	 * @param float $amount The amount to deposit with exactly two decimals in
-	 *		the currency specified by Currency. Do not use this attribute in
-	 *		combination with SuggestedMinAmount or SuggestedMaxAmount. Only
+	 * @param float $suggestedminamount The minimum amount the end-user is
+	 *		allowed to deposit in the currency specified by Currency. Only
 	 *		digits. Use dot (.) as decimal separator.
 	 *
-	 * @param string $currency The currency of the end-user's account in the
-	 *		merchant's system.
+	 * @param float $suggestedmaxamount The maximum amount the end-user is
+	 *		allowed to deposit in the currency specified by Currency. Only
+	 *		digits. Use dot (.) as decimal separator.
 	 *
-	 * @param string $templateurl The URL to your template page for the
-	 *		checkout process
-	 *
-	 * @param string $displaycurrency
+	 * @param string $integrationmodule Version information for your
+	 *		integration module. This is for informational purposes only and can
+	 *		be useful when troubleshooting problems. Should contain enough
+	 *		version information to be useful.
 	 *
 	 * @param boolean $holdnotifications Do not deliver notifications for this
 	 *		order. This is a parameter available when using test.trustly.com
@@ -891,11 +917,14 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
-	public function p2p($notificationurl, $enduserid, $messageid, $ip,
-			$authorizeonly=NULL, $templatedata=NULL, $successurl=NULL,
-			$method=NULL, $lastname=NULL, $firstname=NULL, $urltarget=NULL,
-			$locale=NULL, $amount=NULL, $currency=NULL, $templateurl=NULL,
-			$displaycurrency=NULL, $holdnotifications=NULL) {
+	public function p2p($notificationurl,$enduserid, $messageid,
+		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
+		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
+		$nationalidentificationnumber=NULL, $shopperstatement=NULL,
+		$ip=NULL, $successurl=NULL, $failurl=NULL, $templateurl=NULL,
+		$urltarget=NULL, $suggestedminamount=NULL, $suggestedmaxamount=NULL,
+		$integrationmodule=NULL, $holdnotifications=NULL,
+		$authorizeonly=NULL, $templatedata=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -903,22 +932,27 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'MessageID' => $messageid
 			);
 
-			$authorizeonly = $this->apiBool($authorizeonly);
-
 			$attributes = array(
-				'AuthorizeOnly' => $authorizeonly,
+				'AuthorizeOnly' => $this->apiBool($authorizeonly),
 				'TemplateData' => $templatedata,
-				'SuccessURL' => $successurl,
-				'Method' => $method,
-				'Lastname' => $lastname,
-				'Firstname' => $firstname,
-				'URLTarget' => $urltarget,
+
 				'Locale' => $locale,
 				'Amount' => $amount,
-				'TemplateURL' => $templateurl,
 				'Currency' => $currency,
-				'DisplayCurrency' => $displaycurrency,
-				'IP' => $ip
+				'Country' => $country,
+				'MobilePhone' => $mobilephone,
+				'Firstname' => $firstname,
+				'Lastname' => $lastname,
+				'NationalIdentificationNumber' => $nationalidentificationnumber,
+				'ShopperStatement' => $shopperstatement,
+				'IP' => $ip,
+				'SuccessURL' => $successurl,
+				'FailURL' => $failurl,
+				'TemplateURL' => $templateurl,
+				'URLTarget' => $urltarget,
+				'SuggestedMinAmount' => $suggestedminamount,
+				'SuggestedMaxAmount' => $suggestedmaxamount,
+				'IntegrationModule' => $integrationmodule
 			);
 
 			if(isset($holdnotifications)) {
