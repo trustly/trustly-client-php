@@ -86,12 +86,10 @@ abstract class Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 */
-	public function __construct($host, $port, $is_https) {
-		$this->api_host = $host;
-		$this->api_port = $port;
+	public function __construct($host='trustly.com', $port=443, $is_https=TRUE) {
 		$this->api_is_https = $is_https;
 
-		if($this->loadTrustlyPublicKey() === FALSE) {
+		if($this->loadTrustlyPublicKey($host, $port, $is_https) === FALSE) {
 			$error = openssl_error_string();
 			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
 		}
@@ -107,11 +105,18 @@ abstract class Trustly_Api {
 	 * trustly. The keys are distributed as a part of the source code package
 	 * and should be named to match the host under $PWD/HOSTNAME.public.pem
 	 *
+	 * @param string $host API host used for communication. Fully qualified
+	 *		hostname. When integrating with our public API this is typically
+	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *
+	 * @param integer $port Port on API host used for communicaiton. Normally
+	 *		443 for https, or 80 for http.
+	 *
 	 * @return boolean Indicating success or failure of loading the key for the current host.
 	 */
-	public function loadTrustlyPublicKey() {
-		$filename = sprintf('%s/keys/%s:%d.public.pem', realpath(dirname(__FILE__)), $this->api_host, $this->api_port);
-		$altfilename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $this->api_host);
+	public function loadTrustlyPublicKey($host, $port) {
+		$filename = sprintf('%s/keys/%s:%d.public.pem', realpath(dirname(__FILE__)), $host, $port);
+		$altfilename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $host);
 
 		$cert = @file_get_contents($filename);
 		if($cert === FALSE) {
@@ -122,6 +127,8 @@ abstract class Trustly_Api {
 			if(!$this->trustly_publickey) {
 				return FALSE;
 			}
+			$this->api_host = $host;
+			$this->api_port = $port;
 			return TRUE;
 		}
 		return FALSE;
@@ -248,16 +255,19 @@ abstract class Trustly_Api {
 	 *		https. NULL means do not change.
 	 */
 	public function setHost($host=NULL, $port=NULL, $is_https=NULL) {
-		if(isset($host)) {
-			$this->api_host = $host;
-			if($this->loadTrustlyPublicKey() === FALSE) {
-				$error = openssl_error_string();
-				throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
-			}
+		if(!isset($host)) {
+			$host = $this->api_host;
 		}
-		if(isset($port)) {
-			$this->api_port = $port;
+
+		if(!isset($port)) {
+			$port = $this->api_port;
 		}
+
+		if($this->loadTrustlyPublicKey($host, $port) === FALSE) {
+			$error = openssl_error_string();
+			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
+		}
+
 		if(isset($is_https)) {
 			$this->api_is_https = $is_https;
 		}
