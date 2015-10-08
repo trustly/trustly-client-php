@@ -186,12 +186,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $body The body recieved in response to the request
 	 *
-	 * @param resource $curl the CURL resource used for the call
+	 * @param integer $response_code the HTTP response code for the call
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
-	protected function handleResponse($request, $body, $curl) {
-		$response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+	protected function handleResponse($request, $body, $response_code) {
 		$response = new Trustly_Data_JSONRPCSignedResponse($body, $response_code);
 
 		if($this->verifyTrustlySignedResponse($response) !== TRUE) {

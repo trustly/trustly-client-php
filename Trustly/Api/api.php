@@ -280,39 +280,100 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $postdata The (optional) data to post.
 	 *
-	 * @return resource Curl handle.
+	 * @return Array($body, $response_code)
 	 */
-	public function connect($url=NULL, $postdata=NULL) {
+	public function post($url=NULL, $postdata=NULL) {
 		/* Do note that that if you are going to POST JSON you need to set the
 		 * content-type of the transfer AFTER you set the postfields, this is done
 		 * if you provide the postdata here, if not, take care to do it or the
 		 * content-type will be wrong */
-		$cu = curl_init();
-		curl_setopt($cu, CURLOPT_FAILONERROR, FALSE);
-		curl_setopt($cu, CURLOPT_FOLLOWLOCATION, FALSE);
-		curl_setopt($cu, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($cu, CURLOPT_CONNECTTIMEOUT, 5);
-		curl_setopt($cu, CURLOPT_TIMEOUT, 30);
-		curl_setopt($cu, CURLOPT_PORT, $this->api_port);
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_FAILONERROR, FALSE);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, FALSE);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_PORT, $this->api_port);
 
 		if($this->api_is_https) {
 			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
-				curl_setopt($cu, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 			}
-			curl_setopt($cu, CURLOPT_SSL_VERIFYHOST, 2);
-			curl_setopt($cu, CURLOPT_SSL_VERIFYPEER, TRUE);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
 		} else {
 			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
-				curl_setopt($cu, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
 			}
 		}
 		if(isset($postdata)) {
-			curl_setopt($cu, CURLOPT_POSTFIELDS, $postdata);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
 		}
-		curl_setopt($cu, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
-		curl_setopt($cu, CURLOPT_CUSTOMREQUEST, 'POST');
-		curl_setopt($cu, CURLOPT_URL, $url);
-		return $cu;
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
+		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+		curl_setopt($curl, CURLOPT_URL, $url);
+
+		$body = curl_exec($curl);
+		if($body === FALSE) {
+			$error = curl_error($curl);
+			if($error === NULL) {
+				$error = 'Failed to connect to the Trusly API';
+			}
+			throw new Trustly_ConnectionException($error);
+		}
+
+		if($this->api_is_https) {
+			$ssl_result = curl_getinfo($curl, CURLINFO_SSL_VERIFYRESULT);
+			if($ssl_result !== 0) {
+
+				$curl_x509_errors = array(
+					'0' => 'X509_V_OK',
+					'2' => 'X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT',
+					'3' => 'X509_V_ERR_UNABLE_TO_GET_CRL',
+					'4' => 'X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE',
+					'5' => 'X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE',
+					'6' => 'X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY',
+					'7' => 'X509_V_ERR_CERT_SIGNATURE_FAILURE',
+					'8' => 'X509_V_ERR_CRL_SIGNATURE_FAILURE',
+					'9' => 'X509_V_ERR_CERT_NOT_YET_VALID',
+					'10' => 'X509_V_ERR_CERT_HAS_EXPIRED',
+					'11' => 'X509_V_ERR_CRL_NOT_YET_VALID',
+					'12' => 'X509_V_ERR_CRL_HAS_EXPIRED',
+					'13' => 'X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD',
+					'14' => 'X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD',
+					'15' => 'X509_V_ERR_ERROR_IN_CRL_LAST_UPDATE_FIELD',
+					'16' => 'X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD',
+					'17' => 'X509_V_ERR_OUT_OF_MEM',
+					'18' => 'X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT',
+					'19' => 'X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN',
+					'20' => 'X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY',
+					'21' => 'X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE',
+					'22' => 'X509_V_ERR_CERT_CHAIN_TOO_LONG',
+					'23' => 'X509_V_ERR_CERT_REVOKED',
+					'24' => 'X509_V_ERR_INVALID_CA',
+					'25' => 'X509_V_ERR_PATH_LENGTH_EXCEEDED',
+					'26' => 'X509_V_ERR_INVALID_PURPOSE',
+					'27' => 'X509_V_ERR_CERT_UNTRUSTED',
+					'28' => 'X509_V_ERR_CERT_REJECTED',
+					'29' => 'X509_V_ERR_SUBJECT_ISSUER_MISMATCH',
+					'30' => 'X509_V_ERR_AKID_SKID_MISMATCH',
+					'31' => 'X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH',
+					'32' => 'X509_V_ERR_KEYUSAGE_NO_CERTSIGN',
+					'50' => 'X509_V_ERR_APPLICATION_VERIFICATION'
+				);
+
+				$ssl_error_str = null;
+				if(isset($curl_x509_errors[$ssl_result])) {
+					$ssl_error_str = $curl_x509_errors[$ssl_result];
+				}
+
+				$error = 'Failed to connect to the Trusly API. SSL Verification error #' . $ssl_result . ($ssl_error_str?': ' . $ssl_error_str:'');
+				throw new Trustly_ConnectionException($error);
+			}
+		}
+		$response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+		return array($body, $response_code);
 	}
 
 	/**
@@ -415,68 +476,9 @@ abstract class Trustly_Api {
 		$jsonstr = $request->json();
 
 		$url = $this->url($request);
-		$curl = $this->connect($url, $jsonstr);
+		list($body, $response_code) = $this->post($url, $jsonstr);
 
-		$body = curl_exec($curl);
-		if($body === FALSE) {
-			$error = curl_error($curl);
-			if($error === NULL) {
-				$error = 'Failed to connect to the Trusly API';
-			}
-			throw new Trustly_ConnectionException($error);
-		}
-
-		if($this->api_is_https) {
-			$ssl_result = curl_getinfo($curl, CURLINFO_SSL_VERIFYRESULT);
-			if($ssl_result !== 0) {
-
-				$curl_x509_errors = array(
-					'0' => 'X509_V_OK',
-					'2' => 'X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT',
-					'3' => 'X509_V_ERR_UNABLE_TO_GET_CRL',
-					'4' => 'X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE',
-					'5' => 'X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE',
-					'6' => 'X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY',
-					'7' => 'X509_V_ERR_CERT_SIGNATURE_FAILURE',
-					'8' => 'X509_V_ERR_CRL_SIGNATURE_FAILURE',
-					'9' => 'X509_V_ERR_CERT_NOT_YET_VALID',
-					'10' => 'X509_V_ERR_CERT_HAS_EXPIRED',
-					'11' => 'X509_V_ERR_CRL_NOT_YET_VALID',
-					'12' => 'X509_V_ERR_CRL_HAS_EXPIRED',
-					'13' => 'X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD',
-					'14' => 'X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD',
-					'15' => 'X509_V_ERR_ERROR_IN_CRL_LAST_UPDATE_FIELD',
-					'16' => 'X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD',
-					'17' => 'X509_V_ERR_OUT_OF_MEM',
-					'18' => 'X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT',
-					'19' => 'X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN',
-					'20' => 'X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY',
-					'21' => 'X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE',
-					'22' => 'X509_V_ERR_CERT_CHAIN_TOO_LONG',
-					'23' => 'X509_V_ERR_CERT_REVOKED',
-					'24' => 'X509_V_ERR_INVALID_CA',
-					'25' => 'X509_V_ERR_PATH_LENGTH_EXCEEDED',
-					'26' => 'X509_V_ERR_INVALID_PURPOSE',
-					'27' => 'X509_V_ERR_CERT_UNTRUSTED',
-					'28' => 'X509_V_ERR_CERT_REJECTED',
-					'29' => 'X509_V_ERR_SUBJECT_ISSUER_MISMATCH',
-					'30' => 'X509_V_ERR_AKID_SKID_MISMATCH',
-					'31' => 'X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH',
-					'32' => 'X509_V_ERR_KEYUSAGE_NO_CERTSIGN',
-					'50' => 'X509_V_ERR_APPLICATION_VERIFICATION'
-				);
-
-				$ssl_error_str = null;
-				if(isset($curl_x509_errors[$ssl_result])) {
-					$ssl_error_str = $curl_x509_errors[$ssl_result];
-				}
-
-				$error = 'Failed to connect to the Trusly API. SSL Verification error #' . $ssl_result . ($ssl_error_str?': ' . $ssl_error_str:'');
-				throw new Trustly_ConnectionException($error);
-			}
-		}
-		$result = $this->handleResponse($request, $body, $curl);
-		curl_close($curl);
+		$result = $this->handleResponse($request, $body, $response_code);
 		return $result;
 	}
 
@@ -522,9 +524,9 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $body The body recieved in response to the request
 	 *
-	 * @param resource $curl the CURL resource used for the call
+	 * @param integer $response_code the HTTP response code for the call
 	 */
-	abstract protected function handleResponse($request, $body, $curl);
+	abstract protected function handleResponse($request, $body, $response_code);
 
 	/**
 	 * Callback for populating the outgoing request with the criterias needed

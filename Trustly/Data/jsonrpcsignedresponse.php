@@ -39,11 +39,9 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	 * Constructor.
 	 *
 	 * @param string $response_body RAW response from HTTP call
-	 *
-	 * @param resource $curl cURL resource handle from the call
 	 */
-	public function __construct($response_body, $curl) {
-		parent::__construct($response_body, $curl);
+	public function __construct($response_body) {
+		parent::__construct($response_body);
 
 			/* A signed JSON RPC Error result basically looks like this:
 			 * {

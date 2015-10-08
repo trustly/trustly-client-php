@@ -40,11 +40,9 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 	 * Constructor.
 	 *
 	 * @param string $response_body RAW response body from the API
-	 *
-	 * @param resource $curl cURL resource handle used for the request
 	 */
-	public function __construct($response_body, $curl) {
-		parent::__construct($response_body, $curl);
+	public function __construct($response_body) {
+		parent::__construct($response_body);
 
 		$version = (string)$this->get('version');
 		if($version !== '1.1') {
