@@ -65,7 +65,7 @@ abstract class Trustly_Api {
 	 *
 	 * @var array Last API call in data form.
 	 */
-	protected $last_request = NULL;
+	public $last_request = NULL;
 
 	/**
 	 * API Constructor
