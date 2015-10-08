@@ -95,6 +95,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 */
 	public function loadMerchantPrivateKey($filename) {
 		$cert = @file_get_contents($filename);
+		if($cert === FALSE) {
+			return FALSE;
+		}
 		return $this->useMerchantPrivateKey($cert);
 	}
 
