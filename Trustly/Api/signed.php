@@ -44,10 +44,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $merchant_privatekey Either a filename pointing to a File containing the merchant
-	 *		private RSA key or the key itself in string form as read from the
-	 *		file. The key is used for signing outgoing requests. You can leave
-	 *		this blank here and instead use the
+	 * @param string $merchant_privatekey Either a filename pointing to a File
+	 *		containing the merchant private RSA key or the key itself in string
+	 *		form as read from the file. The key is used for signing outgoing
+	 *		requests. You can leave this blank here and instead use the
 	 *		useMerchantPrivateKey()/loadMerchantPrivateKey() function to set a
 	 *		key later, but it must be defined before issuing any API calls.
 	 *
@@ -402,7 +402,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		order. This is a parameter available when using test.trustly.com
 	 *		and can be used for manually delivering notifications to your local
 	 *		system during development. Intead you can get you notifications on
-	 *		https://test.trustly.com/notifications.html
+	 *		https://test.trustly.com/notifications.html . Never set this in the
+	 *		live environment.
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
