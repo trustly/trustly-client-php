@@ -476,7 +476,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'ShippingAddress' => $shippingaddress,
 			);
 
-			if(isset($holdnotifications)) {
+			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
 			}
 
