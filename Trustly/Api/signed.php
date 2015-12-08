@@ -405,6 +405,30 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		https://test.trustly.com/notifications.html . Never set this in the
 	 *		live environment.
 	 *
+	 * @param string $email The email address of the end user.
+	 *
+	 * @param string $shippingaddresscountry The ISO 3166-1-alpha-2 code of the
+	 *		shipping address country.
+	 *		Shipping address should be provided for merchants sending
+	 *		physical goods to customers. Use either these separated fields or
+	 *		use the $shippingaddress field below if you do not keep separated
+	 *		address fields.
+	 *
+	 * @param string $shippingaddresspostalcode The postal code of the shipping
+	 *		address.
+	 *
+	 * @param string $shippingaddresscity The city of the shipping address.
+	 *
+	 * @param string $shippingaddressline1 The first line of the shipping
+	 *		address field.
+	 *
+	 * @param string $shippingaddressline2 The second line of the shipping
+	 *		address information.
+	 *
+	 * @param string $shippingaddress The full shipping address. Use either the
+	 *		separated fields or use this combined field if you do not keep
+	 *		separated address fields.
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
@@ -413,7 +437,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$nationalidentificationnumber=NULL, $shopperstatement=NULL,
 		$ip=NULL, $successurl=NULL, $failurl=NULL, $templateurl=NULL,
 		$urltarget=NULL, $suggestedminamount=NULL, $suggestedmaxamount=NULL,
-		$integrationmodule=NULL, $holdnotifications=NULL) {
+		$integrationmodule=NULL, $holdnotifications=NULL,
+		$email=NULL, $shippingaddresscountry=NULL,
+		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
+		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
+		$shippingaddress=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -438,7 +466,14 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'URLTarget' => $urltarget,
 				'SuggestedMinAmount' => $suggestedminamount,
 				'SuggestedMaxAmount' => $suggestedmaxamount,
-				'IntegrationModule' => $integrationmodule
+				'IntegrationModule' => $integrationmodule,
+				'Email' => $email,
+				'ShippingAddressCountry' => $shippingaddresscountry,
+				'ShippingAddressPostalcode' => $shippingaddresspostalcode,
+				'ShippingAddressCity' => $shippingaddresscity,
+				'ShippingAddressLine1' => $shippingaddressline1,
+				'ShippingAddressLine2' => $shippingaddressline2,
+				'ShippingAddress' => $shippingaddress,
 			);
 
 			if(isset($holdnotifications)) {
@@ -541,13 +576,18 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		system during development. Intead you can get you notifications on
 	 *		https://test.trustly.com/notifications.html
 	 *
+	 * @param string $email The email address of the end user.
+	 *
+	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function withdraw($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $currency=NULL, $country=NULL,
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
 		$nationalidentificationnumber=NULL, $clearinghouse=NULL,
-		$banknumber=NULL, $accountnumber=NULL, $holdnotifications=NULL) {
+		$banknumber=NULL, $accountnumber=NULL, $holdnotifications=NULL,
+		$email=NULL, $dateofbirth=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -567,6 +607,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'ClearingHouse' => $clearinghouse,
 				'BankNumber' => $banknumber,
 				'AccountNumber' => $accountnumber,
+				'Email' => $email,
+				'DateOfBirth' => $dateofbirth,
 			);
 
 			if(isset($holdnotifications)) {
@@ -672,11 +714,16 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		system during development. Intead you can get you notifications on
 	 *		https://test.trustly.com/notifications.html
 	 *
+	 * @param string $email The email address of the end user.
+	 *
+	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
-		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, $holdnotifications=NULL) {
+		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, $holdnotifications=NULL,
+		$email=NULL, $dateofbirth=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -693,6 +740,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'MobilePhone' => $mobilephone,
 				'Firstname' => $firstname,
 				'Lastname' => $lastname,
+				'Email' => $email,
+				'DateOfBirth' => $dateofbirth,
 			);
 
 			if(isset($holdnotifications)) {
@@ -737,14 +786,37 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		security number / personal number / birth number / etc. Useful for
 	 *		some banks for identifying transactions and KYC/AML.
 	 *
+	 * @param string $addresscountry The ISO 3166-1-alpha-2 code of the
+	 *		account holders country.
+	 *		Use either these separated fields or use the $address field below
+	 *		if you do not keep separated address fields.
+	 *
+	 * @param string $addresspostalcode The postal code of the account holder
+	 *		address.
+	 *
+	 * @param string $addresscity The city of the account holder address.
+	 *
+	 * @param string $addressline1 The first line of the account holder
+	 *		address field.
+	 *
+	 * @param string $addressline2 The second line of the account holder
+	 *		address information.
+	 *
 	 * @param string $address The account holders address
 	 *
+	 * @param string $email The email address of the end user.
+	 *
+	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function registerAccount($enduserid, $clearinghouse, $banknumber,
 		$accountnumber, $firstname, $lastname, $mobilephone=NULL,
-		$nationalidentificationnumber=NULL, $address=NULL) {
+		$nationalidentificationnumber=NULL, $address=NULL,
+		$email=NULL, $dateofbirth=NULL,
+		$addresscountry=NULL, $addresspostalcode=NULL,
+		$addresscity=NULL, $addressline1=NULL,
+		$addressline2=NULL, $address=NULL) {
 
 			$data = array(
 				'EndUserID' => $enduserid,
@@ -758,7 +830,14 @@ class Trustly_Api_Signed extends Trustly_Api {
 			$attributes = array(
 				'MobilePhone' => $mobilephone,
 				'NationalIdentificationNumber' => $nationalidentificationnumber,
-				'Address' => $address
+				'Email' => $email,
+				'DateOfBirth' => $dateofbirth,
+				'AddressCountry' => $addresscountry,
+				'AddressPostalcode' => $addresspostalcode,
+				'AddressCity' => $addresscity,
+				'AddressLine1' => $addressline1,
+				'AddressLine2' => $addressline2,
+				'Address' => $address,
 			);
 
 			$request = new Trustly_Data_JSONRPCRequest('RegisterAccount', $data, $attributes);
