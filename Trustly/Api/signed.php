@@ -580,6 +580,24 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
 	 *
+	 * @param string $addresscountry The ISO 3166-1-alpha-2 code of the
+	 *		account holders country.
+	 *		Use either these separated fields or use the $address field below
+	 *		if you do not keep separated address fields.
+	 *
+	 * @param string $addresspostalcode The postal code of the account holder
+	 *		address.
+	 *
+	 * @param string $addresscity The city of the account holder address.
+	 *
+	 * @param string $addressline1 The first line of the account holder
+	 *		address field.
+	 *
+	 * @param string $addressline2 The second line of the account holder
+	 *		address information.
+	 *
+	 * @param string $address The account holders address
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function withdraw($notificationurl, $enduserid, $messageid,
@@ -587,7 +605,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
 		$nationalidentificationnumber=NULL, $clearinghouse=NULL,
 		$banknumber=NULL, $accountnumber=NULL, $holdnotifications=NULL,
-		$email=NULL, $dateofbirth=NULL) {
+		$email=NULL, $dateofbirth=NULL,
+		$addresscountry=NULL, $addresspostalcode=NULL,
+		$addresscity=NULL, $addressline1=NULL,
+		$addressline2=NULL, $address=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -609,6 +630,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'AccountNumber' => $accountnumber,
 				'Email' => $email,
 				'DateOfBirth' => $dateofbirth,
+				'AddressCountry' => $addresscountry,
+				'AddressPostalcode' => $addresspostalcode,
+				'AddressCity' => $addresscity,
+				'AddressLine1' => $addressline1,
+				'AddressLine2' => $addressline2,
+				'Address' => $address,
 			);
 
 			if(isset($holdnotifications)) {
