@@ -809,6 +809,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string $mobilephone The mobile phonenumber to the account holder
 	 *		in international format. This is used for KYC and AML routines.
 	 *
+	 * @param string $email The email address of the end user.
+	 *
+	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
+	 *
 	 * @param string $nationalidentificationnumber The account holder's social
 	 *		security number / personal number / birth number / etc. Useful for
 	 *		some banks for identifying transactions and KYC/AML.
@@ -830,10 +834,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		address information.
 	 *
 	 * @param string $address The account holders address
-	 *
-	 * @param string $email The email address of the end user.
-	 *
-	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
