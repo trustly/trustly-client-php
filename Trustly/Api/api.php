@@ -173,7 +173,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $signature in the API call
 	 *
-	 * @param string $data in the API call
+	 * @param array $data in the API call
 	 *
 	 * @return boolean Indicating wether or not the host key was used for
 	 *		signing this data.
@@ -209,7 +209,6 @@ abstract class Trustly_Api {
 	 * @return boolean Indicating if the data was indeed properly signed by the
 	 *		API we think we are talking to
 	 */
-
 	public function verifyTrustlySignedResponse($response) {
 		$method = $response->getMethod();
 		$uuid = $response->getUUID();
