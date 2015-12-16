@@ -429,6 +429,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		separated fields or use this combined field if you do not keep
 	 *		separated address fields.
 	 *
+	 * @param string $unchangeablenationalidentificationnumber The supplied
+	 *		$nationalidentificationnumber should be considered read only information
+	 *		and will not be changable by end the enduser. Only valid in Sweden,
+	 *		the $nationalidentification number needs to be well formed.
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
@@ -441,7 +446,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$email=NULL, $shippingaddresscountry=NULL,
 		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
 		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
-		$shippingaddress=NULL) {
+		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -478,6 +483,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 
 			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
+			}
+			if($unchangeablenationalidentificationnumber) {
+				$attributes['UnchangeableNationalIdentificationNumber'] = 1;
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
@@ -745,12 +753,15 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $dateofbirth The ISO 8601 date of birth of the end user.
 	 *
+	 * @param boolean $requestdirectdebitmandate Initiate a direct debit
+	 *		mandate request for the selected account.
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
 		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, $holdnotifications=NULL,
-		$email=NULL, $dateofbirth=NULL) {
+		$email=NULL, $dateofbirth=NULL, $requestdirectdebitmandate=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -773,6 +784,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 
 			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
+			}
+			if($requestdirectdebitmandate) {
+				$attributes['RequestDirectDebitMandate'] = 1;
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('SelectAccount', $data, $attributes);
