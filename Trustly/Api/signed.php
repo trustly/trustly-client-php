@@ -638,7 +638,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'Address' => $address,
 			);
 
-			if(isset($holdnotifications)) {
+			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
 			}
 
@@ -771,7 +771,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'DateOfBirth' => $dateofbirth,
 			);
 
-			if(isset($holdnotifications)) {
+			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
 			}
 
@@ -927,7 +927,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 			$attributes = array(
 			);
 
-			if(isset($holdnotifications)) {
+			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
 			}
 
@@ -1064,7 +1064,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'IntegrationModule' => $integrationmodule
 			);
 
-			if(isset($holdnotifications)) {
+			if($holdnotifications) {
 				$attributes['HoldNotifications'] = 1;
 			}
 
