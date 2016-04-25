@@ -1146,6 +1146,60 @@ class Trustly_Api_Signed extends Trustly_Api {
 			return $this->call($request);
 	}
 
+
+	/**
+	 * Call the Charge API Method.
+	 *
+	 * Initiates a new drect debit charge.
+	 *
+	 * @see https://trustly.com/en/developer/api#/charge
+	 *
+	 * @param string $accountid The AccountID received from an account
+	 *		notification with granted direct debit mandate from which the money 
+	 *		should be sent.
+	 *
+	 * @param string $notificationurl The URL to which notifications for this
+	 *		payment should be sent to. This URL should be hard to guess and not
+	 *		contain a ? ("question mark").
+	 *
+	 * @param string $enduserid ID, username, hash or anything uniquely
+	 *		identifying the end-user requesting the withdrawal. Preferably the
+	 *		same ID/username as used in the merchant's own backoffice in order
+	 *		to simplify for the merchant's support department.
+	 *
+	 * @param string $messageid Your unique ID for the charge.
+	 *
+	 * @param float $amount with exactly two decimals in the currency specified
+	 *		by Currency. Only digits. Use dot (.) as decimal separator.
+	 *
+	 * @param string $currency The currency of the end-user's account in the
+	 *		merchant's system.
+	 *
+	 * @param string $shopperstatement The text to show on the end-user's bank
+	 *		statement.
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
+	public function charge($accountid, $notificationurl, $enduserid, $messageid,
+		$amount, $currency, $shopperstatement=NULL) {
+
+			$data = array(
+				'AccountID' => $accountid,
+				'NotificationURL' => $notificationurl,
+				'EndUserID' => $enduserid,
+				'MessageID' => $messageid,
+				'Amount' => $amount,
+				'Currency' => $currency,
+			);
+
+			$attributes = array(
+				'ShopperStatement' => $shopperstatement,
+			);
+
+			$request = new Trustly_Data_JSONRPCRequest('Charge', $data, $attributes);
+			return $this->call($request);
+	}
+
 	/**
 	 * Basic communication test to the API.
 	 *
