@@ -857,7 +857,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$email=NULL, $dateofbirth=NULL,
 		$addresscountry=NULL, $addresspostalcode=NULL,
 		$addresscity=NULL, $addressline1=NULL,
-		$addressline2=NULL, $address=NULL) {
+		$addressline2=NULL) {
 
 			$data = array(
 				'EndUserID' => $enduserid,
