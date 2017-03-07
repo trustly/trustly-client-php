@@ -60,42 +60,42 @@ Example deposit call
 
     /* Change 'test.trustly.com' to 'trustly.com' below to use the live environment */
     $api = new Trustly_Api_Signed(
-                    $trustly_rsa_private_key,
-                    $trustly_username,
-                    $trustly_password,
-                    'test.trustly.com'
-                );
+        $trustly_rsa_private_key,
+        $trustly_username,
+        $trustly_password,
+        'test.trustly.com'
+    );
 
     $deposit = $api->deposit(
-                    "$base_url/php/example.php/notification",   /* NotificationURL */
-                    'john.doe@example.com',                     /* EndUserID */
-                    $messageid,                                 /* MessageID */
-                    'en_US',                                    /* Locale */
-                    $amount,                                    /* Amount */
-                    $currency,                                  /* Currency */
-                    'SE',                                       /* Country */
-                    NULL,                                       /* MobilePhone */
-                    NULL,                                       /* FirstName */
-                    NULL,                                       /* LastName */
-                    NULL,                                       /* NationalIdentificationNumber */
-                    'Test',                                     /* ShopperStatement */
-                    $ip,                                        /* IP */
-                    "$base_url/success.html",                   /* SuccessURL */
-                    "$base_url/fail.html",                      /* FailURL */
-                    NULL,                                       /* TemplateURL */
-                    "0",                                        /* URLTarget */
-                    NULL,                                       /* SuggestedMinAmount */
-                    NULL,                                       /* SuggestedMaxAmount */
-                    'trustly-client-php example/1.0'            /* IntegrationModule */
-                    FALSE,                                      /* HoldNotifications */
-                    'john.doe@example.com',                     /* Email */
-                    'SE',                                       /* ShippingAddressCountry */
-                    '12345',                                    /* ShippingAddressPostalCode */
-                    'ExampleCity',                              /* ShippingAddressCity */
-                    '123 Main St'                               /* ShippingAddressLine1 */
-                    'C/O Careholder',                           /* ShippingAddressLine2 */
-                    NULL                                        /* ShippingAddress */
-                );
+        "$base_url/php/example.php/notification",   /* NotificationURL */
+        'john.doe@example.com',                     /* EndUserID */
+        $messageid,                                 /* MessageID */
+        'en_US',                                    /* Locale */
+        $amount,                                    /* Amount */
+        $currency,                                  /* Currency */
+        'SE',                                       /* Country */
+        NULL,                                       /* MobilePhone */
+        NULL,                                       /* FirstName */
+        NULL,                                       /* LastName */
+        NULL,                                       /* NationalIdentificationNumber */
+        'Test',                                     /* ShopperStatement */
+        $ip,                                        /* IP */
+        "$base_url/success.html",                   /* SuccessURL */
+        "$base_url/fail.html",                      /* FailURL */
+        NULL,                                       /* TemplateURL */
+        '0',                                        /* URLTarget */
+        NULL,                                       /* SuggestedMinAmount */
+        NULL,                                       /* SuggestedMaxAmount */
+        'trustly-client-php example/1.0',           /* IntegrationModule */
+        FALSE,                                      /* HoldNotifications */
+        'john.doe@example.com',                     /* Email */
+        'SE',                                       /* ShippingAddressCountry */
+        '12345',                                    /* ShippingAddressPostalCode */
+        'ExampleCity',                              /* ShippingAddressCity */
+        '123 Main St',                              /* ShippingAddressLine1 */
+        'C/O Careholder',                           /* ShippingAddressLine2 */
+        NULL                                        /* ShippingAddress */
+    );
 
     $iframe_url= $deposit->getData('url');
 
