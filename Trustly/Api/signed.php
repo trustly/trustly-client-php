@@ -1201,6 +1201,28 @@ class Trustly_Api_Signed extends Trustly_Api {
 	}
 
 	/**
+	 * Call the getWithdrawals API Method.
+	 *
+	 * Get a list of withdrawals from an executed order.
+	 *
+	 * @see https://trustly.com/en/developer/api#/getwithdrawals
+	 *
+	 * @param integer $orderid The OrderID of the order to query
+	 *
+	 * @return Trustly_Data_JSONRPCSignedResponse
+	 */
+	public function getWithdrawals($orderid) {
+
+		$data = array(
+			'OrderID' => $orderid,
+		);
+
+		$request = new Trustly_Data_JSONRPCRequest('getWithdrawals', $data);
+		return $this->call($request);
+	}
+
+
+	/**
 	 * Basic communication test to the API.
 	 *
 	 * @return Trustly_Data_JSONRPCResponse Response from the API
