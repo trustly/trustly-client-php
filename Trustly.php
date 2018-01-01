@@ -31,18 +31,18 @@
  * THE SOFTWARE.
  */
 
-require_once('Trustly/exceptions.php');
-require_once('Trustly/Data/data.php');
-require_once('Trustly/Data/request.php');
-require_once('Trustly/Data/jsonrpcrequest.php');
-require_once('Trustly/Data/response.php');
-require_once('Trustly/Data/jsonrpcresponse.php');
-require_once('Trustly/Data/jsonrpcsignedresponse.php');
-require_once('Trustly/Data/jsonrpcnotificationrequest.php');
-require_once('Trustly/Data/jsonrpcnotificationresponse.php');
+require_once('src/exceptions.php');
+require_once('src/Data/data.php');
+require_once('src/Data/request.php');
+require_once('src/Data/jsonrpcrequest.php');
+require_once('src/Data/response.php');
+require_once('src/Data/jsonrpcresponse.php');
+require_once('src/Data/jsonrpcsignedresponse.php');
+require_once('src/Data/jsonrpcnotificationrequest.php');
+require_once('src/Data/jsonrpcnotificationresponse.php');
 
-require_once('Trustly/Api/api.php');
-require_once('Trustly/Api/signed.php');
-require_once('Trustly/Api/unsigned.php');
+require_once('src/Api/api.php');
+require_once('src/Api/signed.php');
+require_once('src/Api/unsigned.php');
 
 /* vim: set noet cindent sts=4 ts=4 sw=4: */

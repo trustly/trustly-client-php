@@ -116,7 +116,13 @@ the code to make a deposit call to Trustly and processes incoming
 notifications. The code is well commented and contains information about what
 to calls that needs to be made and some caveats while doing so.
 
-The code is runnable on Linux/OSX with Apache v2.2/2.4. Use the
-`example/example.sh` script to control the example environment. You need to
+Use the built-in php webserver to give it a go (php -S localhost:8000 in the example/www directory). You need to
 amend `example/www/php/example.php` and `example/example.private.pem` to
 contain your processing account information before giving it a test spin.
+
+Contribution / Development
+------------------------
+
+Feel free to raise a pull request for changes that you may need. Any changes coming in would need to be covered with unit tests.
+
+Thanks very much, happy open sourcing.
