@@ -31,7 +31,6 @@
  * THE SOFTWARE.
  */
 
-require __DIR__ . '/vendor/autoload.php';
 require_once('src/exceptions.php');
 require_once('src/Data/data.php');
 require_once('src/Data/request.php');

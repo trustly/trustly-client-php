@@ -52,7 +52,7 @@ class signedTest extends PHPUnit_Framework_TestCase
     /**
      * @const The path to the private key.
      */
-    const PRIVATE_KEY_PATH = __DIR__ . '/../../private.pem';
+    const PRIVATE_KEY_PATH = '/../../private.pem';
 
     /**
      * @const An invalid private key path used for testing.
@@ -138,7 +138,7 @@ class signedTest extends PHPUnit_Framework_TestCase
     public function testLoadMerchantPrivateKey()
     {
         // Prepare / Mock
-        $filename = self::PRIVATE_KEY_PATH;
+        $filename = $this->getPrivateKeyPath();
 
         // Execute
         $result = $this->testObject->loadMerchantPrivateKey($filename);
@@ -168,7 +168,7 @@ class signedTest extends PHPUnit_Framework_TestCase
     public function testUseMerchantPrivateKey()
     {
         // Prepare / Mock
-        $key = file_get_contents(self::PRIVATE_KEY_PATH);
+        $key = file_get_contents($this->getPrivateKeyPath());
 
         // Execute
         $result = $this->testObject->useMerchantPrivateKey($key);
@@ -223,7 +223,7 @@ class signedTest extends PHPUnit_Framework_TestCase
         $notificationurl = '/notifications/';
         $enduserid = '883736';
         $messageid = '9999';
-        $testOpenSSLKey = file_get_contents(self::PRIVATE_KEY_PATH);
+        $testOpenSSLKey = file_get_contents($this->getPrivateKeyPath());
 
         $this->testObject->useMerchantPrivateKey($testOpenSSLKey);
 
@@ -291,7 +291,7 @@ class signedTest extends PHPUnit_Framework_TestCase
         $notificationurl = '/notifications/';
         $enduserid = '883736';
         $messageid = '9999';
-        $testOpenSSLKey = file_get_contents(self::PRIVATE_KEY_PATH);
+        $testOpenSSLKey = file_get_contents($this->getPrivateKeyPath());
 
         $this->testObject->useMerchantPrivateKey($testOpenSSLKey);
 
@@ -361,7 +361,7 @@ class signedTest extends PHPUnit_Framework_TestCase
         $notificationurl = '/notifications/';
         $enduserid = '883736';
         $messageid = '9999';
-        $testOpenSSLKey = file_get_contents(self::PRIVATE_KEY_PATH);
+        $testOpenSSLKey = file_get_contents($this->getPrivateKeyPath());
 
         $this->testObject->useMerchantPrivateKey($testOpenSSLKey);
 
@@ -422,5 +422,15 @@ class signedTest extends PHPUnit_Framework_TestCase
         self::assertEquals('This is a test message', $result->getData('message'));
         self::assertEquals('34233', $result->getData('orderid'));
         self::assertEquals('http://test-url.com', $result->getData('url'));
+    }
+
+    /**
+     * PHP 5.5 does not support static scalar expressions so back porting.
+     *
+     * @return string
+     */
+    private function getPrivateKeyPath()
+    {
+        return __DIR__ . self::PRIVATE_KEY_PATH;
     }
 }
