@@ -59,7 +59,7 @@ Example deposit call
     require_once('Trustly.php');
 
     /* Change 'test.trustly.com' to 'trustly.com' below to use the live environment */
-    $api = new Trustly_Api_Signed(
+    $api = new Trustly\Api\Trustly_Api_Signed(
                     $trustly_rsa_private_key,
                     $trustly_username,
                     $trustly_password,

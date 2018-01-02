@@ -252,12 +252,6 @@ class signedTest extends PHPUnit_Framework_TestCase
         $guzzleResponseMock->expects($this->any())
             ->method('getBody')
             ->willReturn($streamBodyMock);
-        $guzzleResponseMock->expects($this->any())
-            ->method('getStatusCode')
-            ->willReturn('200');
-        $guzzleResponseMock->expects($this->any())
-            ->method('getUUID')
-            ->willReturn('882772663636666363636');
 
         $guzzleMock = $this->getMock(Client::class);
         $guzzleMock->expects($this->once())
@@ -321,12 +315,6 @@ class signedTest extends PHPUnit_Framework_TestCase
         $guzzleResponseMock->expects($this->any())
             ->method('getBody')
             ->willReturn($streamBodyMock);
-        $guzzleResponseMock->expects($this->any())
-            ->method('getStatusCode')
-            ->willReturn('200');
-        $guzzleResponseMock->expects($this->any())
-            ->method('getUUID')
-            ->willReturn('882772663636666363636');
 
         $guzzleMock = $this->getMock(Client::class);
         $guzzleMock->expects($this->once())
@@ -398,9 +386,6 @@ class signedTest extends PHPUnit_Framework_TestCase
         $guzzleResponseMock->expects($this->any())
             ->method('getBody')
             ->willReturn($streamBodyMock);
-        $guzzleResponseMock->expects($this->any())
-            ->method('getStatusCode')
-            ->willReturn(200);
 
         $guzzleMock = $this->getMock(Client::class);
         $guzzleMock->expects($this->once())
