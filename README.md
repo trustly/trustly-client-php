@@ -66,6 +66,9 @@ Example deposit call
                     'test.trustly.com'
                 );
 
+    /* Guzzle will handle our remote requests. */
+    $api->setGuzzle(new \GuzzleHttp\Client());
+
     $deposit = $api->deposit(
                     "$base_url/php/example.php/notification",   /* NotificationURL */
                     'john.doe@example.com',                     /* EndUserID */
