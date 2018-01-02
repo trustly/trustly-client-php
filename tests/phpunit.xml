@@ -1,0 +1,27 @@
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    backupGlobals="true"
+    backupStaticAttributes="false"
+    bootstrap="bootstrap.php"
+    cacheTokens="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
+    timeoutForSmallTests="1"
+    timeoutForMediumTests="10"
+    timeoutForLargeTests="60"
+    verbose="false">
+    <testsuites>
+        <testsuite name="My Test Suite">
+            <directory>src</directory>
+            <exclude>example/*</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>
