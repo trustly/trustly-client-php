@@ -1,4 +1,14 @@
 <?php
+
+namespace Trustly\Api;
+
+use InvalidArgumentException;
+use Trustly_Data_JSONRPCNotificationResponse;
+use Trustly_Data_JSONRPCRequest;
+use Trustly_Data_JSONRPCSignedResponse;
+use Trustly_DataException;
+use Trustly_SignatureException;
+
 /**
  * Trustly_Api_Signed class.
  *
@@ -200,6 +210,11 @@ class Trustly_Api_Signed extends Trustly_Api
         }
 
         if ($response->getUUID() !== $request->getUUID()) {
+            echo 'response: ';
+            echo $response->getUUID();
+
+            echo 'request: ';
+            echo $request->getUUID();
             throw new Trustly_DataException('Incoming message is not related to request. UUID mismatch');
         }
 

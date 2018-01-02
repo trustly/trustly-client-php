@@ -1,5 +1,32 @@
 <?php
 
+namespace Trustly\Api;
+
+// To test the behaviour of the code, we need to control the behaviour of these methods.
+
+/**
+ * @override Returns what is set by the test.
+ *
+ * @param mixed $serial_data
+ * @param mixed $raw_signature
+ * @param mixed $public_key
+ */
+function openssl_verify($serial_data, $raw_signature, $public_key)
+{
+    return \Trustly\Tests\Unit\Api\signedTest::$openssl_verified;
+}
+
+/**
+ * @override Returns concatenated params.
+ *
+ * @param mixed $min
+ * @param mixed $max
+ */
+function mt_rand($min, $max)
+{
+    return \Trustly\Tests\Unit\Api\signedTest::$uuid_fraction;
+}
+
 namespace Trustly\Tests\Unit\Api;
 
 use GuzzleHttp\Client;
@@ -7,11 +34,21 @@ use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use ReflectionClass;
-use Trustly_Api_Signed;
+use Trustly\Api\Trustly_Api_Signed;
 use Trustly_Data_JSONRPCSignedResponse;
 
 class signedTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Used to mock the behaviour of the openssl verified method in the api class.
+     */
+    public static $openssl_verified = false;
+
+    /**
+     * Used to compute the uuid for signed requests, controlled by tests.
+     */
+    public static $uuid_fraction;
+
     /**
      * @const The path to the private key.
      */
@@ -250,6 +287,9 @@ class signedTest extends PHPUnit_Framework_TestCase
 
     /**
      * testDeposit Test that deposit executes as expected.
+     *
+     * @expectedException Trustly_DataException
+     * @expectedExceptionMessage UUID mismatch
      */
     public function testDepositUUIDMismatch()
     {
@@ -304,6 +344,8 @@ class signedTest extends PHPUnit_Framework_TestCase
             )
             ->willReturn($guzzleResponseMock);
 
+        self::$openssl_verified = true;
+
         $this->testObject->setGuzzle($guzzleMock);
 
         // Execute
@@ -322,6 +364,8 @@ class signedTest extends PHPUnit_Framework_TestCase
 
     /**
      * testDeposit Test that deposit executes as expected.
+     *
+     * @group testing
      */
     public function testDeposit()
     {
@@ -342,10 +386,11 @@ class signedTest extends PHPUnit_Framework_TestCase
                     "signature": "...",
                     "method": "...",
                     "data": {
-                        "url": "...",
-                        "orderid": "..."
+                        "url": "http://test-url.com",
+                        "orderid": "34233",
+                        "message": "This is a test message"
                     },
-                    "uuid": "..."
+                    "uuid": "0d050d05-0d05-4d05-8d05-0d050d050d05"
                 }
             }');
 
@@ -355,10 +400,7 @@ class signedTest extends PHPUnit_Framework_TestCase
             ->willReturn($streamBodyMock);
         $guzzleResponseMock->expects($this->any())
             ->method('getStatusCode')
-            ->willReturn('200');
-        $guzzleResponseMock->expects($this->any())
-            ->method('getUUID')
-            ->willReturn('882772663636666363636');
+            ->willReturn(200);
 
         $guzzleMock = $this->getMock(Client::class);
         $guzzleMock->expects($this->once())
@@ -376,6 +418,11 @@ class signedTest extends PHPUnit_Framework_TestCase
             )
             ->willReturn($guzzleResponseMock);
 
+        self::$openssl_verified = true;
+
+        // This generates the uuid: 0d050d05-0d05-4d05-8d05-0d050d050d05, use this in the response.
+        self::$uuid_fraction = 3333;
+
         $this->testObject->setGuzzle($guzzleMock);
 
         // Execute
@@ -387,8 +434,8 @@ class signedTest extends PHPUnit_Framework_TestCase
 
         // Assert Result
         self::assertInstanceOf(Trustly_Data_JSONRPCSignedResponse::class, $result);
-
-        self::assertTrue(is_integer($result->getData('code')));
-        self::assertTrue(is_string($result->getData('message')));
+        self::assertEquals('This is a test message', $result->getData('message'));
+        self::assertEquals('34233', $result->getData('orderid'));
+        self::assertEquals('http://test-url.com', $result->getData('url'));
     }
 }

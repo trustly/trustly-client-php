@@ -1,9 +1,10 @@
 <?php
 
+namespace Trustly\Api;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
-use Trustly\Api\GuzzleRequestInterface;
 
 /**
  * Trustly_Api class.
