@@ -5,6 +5,7 @@ namespace Trustly\Api;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Trustly_Api class.
@@ -351,9 +352,9 @@ abstract class Trustly_Api implements GuzzleRequestInterface
 
         try {
             $response = $this->guzzle->request('POST', $url, [
-                'query' => $postdata,
-                'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
-                'verify' => true
+                RequestOptions::BODY => $postdata,
+                RequestOptions::HEADERS => ['Content-Type' => 'application/json; charset=utf-8'],
+                RequestOptions::VERIFY => true
             ]);
         } catch (ClientException $e) {
             $error = $e->getMessage();
