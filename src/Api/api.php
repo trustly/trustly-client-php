@@ -351,9 +351,9 @@ abstract class Trustly_Api implements GuzzleRequestInterface
         }
 
         try {
-            $response = $this->guzzle->post($url, [
+            $response = $this->guzzle->request('POST', $url, [
                 RequestOptions::BODY => $postdata,
-                RequestOptions::HEADERS => ['content-type' => 'application/json'],
+                RequestOptions::HEADERS => ['Content-Type' => 'application/json; charset=utf-8'],
                 RequestOptions::VERIFY => true
             ]);
         } catch (ClientException $e) {

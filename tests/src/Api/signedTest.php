@@ -262,7 +262,7 @@ class signedTest extends PHPUnit_Framework_TestCase
                 $this->callback(function (array $options) {
                     self::assertEquals(['Content-Type' => 'application/json; charset=utf-8'], $options['headers']);
                     self::assertTrue($options['verify']);
-                    self::assertRegExp('#{"params":{"Data":{"NotificationURL":"\\\/notifications\\\/","EndUserID":"883736","MessageID":"9999","Username":"testUsername","Password":"testPassword"},"UUID":"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}","Signature":".+"},"method":"Deposit","version":"1.1"}#', $options['query']);
+                    self::assertRegExp('#{"params":{"Data":{"NotificationURL":"\\\/notifications\\\/","EndUserID":"883736","MessageID":"9999","Username":"testUsername","Password":"testPassword"},"UUID":"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}","Signature":".+"},"method":"Deposit","version":"1.1"}#', $options['body']);
 
                     return true;
                 })
@@ -325,7 +325,7 @@ class signedTest extends PHPUnit_Framework_TestCase
                 $this->callback(function (array $options) {
                     self::assertEquals(['Content-Type' => 'application/json; charset=utf-8'], $options['headers']);
                     self::assertTrue($options['verify']);
-                    self::assertRegExp('#{"params":{"Data":{"NotificationURL":"\\\/notifications\\\/","EndUserID":"883736","MessageID":"9999","Username":"testUsername","Password":"testPassword"},"UUID":"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}","Signature":".+"},"method":"Deposit","version":"1.1"}#', $options['query']);
+                    self::assertRegExp('#{"params":{"Data":{"NotificationURL":"\\\/notifications\\\/","EndUserID":"883736","MessageID":"9999","Username":"testUsername","Password":"testPassword"},"UUID":"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}","Signature":".+"},"method":"Deposit","version":"1.1"}#', $options['body']);
 
                     return true;
                 })
@@ -396,7 +396,7 @@ class signedTest extends PHPUnit_Framework_TestCase
                 $this->callback(function (array $options) {
                     self::assertEquals(['Content-Type' => 'application/json; charset=utf-8'], $options['headers']);
                     self::assertTrue($options['verify']);
-                    self::assertRegExp('#{"params":{"Data":{"NotificationURL":"\\\/notifications\\\/","EndUserID":"883736","MessageID":"9999","Username":"testUsername","Password":"testPassword"},"UUID":"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}","Signature":".+"},"method":"Deposit","version":"1.1"}#', $options['query']);
+                    self::assertRegExp('#{"params":{"Data":{"NotificationURL":"\\\/notifications\\\/","EndUserID":"883736","MessageID":"9999","Username":"testUsername","Password":"testPassword"},"UUID":"[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}","Signature":".+"},"method":"Deposit","version":"1.1"}#', $options['body']);
 
                     return true;
                 })
