@@ -1,5 +1,5 @@
 {
-	"name": "trustly/trustly-client-php",
+	"name": "cruisedotco/trustly-client-php",
 	"description": "Implementation of communications with Trustly public API for Online bank e-payments. See https://trustly.com for more information",
 	"type": "library",
 	"homepage": "http://github.com/trustly/trustly-client-php",
@@ -14,9 +14,24 @@
 		"ext-openssl": "*",
 		"ext-curl": "*",
 		"ext-mbstring": "*",
-		"php": ">=5.2.0"
+		"php": ">=5.2.0",
+		"guzzlehttp/guzzle": "^6.3"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.8"
 	},
 	"autoload": {
-		"files": ["Trustly.php"]
+		"files": ["Trustly.php"],
+		"psr-4": {
+			"Trustly\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Trustly\\Tests\\Unit\\": "tests/src"
+		}
+	},
+	"config": {
+		"bin-dir": "vendor/bin"
 	}
 }
