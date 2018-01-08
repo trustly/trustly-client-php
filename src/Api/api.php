@@ -440,10 +440,10 @@ abstract class Trustly_Api implements GuzzleRequestInterface
      */
     public function handleNotification($httpbody)
     {
-        $request = new Trustly_Data_JSONRPCNotificationRequest($httpbody);
+        $request = new \Trustly_Data_JSONRPCNotificationRequest($httpbody);
 
         if ($this->verifyTrustlySignedNotification($request) !== true) {
-            throw new Trustly_SignatureException('Incomming notification signature is not valid', $httpbody);
+            throw new \Trustly_SignatureException('Incomming notification signature is not valid', $httpbody);
         }
 
         return $request;
@@ -461,7 +461,7 @@ abstract class Trustly_Api implements GuzzleRequestInterface
      */
     public function notificationResponse($request, $success=true)
     {
-        $response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
+        $response = new \Trustly_Data_JSONRPCNotificationResponse($request, $success);
 
         return $response;
     }
@@ -482,7 +482,7 @@ abstract class Trustly_Api implements GuzzleRequestInterface
     public function call($request)
     {
         if ($this->insertCredentials($request) !== true) {
-            throw new Trustly_DataException('Unable to add authorization criterias to outgoing request');
+            throw new \Trustly_DataException('Unable to add authorization criterias to outgoing request');
         }
         $this->last_request = $request;
 
