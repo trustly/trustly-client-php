@@ -75,15 +75,15 @@ Example deposit call
                     $currency,                                  /* Currency */
                     'SE',                                       /* Country */
                     NULL,                                       /* MobilePhone */
-                    NULL,                                       /* FirstName */
-                    NULL,                                       /* LastName */
+                    'Sam',                                      /* FirstName */
+                    'Trautman',                                 /* LastName */
                     NULL,                                       /* NationalIdentificationNumber */
-                    'Test',                                     /* ShopperStatement */
+                    NULL,                                       /* ShopperStatement */
                     $ip,                                        /* IP */
                     "$base_url/success.html",                   /* SuccessURL */
                     "$base_url/fail.html",                      /* FailURL */
                     NULL,                                       /* TemplateURL */
-                    "0",                                        /* URLTarget */
+                    NULL,                                       /* URLTarget */
                     NULL,                                       /* SuggestedMinAmount */
                     NULL,                                       /* SuggestedMaxAmount */
                     'trustly-client-php example/1.0'            /* IntegrationModule */
