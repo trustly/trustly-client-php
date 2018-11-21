@@ -53,7 +53,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $username Username for the processing account used at Trustly.
 	 *
-	 * @param string $password Password for the processing account used at Trustly.
+	 * @param string $password Password for the processing account used at Trustly.
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
@@ -927,7 +927,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
-		$messageid, $amount, $currency, $holdnotifications=NULL) {
+		$messageid, $amount, $currency, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -1155,7 +1155,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @see https://trustly.com/en/developer/api#/charge
 	 *
 	 * @param string $accountid The AccountID received from an account
-	 *		notification with granted direct debit mandate from which the money 
+	 *		notification with granted direct debit mandate from which the money
 	 *		should be sent.
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
