@@ -433,8 +433,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		$nationalidentificationnumber should be considered read only information
 	 *		and will not be changable by end the enduser. Only valid in Sweden,
 	 *		the $nationalidentification number needs to be well formed.
-     *
-     * @param bool $requestKYC Flag to pass whether we request KYC check or not (Pay N Play feature)
+	 *
+	 * @param bool $requestKYC Flag to pass whether we request KYC check or not (Pay N Play feature)
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
@@ -489,9 +489,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 			if($unchangeablenationalidentificationnumber) {
 				$attributes['UnchangeableNationalIdentificationNumber'] = 1;
 			}
-            if(NULL !== $requestKYC) {
-                $attributes['requestKYC'] = $requestKYC;
-            }
+			if($requestKYC) {
+				$attributes['requestKYC'] = 1;
+			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
 			return $this->call($request);
