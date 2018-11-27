@@ -60,7 +60,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @param string $username Username for the processing account used at Trustly.
 	 *
-	 * @param string $password Password for the processing account used at Trustly.
+	 * @param string $password Password for the processing account used at Trustly.
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically

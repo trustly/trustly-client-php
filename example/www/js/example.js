@@ -54,7 +54,7 @@ function deposit() {
 			if(data.result == 'ok') {
 				$('.iframe_container > iframe').prop('src', data.url).removeClass('hidden');
 				$('.iframe_container').removeClass('hidden');
-			} else {
+			} else {
 				failure('Failed to make deposit call', data.error);
 			}
 		},
