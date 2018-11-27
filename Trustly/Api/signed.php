@@ -490,7 +490,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				$attributes['UnchangeableNationalIdentificationNumber'] = 1;
 			}
 			if($requestKYC) {
-				$attributes['requestKYC'] = 1;
+				$attributes['RequestKYC'] = 1;
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
