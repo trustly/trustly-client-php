@@ -41,18 +41,18 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * newSessionCookie after which the $session_uuid is used instead.
 	 * @var string
 	 */
-	private $api_username = NULL;
+	private $api_username = null;
 	/**
 	 * Login password when using the API. Used only in the first API call to
 	 * newSessionCookie after which the $session_uuid is used instead.
 	 * @var string
 	 */
-	private $api_password = NULL;
+	private $api_password = null;
 	/**
 	 * Session UUID used for authenticating calls.
 	 * @var string
 	 */
-	private $session_uuid = NULL;
+	private $session_uuid = null;
 
 
 	/**
@@ -72,7 +72,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 **/
-	public function __construct($username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($username, $password, $host='trustly.com', $port=443, $is_https=true) {
 		parent::__construct($host, $port, $is_https);
 
 		$this->api_username = $username;
@@ -91,7 +91,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @return string The URL path
 	 */
-	protected function urlPath($request=NULL) {
+	protected function urlPath($request=null) {
 		return '/api/Legacy';
 	}
 
@@ -131,7 +131,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		} else {
 			$request->setParam('Password', $this->api_password);
 		}
-		return TRUE;
+		return true;
 	}
 
 
@@ -156,7 +156,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 */
 	public function newSessionCookie() {
-		$this->session_uuid = NULL;
+		$this->session_uuid = null;
 
 		$request = new Trustly_Data_JSONRPCRequest('NewSessionCookie');
 			/* Call parent directly here as we will attempt to detect the
@@ -204,9 +204,9 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 *
 	 */
-	public function getViewStable($viewname, $dateorder=NULL, $datestamp=NULL,
-		$filterkeys=NULL, $limit=100, $offset=0, $params=NULL, $sortby=NULL,
-		$sortorder=NULL) {
+	public function getViewStable($viewname, $dateorder=null, $datestamp=null,
+		$filterkeys=null, $limit=100, $offset=0, $params=null, $sortby=null,
+		$sortorder=null) {
 
 		return $this->call('GetViewStable', array(
 			'DateOrder' => $dateorder,
@@ -235,7 +235,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 */
-	public function call($method, $params=NULL)  {
+	public function call($method, $params=null)  {
 		$request = new Trustly_Data_JSONRPCRequest($method);
 
 		if(isset($params)) {

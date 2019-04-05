@@ -44,19 +44,19 @@ abstract class Trustly_Api {
 	 *
 	 * @var string FQHN
 	 */
-	protected $api_host = NULL;
+	protected $api_host = null;
 	/**
 	 * API port used for communication.
 	 *
 	 * @var integer Normally either 443 (https) or 80 (http)
 	 */
-	protected $api_port = NULL;
+	protected $api_port = null;
 	/**
 	 * Inidicator wether the API host is communicating using https
 	 *
 	 * @var bool
 	 */
-	protected $api_is_https = TRUE;
+	protected $api_is_https = true;
 
 	/**
 	 * The data in the last request made. Kept for diagnostics usage mostly.
@@ -65,7 +65,7 @@ abstract class Trustly_Api {
 	 *
 	 * @var array Last API call in data form.
 	 */
-	public $last_request = NULL;
+	public $last_request = null;
 
 	/**
 	 * API Constructor
@@ -86,10 +86,10 @@ abstract class Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 */
-	public function __construct($host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($host='trustly.com', $port=443, $is_https=true) {
 		$this->api_is_https = $is_https;
 
-		if($this->loadTrustlyPublicKey($host, $port, $is_https) === FALSE) {
+		if($this->loadTrustlyPublicKey($host, $port, $is_https) === false) {
 			$error = openssl_error_string();
 			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
 		}
@@ -119,19 +119,19 @@ abstract class Trustly_Api {
 		$altfilename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $host);
 
 		$cert = @file_get_contents($filename);
-		if($cert === FALSE) {
+		if($cert === false) {
 			$cert = @file_get_contents($altfilename);
 		}
-		if($cert !== FALSE) {
+		if($cert !== false) {
 			$this->trustly_publickey = openssl_pkey_get_public($cert);
 			if(!$this->trustly_publickey) {
-				return FALSE;
+				return false;
 			}
 			$this->api_host = $host;
 			$this->api_port = $port;
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -179,15 +179,15 @@ abstract class Trustly_Api {
 	 *		signing this data.
 	 */
 	protected function verifyTrustlySignedData($method, $uuid, $signature, $data) {
-		if($method === NULL) {
+		if($method === null) {
 			$method = '';
 		}
-		if($uuid === NULL) {
+		if($uuid === null) {
 			$uuid = '';
 		}
 
 		if(!isset($signature)) {
-			return FALSE;
+			return false;
 		}
 
 		$serial_data = $method . $uuid . $this->serializeData($data);
@@ -253,7 +253,7 @@ abstract class Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https. NULL means do not change.
 	 */
-	public function setHost($host=NULL, $port=NULL, $is_https=NULL) {
+	public function setHost($host=null, $port=null, $is_https=null) {
 		if(!isset($host)) {
 			$host = $this->api_host;
 		}
@@ -262,7 +262,7 @@ abstract class Trustly_Api {
 			$port = $this->api_port;
 		}
 
-		if($this->loadTrustlyPublicKey($host, $port) === FALSE) {
+		if($this->loadTrustlyPublicKey($host, $port) === false) {
 			$error = openssl_error_string();
 			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
 		}
@@ -281,15 +281,15 @@ abstract class Trustly_Api {
 	 *
 	 * @return Array($body, $response_code)
 	 */
-	public function post($url=NULL, $postdata=NULL) {
+	public function post($url=null, $postdata=null) {
 		/* Do note that that if you are going to POST JSON you need to set the
 		 * content-type of the transfer AFTER you set the postfields, this is done
 		 * if you provide the postdata here, if not, take care to do it or the
 		 * content-type will be wrong */
 		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_FAILONERROR, FALSE);
-		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, FALSE);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($curl, CURLOPT_FAILONERROR, false);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 		curl_setopt($curl, CURLOPT_PORT, $this->api_port);
@@ -299,7 +299,7 @@ abstract class Trustly_Api {
 				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 			}
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 		} else {
 			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
 				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
@@ -313,9 +313,9 @@ abstract class Trustly_Api {
 		curl_setopt($curl, CURLOPT_URL, $url);
 
 		$body = curl_exec($curl);
-		if($body === FALSE) {
+		if($body === false) {
 			$error = curl_error($curl);
-			if($error === NULL) {
+			if($error === null) {
 				$error = 'Failed to connect to the Trusly API';
 			}
 			throw new Trustly_ConnectionException($error);
@@ -396,7 +396,7 @@ abstract class Trustly_Api {
 	 *
 	 * @return URL to the API peer with the given query path.
 	 */
-	public function url($request=NULL) {
+	public function url($request=null) {
 		return $this->baseURL() . $this->urlPath($request);
 	}
 
@@ -429,7 +429,7 @@ abstract class Trustly_Api {
 	public function handleNotification($httpbody) {
 		$request = new Trustly_Data_JSONRPCNotificationRequest($httpbody);
 
-		if($this->verifyTrustlySignedNotification($request) !== TRUE) {
+		if($this->verifyTrustlySignedNotification($request) !== true) {
 			throw new Trustly_SignatureException('Incomming notification signature is not valid', $httpbody);
 		}
 
@@ -448,7 +448,7 @@ abstract class Trustly_Api {
 	 *
 	 * @return Trustly_Data_JSONRPCNotificationResponse response object.
 	 */
-	public function notificationResponse($request, $success=TRUE) {
+	public function notificationResponse($request, $success=true) {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
 		return $response;
 	}
@@ -467,7 +467,7 @@ abstract class Trustly_Api {
 	 *
 	 */
 	public function call($request) {
-		if($this->insertCredentials($request) !== TRUE) {
+		if($this->insertCredentials($request) !== true) {
 			throw new Trustly_DataException('Unable to add authorization criterias to outgoing request');
 		}
 		$this->last_request = $request;
@@ -496,7 +496,7 @@ abstract class Trustly_Api {
 				return '0';
 			}
 		}
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -510,7 +510,7 @@ abstract class Trustly_Api {
 	 *
 	 * @return string The URL path
 	 */
-	abstract protected function urlPath($request=NULL);
+	abstract protected function urlPath($request=null);
 
 	/**
 	 * Callback for handling the response from an API call. This call is

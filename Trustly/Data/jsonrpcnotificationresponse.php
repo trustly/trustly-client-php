@@ -45,7 +45,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * @param boolean $success Set to true to indicate that the notification
 	 *		was successfully processed.
 	 */
-	public function __construct($request, $success=NULL) {
+	public function __construct($request, $success=null) {
 
 		parent::__construct();
 
@@ -75,10 +75,10 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 *
 	 * @return $success
 	 */
-	public function setSuccess($success=NULL) {
+	public function setSuccess($success=null) {
 		$status = 'OK';
 
-		if(isset($success) && $success !== TRUE) {
+		if(isset($success) && $success !== true) {
 			$status = 'FAILED';
 		}
 		$this->setData('status', $status);
@@ -126,12 +126,12 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * @return mixed The value sought after or the entire payload depending on
 	 *		$name.
 	 */
-	public function getResult($name=NULL) {
-		$result = NULL;
+	public function getResult($name=null) {
+		$result = null;
 		if(isset($this->payload['result'])) {
 			$result = $this->payload['result'];
 		} else {
-			return NULL;
+			return null;
 		}
 
 		if(isset($name)) {
@@ -154,12 +154,12 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * @return mixed The value sought after or the entire payload depending on
 	 *		$name.
 	 */
-	public function getData($name=NULL) {
-		$data = NULL;
+	public function getData($name=null) {
+		$data = null;
 		if(isset($this->payload['result']['data'])) {
 			$data = $this->payload['result']['data'];
 		}else {
-			return NULL;
+			return null;
 		}
 
 		if(isset($name)) {

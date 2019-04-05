@@ -94,13 +94,13 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	 * @return mixed The value for parameter $name or the entire data block if
 	 *		no name was given
 	 */
-	public function getData($name=NULL) {
-		$data = NULL;
+	public function getData($name=null) {
+		$data = null;
 
 		if(isset($this->response_result['data'])) {
 			$data = $this->response_result['data'];
 		}else {
-			return NULL;
+			return null;
 		}
 
 		if(isset($name)) {
@@ -122,7 +122,7 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 		if($this->isError() && isset($this->response_result['data']['code'])) {
 			return $this->response_result['data']['code'];
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -135,7 +135,7 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 		if($this->isError() && isset($this->response_result['data']['message'])) {
 			return $this->response_result['data']['message'];
 		}
-		return NULL;
+		return null;
 	}
 }
 /* vim: set noet cindent sts=4 ts=4 sw=4: */

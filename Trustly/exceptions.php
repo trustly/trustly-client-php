@@ -55,7 +55,7 @@ class Trustly_SignatureException extends Exception {
 	 *
 	 * @param array $data Data that was signed with an invalid signature
 	 */
-	public function __construct($message, $data=NULL) {
+	public function __construct($message, $data=null) {
 		parent::__construct($message);
 		$this->signature_data = $data;
 	}
