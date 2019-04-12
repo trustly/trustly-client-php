@@ -84,7 +84,7 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 		if($this->isError() && isset($this->response_result['code'])) {
 			return $this->response_result['code'];
 		}
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -96,7 +96,7 @@ class Trustly_Data_JSONRPCResponse extends Trustly_Data_Response {
 		if($this->isError() && isset($this->response_result['message'])) {
 			return $this->response_result['message'];
 		}
-		return NULL;
+		return null;
 	}
 }
 /* vim: set noet cindent sts=4 ts=4 sw=4: */

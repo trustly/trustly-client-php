@@ -39,7 +39,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Loaded merchant private key resource
 	 * @var resource from openssl with the loaded privatekey
 	 */
-	private $merchant_privatekey = NULL;
+	private $merchant_privatekey = null;
 
 	/**
 	 * Constructor.
@@ -65,19 +65,19 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 */
-	public function __construct($merchant_privatekey, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($merchant_privatekey, $username, $password, $host='trustly.com', $port=443, $is_https=true) {
 
 		parent::__construct($host, $port, $is_https);
 
 		$this->api_username = $username;
 		$this->api_password  = $password;
-		if($merchant_privatekey != NULL) {
-			if(strpos($merchant_privatekey, "\n") !== FALSE) {
-				if($this->useMerchantPrivateKey($merchant_privatekey) === FALSE) {
+		if($merchant_privatekey != null) {
+			if(strpos($merchant_privatekey, "\n") !== false) {
+				if($this->useMerchantPrivateKey($merchant_privatekey) === false) {
 					throw new InvalidArgumentException('Cannot use merchant private key');
 				}
 			} else {
-				if($this->loadMerchantPrivateKey($merchant_privatekey) === FALSE) {
+				if($this->loadMerchantPrivateKey($merchant_privatekey) === false) {
 					throw new InvalidArgumentException('Cannot load merchant private key file ' . $merchant_privatekey);
 				}
 			}
@@ -95,8 +95,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 */
 	public function loadMerchantPrivateKey($filename) {
 		$cert = @file_get_contents($filename);
-		if($cert === FALSE) {
-			return FALSE;
+		if($cert === false) {
+			return false;
 		}
 		return $this->useMerchantPrivateKey($cert);
 	}
@@ -110,11 +110,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string $cert Loaded private RSA key as a string
 	 */
 	public function useMerchantPrivateKey($cert) {
-		if($cert !== FALSE) {
+		if($cert !== false) {
 			$this->merchant_privatekey = openssl_pkey_get_private($cert);
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 
 
@@ -132,11 +132,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 		}
 
 		$method = $request->getMethod();
-		if($method === NULL) {
+		if($method === null) {
 			$method = '';
 		}
 		$uuid = $request->getUUID();
-		if($uuid === NULL) {
+		if($uuid === null) {
 			$uuid = '';
 		}
 
@@ -146,7 +146,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$raw_signature = '';
 
 		$this->clearOpenSSLError();
-		if(openssl_sign($serial_data, $raw_signature, $this->merchant_privatekey, OPENSSL_ALGO_SHA1) === TRUE) {
+		if(openssl_sign($serial_data, $raw_signature, $this->merchant_privatekey, OPENSSL_ALGO_SHA1) === true) {
 			return base64_encode($raw_signature);
 		}
 
@@ -166,12 +166,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$request->setData('Password', $this->api_password);
 
 		$signature = $this->signMerchantRequest($request);
-		if($signature === FALSE) {
-			return FALSE;
+		if($signature === false) {
+			return false;
 		}
 		$request->setParam('Signature', $signature);
 
-		return TRUE;
+		return true;
 	}
 
 
@@ -196,7 +196,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	protected function handleResponse($request, $body, $response_code) {
 		$response = new Trustly_Data_JSONRPCSignedResponse($body, $response_code);
 
-		if($this->verifyTrustlySignedResponse($response) !== TRUE) {
+		if($this->verifyTrustlySignedResponse($response) !== true) {
 			throw new Trustly_SignatureException('Incomming message signature is not valid', $response);
 		}
 
@@ -219,12 +219,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @return Trustly_Data_JSONRPCNotificationResponse response object.
 	 */
-	public function notificationResponse($request, $success=TRUE) {
+	public function notificationResponse($request, $success=true) {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
 
 		$signature = $this->signMerchantRequest($response);
-		if($signature === FALSE) {
-			return FALSE;
+		if($signature === false) {
+			return false;
 		}
 		$response->setSignature($signature);
 
@@ -243,7 +243,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @return string The URL path
 	 */
-	protected function urlPath($request=NULL) {
+	protected function urlPath($request=null) {
 		$url = '/api/1';
 		return $url;
 	}
@@ -309,7 +309,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 */
 	public function call($request) {
 		$uuid = $request->getUUID();
-		if($uuid === NULL) {
+		if($uuid === null) {
 			$request->setUUID($this->generateUUID());
 		}
 		return parent::call($request);
@@ -437,16 +437,16 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
-		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
-		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
-		$nationalidentificationnumber=NULL, $shopperstatement=NULL,
-		$ip=NULL, $successurl=NULL, $failurl=NULL, $templateurl=NULL,
-		$urltarget=NULL, $suggestedminamount=NULL, $suggestedmaxamount=NULL,
-		$integrationmodule=NULL, $holdnotifications=NULL,
-		$email=NULL, $shippingaddresscountry=NULL,
-		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
-		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
-		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL) {
+		$locale=null, $amount=null, $currency=null, $country=null,
+		$mobilephone=null, $firstname=null, $lastname=null,
+		$nationalidentificationnumber=null, $shopperstatement=null,
+		$ip=null, $successurl=null, $failurl=null, $templateurl=null,
+		$urltarget=null, $suggestedminamount=null, $suggestedmaxamount=null,
+		$integrationmodule=null, $holdnotifications=null,
+		$email=null, $shippingaddresscountry=null,
+		$shippingaddresspostalcode=null, $shippingaddresscity=null,
+		$shippingaddressline1=null, $shippingaddressline2=null,
+		$shippingaddress=null, $unchangeablenationalidentificationnumber=null) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -609,14 +609,14 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function withdraw($notificationurl, $enduserid, $messageid,
-		$locale=NULL, $currency=NULL, $country=NULL,
-		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
-		$nationalidentificationnumber=NULL, $clearinghouse=NULL,
-		$banknumber=NULL, $accountnumber=NULL, $holdnotifications=NULL,
-		$email=NULL, $dateofbirth=NULL,
-		$addresscountry=NULL, $addresspostalcode=NULL,
-		$addresscity=NULL, $addressline1=NULL,
-		$addressline2=NULL, $address=NULL) {
+		$locale=null, $currency=null, $country=null,
+		$mobilephone=null, $firstname=null, $lastname=null,
+		$nationalidentificationnumber=null, $clearinghouse=null,
+		$banknumber=null, $accountnumber=null, $holdnotifications=null,
+		$email=null, $dateofbirth=null,
+		$addresscountry=null, $addresspostalcode=null,
+		$addresscity=null, $addressline1=null,
+		$addressline2=null, $address=null) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -759,9 +759,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
-		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
-		$mobilephone=NULL, $firstname=NULL, $lastname=NULL, $holdnotifications=NULL,
-		$email=NULL, $dateofbirth=NULL, $requestdirectdebitmandate=NULL) {
+		$locale=null, $country=null, $ip=null, $successurl=null, $urltarget=null,
+		$mobilephone=null, $firstname=null, $lastname=null, $holdnotifications=null,
+		$email=null, $dateofbirth=null, $requestdirectdebitmandate=null) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -852,12 +852,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function registerAccount($enduserid, $clearinghouse, $banknumber,
-		$accountnumber, $firstname, $lastname, $mobilephone=NULL,
-		$nationalidentificationnumber=NULL, $address=NULL,
-		$email=NULL, $dateofbirth=NULL,
-		$addresscountry=NULL, $addresspostalcode=NULL,
-		$addresscity=NULL, $addressline1=NULL,
-		$addressline2=NULL) {
+		$accountnumber, $firstname, $lastname, $mobilephone=null,
+		$nationalidentificationnumber=null, $address=null,
+		$email=null, $dateofbirth=null,
+		$addresscountry=null, $addresspostalcode=null,
+		$addresscity=null, $addressline1=null,
+		$addressline2=null) {
 
 			$data = array(
 				'EndUserID' => $enduserid,
@@ -927,7 +927,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
-		$messageid, $amount, $currency, $holdnotifications=NULL) {
+		$messageid, $amount, $currency, $holdnotifications=null) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -1041,13 +1041,13 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function p2p($notificationurl,$enduserid, $messageid,
-		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
-		$mobilephone=NULL, $firstname=NULL, $lastname=NULL,
-		$nationalidentificationnumber=NULL, $shopperstatement=NULL,
-		$ip=NULL, $successurl=NULL, $failurl=NULL, $templateurl=NULL,
-		$urltarget=NULL, $suggestedminamount=NULL, $suggestedmaxamount=NULL,
-		$integrationmodule=NULL, $holdnotifications=NULL,
-		$authorizeonly=NULL, $templatedata=NULL) {
+		$locale=null, $amount=null, $currency=null, $country=null,
+		$mobilephone=null, $firstname=null, $lastname=null,
+		$nationalidentificationnumber=null, $shopperstatement=null,
+		$ip=null, $successurl=null, $failurl=null, $templateurl=null,
+		$urltarget=null, $suggestedminamount=null, $suggestedmaxamount=null,
+		$integrationmodule=null, $holdnotifications=null,
+		$authorizeonly=null, $templatedata=null) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -1181,7 +1181,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function charge($accountid, $notificationurl, $enduserid, $messageid,
-		$amount, $currency, $shopperstatement=NULL) {
+		$amount, $currency, $shopperstatement=null) {
 
 			$data = array(
 				'AccountID' => $accountid,

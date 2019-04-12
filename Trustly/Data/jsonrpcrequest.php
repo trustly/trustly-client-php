@@ -49,8 +49,8 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 * @param mixed $attributes Outgoing call attributes if any. If attributes
 	 *		is set then $data needs to be an array.
 	 */
-	public function __construct($method=NULL, $data=NULL, $attributes=NULL) {
-		$payload = NULL;
+	public function __construct($method=null, $data=null, $attributes=null) {
+		$payload = null;
 
 		if(isset($data) || isset($attributes)) {
 			$payload = array('params' => array());
@@ -111,7 +111,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		if(isset($this->payload['params'][$name])) {
 			return $this->payload['params'][$name];
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -124,7 +124,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 * @return mixed The value
 	 */
 	public function popParam($name) {
-		$v = NULL;
+		$v = null;
 		if(isset($this->payload['params'][$name])) {
 			$v = $this->payload['params'][$name];
 		}
@@ -155,7 +155,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		if(isset($this->payload['params']['UUID'])) {
 			return $this->payload['params']['UUID'];
 		}
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -207,7 +207,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 *
 	 * @return mixed The value or the entire Data depending on $name
 	 */
-	public function getData($name=NULL) {
+	public function getData($name=null) {
 		if(isset($name)) {
 			if(isset($this->payload['params']['Data'][$name])) {
 				return $this->payload['params']['Data'][$name];
@@ -217,7 +217,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 				return $this->payload['params']['Data'];
 			}
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -256,7 +256,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 		if(isset($this->payload['params']['Data']['Attributes'][$name])) {
 			return $this->payload['params']['Data']['Attributes'][$name];
 		}
-		return NULL;
+		return null;
 	}
 }
 /* vim: set noet cindent sts=4 ts=4 sw=4: */

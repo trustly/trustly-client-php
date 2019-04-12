@@ -38,7 +38,7 @@ class Trustly_Data_Request extends Trustly_Data {
 	 * Call method name
 	 * @var string
 	 */
-	var $method = NULL;
+	var $method = null;
 
 	/**
 	 * Constructor.
@@ -47,7 +47,7 @@ class Trustly_Data_Request extends Trustly_Data {
 	 *
 	 * @param array $payload Call payload
 	 */
-	public function __construct($method=NULL, $payload=NULL) {
+	public function __construct($method=null, $payload=null) {
 		parent::__construct();
 
 		$vpayload = $this->vacuum($payload);
@@ -68,7 +68,7 @@ class Trustly_Data_Request extends Trustly_Data {
 		if(isset($this->payload['uuid'])) {
 			return $this->payload['uuid'];
 		}
-		return NULL;
+		return null;
 	}
 
 

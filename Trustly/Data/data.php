@@ -39,7 +39,7 @@ class Trustly_Data {
 	 * Data payload
 	 * @var array
 	 */
-	protected $payload = NULL;
+	protected $payload = null;
 
 	/**
 	 * Constructur.
@@ -60,7 +60,7 @@ class Trustly_Data {
 	 */
 	public function vacuum($data) {
 		if(is_null($data)) {
-			return NULL;
+			return null;
 		} elseif(is_array($data)) {
 			$ret = array();
 			foreach($data as $k => $v) {
@@ -72,7 +72,7 @@ class Trustly_Data {
 			if(count($ret)) {
 				return $ret;
 			}
-			return NULL;
+			return null;
 		} else {
 			return $data;
 		}
@@ -88,15 +88,15 @@ class Trustly_Data {
 	 *
 	 * @return mixed value
 	 */
-	public function get($name=NULL) {
-		if($name === NULL) {
+	public function get($name=null) {
+		if($name === null) {
 			return $this->payload;
 		} else {
 			if(isset($this->payload[$name])) {
 				return $this->payload[$name];
 			}
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -109,11 +109,11 @@ class Trustly_Data {
 	 * @return string UTF-8 variant of string
 	 */
 	public static function ensureUTF8($str) {
-		if($str == NULL) {
-			return NULL;
+		if($str == null) {
+			return null;
 		}
 		$enc = mb_detect_encoding($str, array('ISO-8859-1', 'ISO-8859-15', 'UTF-8', 'ASCII'));
-		if($enc !== FALSE) {
+		if($enc !== false) {
 			if($enc == 'ISO-8859-1' || $enc == 'ISO-8859-15') {
 				$str = mb_convert_encoding($str, 'UTF-8', $enc);
 			}
@@ -143,7 +143,7 @@ class Trustly_Data {
 	 * @return mixed The value
 	 */
 	public function pop($name) {
-		$v = NULL;
+		$v = null;
 		if(isset($this->payload[$name])) {
 			$v = $this->payload[$name];
 		}
@@ -160,7 +160,7 @@ class Trustly_Data {
 	 *
 	 * @return string The current payload in JSON
 	 */
-	public function json($pretty=FALSE) {
+	public function json($pretty=false) {
 		if($pretty) {
 			$sorted = $this->payload;
 			$this->sortRecursive($sorted);

@@ -40,7 +40,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * The RAW incoming notification body
 	 * @var string
 	 */
-	var $notification_body = NULL;
+	var $notification_body = null;
 
 
 	/**
@@ -63,7 +63,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 			throw new Trustly_DataException('Empty notification body');
 		}
 
-		$payload = json_decode($notification_body, TRUE);
+		$payload = json_decode($notification_body, true);
 
 		if(is_null($payload)) {
 			$error = '';
@@ -90,9 +90,9 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * @return mixed The value for the params parameter or the entire payload
 	 *		depending on $name
 	 */
-	public function getParams($name=NULL) {
+	public function getParams($name=null) {
 		if(!isset($this->payload['params'])) {
-			return NULL;
+			return null;
 		}
 		$params = $this->payload['params'];
 		if(isset($name)) {
@@ -102,7 +102,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		} else {
 			return $params;
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -116,9 +116,9 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * @return mixed The value sought after or the entire payload depending on
 	 *		$name.
 	 */
-	public function getData($name=NULL) {
+	public function getData($name=null) {
 		if(!isset($this->payload['params']['data'])) {
-			return NULL;
+			return null;
 		}
 		$data = $this->payload['params']['data'];
 		if(isset($name)) {
@@ -128,7 +128,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 		} else {
 			return $data;
 		}
-		return NULL;
+		return null;
 	}
 
 

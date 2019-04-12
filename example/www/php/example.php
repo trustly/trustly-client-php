@@ -50,7 +50,7 @@ function _http_response_code($code) {
     }
 }
 
-function respond_json($http_response = 200, $data = NULL) {
+function respond_json($http_response = 200, $data = null) {
     _http_response_code($http_response);
     header('Content-type: application/json; charset=UTF-8');
     print json_encode($data);
@@ -101,7 +101,7 @@ function orders() {
     foreach(glob("$order_info_dir/*.order.json") as $orderfile) {
         error_log($orderfile);
         $json = file_get_contents($orderfile);
-        error_log($json === FALSE?'FALSE':$json);
+        error_log($json === false?'FALSE':$json);
         $data = json_decode($json, true);
         if(isset($data)) {
             array_push($orders, $data);
@@ -162,9 +162,9 @@ function save_order_data($orderid, $data) {
         fflush($fh);
         flock($fh, LOCK_UN);
         fclose($fh);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 function get_api() {
@@ -194,7 +194,7 @@ function get_api() {
     } catch(Exception $e) {
         respond_json(200, Array('result' => 'error', 'error' => 'Exception ' . $e->getMessage()));
     }
-    return NULL;
+    return null;
 }
 
 function deposit() {
@@ -221,7 +221,7 @@ function deposit() {
          * wallet this can come in handy */
         $amount = $_GET['amount'];
         if(empty($amount)) {
-            $amount = NULL;
+            $amount = null;
         }
         if(isset($amount)) {
             $amount = number_format($amount, 2, '.', '');
@@ -285,18 +285,18 @@ function deposit() {
                 $amount,                                    /* Amount */
                 $currency,                                  /* Currency */
                 'SE',                                       /* Country */
-                NULL,                                       /* MobilePhone */
+                null,                                       /* MobilePhone */
                 'Sam',                                      /* FirstName */
                 'Trautman',                                 /* LastName */
-                NULL,                                       /* NationalIdentificationNumber */
-                NULL,                                       /* ShopperStatement */
+                null,                                       /* NationalIdentificationNumber */
+                null,                                       /* ShopperStatement */
                 $ip,                                        /* IP */
                 "$base_url/success.html",                   /* SuccessURL */
                 "$base_url/fail.html",                      /* FailURL */
-                NULL,                                       /* TemplateURL */
-                NULL,                                       /* URLTarget */
-                NULL,                                       /* SuggestedMinAmount */
-                NULL,                                       /* SuggestedMaxAmount */
+                null,                                       /* TemplateURL */
+                null,                                       /* URLTarget */
+                null,                                       /* SuggestedMinAmount */
+                null,                                       /* SuggestedMaxAmount */
                 'trustly-client-php example/1.0'            /* IntegrationModule */
             );
 
@@ -434,7 +434,7 @@ function notification() {
              * Trustly will continue to attempt to deliver this notification 
              * until you respond to it.
              * */
-            $response = $api->notificationResponse($notification, TRUE);
+            $response = $api->notificationResponse($notification, true);
             print $response->json();
         }
     }

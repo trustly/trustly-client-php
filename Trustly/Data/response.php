@@ -39,19 +39,19 @@ class Trustly_Data_Response extends Trustly_Data {
 	 * Raw copy of the incoming response body
 	 * @var integer
 	 */
-	var $response_body = NULL;
+	var $response_body = null;
 
 	/**
 	 * The response HTTP code
 	 * @var integer
 	 */
-	var $response_code = NULL;
+	var $response_code = null;
 
 	/**
 	 * Shortcut to the part of the result being actually interesting. The guts will contain all returned data.
 	 * @var mixed
 	 */
-	var $response_result = NULL;
+	var $response_result = null;
 
 
 	/**
@@ -66,14 +66,14 @@ class Trustly_Data_Response extends Trustly_Data {
 	 *
 	 * @param integer $response_code HTTP response code from the API call
 	 */
-	public function __construct($response_body, $response_code=NULL) {
+	public function __construct($response_body, $response_code=null) {
 		parent::__construct();
 
 		$this->response_code = $response_code;
 		$this->response_body = $response_body;
 
-		$payload = json_decode($response_body, TRUE);
-		if($payload === FALSE) {
+		$payload = json_decode($response_body, true);
+		if($payload === false) {
 			/* Only throw the connection error exception here if we did not
 			 * receive a valid JSON response, if we did recive one we will use
 			 * the error information in that response instead. */
@@ -93,9 +93,9 @@ class Trustly_Data_Response extends Trustly_Data {
 		 * have a 'error' on the tyoplevel
 		 */
 		$this->response_result = &$this->payload['result'];
-		if($this->response_result === NULL) {
+		if($this->response_result === null) {
 			$this->response_result = &$this->payload['error'];
-			if($this->response_result === NULL) {
+			if($this->response_result === null) {
 				throw new Trustly_DataException('No result or error in response');
 			}
 		}
@@ -111,10 +111,10 @@ class Trustly_Data_Response extends Trustly_Data {
 	 * @return boolean revealing if the response had an error element in it.
 	 */
 	public function isError() {
-		if($this->get('error') === NULL) {
-			return FALSE;
+		if($this->get('error') === null) {
+			return false;
 		}
-		return TRUE;
+		return true;
 	}
 
 
@@ -125,10 +125,10 @@ class Trustly_Data_Response extends Trustly_Data {
 	 * @return boolean revealing if the response has a result element in it
 	 */
 	public function isSuccess() {
-		if($this->get('result') === NULL) {
-			return FALSE;
+		if($this->get('result') === null) {
+			return false;
 		}
-		return TRUE;
+		return true;
 	}
 
 
@@ -143,7 +143,7 @@ class Trustly_Data_Response extends Trustly_Data {
 				return $this->response_result['message'];
 			}
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -158,7 +158,7 @@ class Trustly_Data_Response extends Trustly_Data {
 				return $this->response_result['code'];
 			}
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -171,8 +171,8 @@ class Trustly_Data_Response extends Trustly_Data {
 	 * @return mixed The value for parameter $name or the entire result block
 	 *		if no name was given
 	 */
-	public function getResult($name=NULL) {
-		if($name === NULL) {
+	public function getResult($name=null) {
+		if($name === null) {
 				# An array is always copied
 			return $this->response_result;
 		}
@@ -181,7 +181,7 @@ class Trustly_Data_Response extends Trustly_Data {
 			return $this->response_result[$name];
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -194,7 +194,7 @@ class Trustly_Data_Response extends Trustly_Data {
 		if(isset($this->response_result['uuid'])) {
 			return $this->response_result['uuid'];
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -207,7 +207,7 @@ class Trustly_Data_Response extends Trustly_Data {
 		if(isset($this->response_result['method'])) {
 			return $this->response_result['method'];
 		}
-		return NULL;
+		return null;
 	}
 
 
@@ -220,7 +220,7 @@ class Trustly_Data_Response extends Trustly_Data {
 		if(isset($this->response_result['signature'])) {
 			return $this->response_result['signature'];
 		}
-		return NULL;
+		return null;
 	}
 }
 /* vim: set noet cindent sts=4 ts=4 sw=4: */
