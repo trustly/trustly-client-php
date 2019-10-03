@@ -927,7 +927,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
-		$messageid, $amount, $currency, $holdnotifications=NULL) {
+		$messageid, $amount, $currency, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
