@@ -117,11 +117,15 @@ abstract class Trustly_Api {
 	public function loadTrustlyPublicKey($host, $port) {
 		$filename = sprintf('%s/keys/%s:%d.public.pem', realpath(dirname(__FILE__)), $host, $port);
 		$altfilename = sprintf('%s/keys/%s.public.pem', realpath(dirname(__FILE__)), $host);
+		$productionFileName = sprintf('%s/keys/trustly.com.public.pem', realpath(dirname(__FILE__)));
 
 		$cert = @file_get_contents($filename);
 		if($cert === FALSE) {
 			$cert = @file_get_contents($altfilename);
 		}
+        if($cert === FALSE) {
+            $cert = @file_get_contents($productionFileName);
+        }
 		if($cert !== FALSE) {
 			$this->trustly_publickey = openssl_pkey_get_public($cert);
 			if(!$this->trustly_publickey) {
