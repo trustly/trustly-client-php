@@ -86,13 +86,13 @@ Example deposit call
                     NULL,                                       /* URLTarget */
                     NULL,                                       /* SuggestedMinAmount */
                     NULL,                                       /* SuggestedMaxAmount */
-                    'trustly-client-php example/1.0'            /* IntegrationModule */
+                    'trustly-client-php example/1.0',           /* IntegrationModule */
                     FALSE,                                      /* HoldNotifications */
                     'john.doe@example.com',                     /* Email */
                     'SE',                                       /* ShippingAddressCountry */
                     '12345',                                    /* ShippingAddressPostalCode */
                     'ExampleCity',                              /* ShippingAddressCity */
-                    '123 Main St'                               /* ShippingAddressLine1 */
+                    '123 Main St',                              /* ShippingAddressLine1 */
                     'C/O Careholder',                           /* ShippingAddressLine2 */
                     NULL                                        /* ShippingAddress */
                 );
