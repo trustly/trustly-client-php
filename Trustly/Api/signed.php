@@ -918,16 +918,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $currency The currency of the amount to send.
 	 *
-	 * @param boolean $holdnotifications Do not deliver notifications for this
-	 *		order. This is a parameter available when using test.trustly.com
-	 *		and can be used for manually delivering notifications to your local
-	 *		system during development. Intead you can get you notifications on
-	 *		https://test.trustly.com/notifications.html
+	 * @param boolean $attributes
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
-		$messageid, $amount, $currency, $holdnotifications=NULL) {
+		$messageid, $amount, $currency, $attributes = []) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -937,13 +933,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 				'Amount' => $amount,
 				'Currency' => $currency,
 			);
-
-			$attributes = array(
-			);
-
-			if($holdnotifications) {
-				$attributes['HoldNotifications'] = 1;
-			}
 
 			$request = new Trustly_Data_JSONRPCRequest('AccountPayout', $data, $attributes);
 			return $this->call($request);
