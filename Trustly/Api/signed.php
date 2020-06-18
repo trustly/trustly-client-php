@@ -918,9 +918,19 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $currency The currency of the amount to send.
 	 *
-	 * @param boolean $attributes
+	 * @param array $attributes
 	 *
+     * @throws Trustly_ConnectionException When failing to communicate with the
+     *		API.
+     *
+     * @throws Trustly_SignatureException If the incoming message has an
+     *		invalid signature
+     *
+     * @throws Trustly_DataException If the combination of $data and
+     *		$attributes is invalid
+     *
 	 * @return Trustly_Data_JSONRPCSignedResponse
+     *
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
 		$messageid, $amount, $currency, $attributes = []) {
