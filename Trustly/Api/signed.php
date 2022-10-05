@@ -434,6 +434,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		and will not be changable by end the enduser. Only valid in Sweden,
 	 *		the $nationalidentification number needs to be well formed.
 	 *
+	 * @param string $accountid Enable express deposit for a recurring user by providing
+	 *		the "accountid" from a previous Account notification, resulting
+	 *		in the previously used account being preselected
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
@@ -446,7 +450,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$email=NULL, $shippingaddresscountry=NULL,
 		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
 		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
-		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL) {
+		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL, $accountid=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -486,6 +490,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 			}
 			if($unchangeablenationalidentificationnumber) {
 				$attributes['UnchangeableNationalIdentificationNumber'] = 1;
+			}
+			if ($accountid) {
+				$attributes['AccountID'] = $accountid
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
