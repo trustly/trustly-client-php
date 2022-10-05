@@ -492,7 +492,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 				$attributes['UnchangeableNationalIdentificationNumber'] = 1;
 			}
 			if ($accountid) {
-				$attributes['AccountID'] = $accountid
+				$attributes['AccountID'] = $accountid;
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
