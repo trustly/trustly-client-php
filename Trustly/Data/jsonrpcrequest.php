@@ -163,10 +163,10 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 *
 	 * @param string $method The name of the API method this call is for
 	 *
-	 * @return string $method
+	 * @return void
 	 */
 	public function setMethod($method) {
-		return $this->set('method', $method);
+		$this->set('method', $method);
 	}
 
 
