@@ -434,6 +434,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		and will not be changable by end the enduser. Only valid in Sweden,
 	 *		the $nationalidentification number needs to be well formed.
 	 *
+	 * @param bool $requestKYC Flag to pass whether we request KYC check or not (Pay N Play feature)
+	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
@@ -446,7 +448,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$email=NULL, $shippingaddresscountry=NULL,
 		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
 		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
-		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL) {
+		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL, $requestKYC=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -486,6 +488,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 			}
 			if($unchangeablenationalidentificationnumber) {
 				$attributes['UnchangeableNationalIdentificationNumber'] = 1;
+			}
+			if($requestKYC) {
+				$attributes['RequestKYC'] = 1;
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
