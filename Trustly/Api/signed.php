@@ -239,7 +239,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
+	 * @param ?Trustly_Data_JSONRPCRequest $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */
@@ -980,70 +980,70 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $messageid Your unique ID for the deposit.
 	 *
-	 * @param string $locale The end-users localization preference in the
+	 * @param ?string $locale The end-users localization preference in the
 	 *		format [language[_territory]]. Language is the ISO 639-1 code and
 	 *		territory the ISO 3166-1-alpha-2 code.
 	 *
-	 * @param float $amount with exactly two decimals in the currency specified
+	 * @param ?float $amount with exactly two decimals in the currency specified
 	 *		by Currency. Do not use this attribute in combination with
 	 *		SuggestedMinAmount or SuggestedMaxAmount. Only digits. Use dot (.)
 	 *		as decimal separator.
 	 *
-	 * @param string $currency The currency of the end-user's account in the
+	 * @param ?string $currency The currency of the end-user's account in the
 	 *		merchant's system.
 	 *
-	 * @param string $country The ISO 3166-1-alpha-2 code of the end-user's
+	 * @param ?string $country The ISO 3166-1-alpha-2 code of the end-user's
 	 *		country. This will be used for preselecting the correct country for
 	 *		the end-user in the iframe.
 	 *
-	 * @param string $mobilephone The mobile phonenumber to the end-user in
+	 * @param ?string $mobilephone The mobile phonenumber to the end-user in
 	 *		international format. This is used for KYC and AML routines.
 	 *
-	 * @param string $firstname The end-user's firstname. Useful for some banks
+	 * @param ?string $firstname The end-user's firstname. Useful for some banks
 	 *		for identifying transactions.
 	 *
-	 * @param string $lastname The end-user's lastname. Useful for some banks
+	 * @param ?string $lastname The end-user's lastname. Useful for some banks
 	 *		for identifying transactions.
 	 *
-	 * @param string $nationalidentificationnumber The end-user's social
+	 * @param ?string $nationalidentificationnumber The end-user's social
 	 *		security number / personal number / birth number / etc. Useful for
 	 *		some banks for identifying transactions and KYC/AML.
 	 *
-	 * @param string $shopperstatement The text to show on the end-user's bank
+	 * @param ?string $shopperstatement The text to show on the end-user's bank
 	 *		statement.
 	 *
-	 * @param string $ip The IP-address of the end-user.
+	 * @param ?string $ip The IP-address of the end-user.
 	 *
-	 * @param string $successurl The URL to which the end-user should be
+	 * @param ?string $successurl The URL to which the end-user should be
 	 *		redirected after a successful deposit. Do not put any logic on that
 	 *		page since it's not guaranteed that the end-user will in fact visit
 	 *		it.
 	 *
-	 * @param string $failurl The URL to which the end-user should be
+	 * @param ?string $failurl The URL to which the end-user should be
 	 *		redirected after a failed deposit. Do not put any logic on that
 	 *		page since it's not guaranteed that the end-user will in fact visit
 	 *		it.
 	 *
-	 * @param string $templateurl The URL to your template page for the
+	 * @param ?string $templateurl The URL to your template page for the
 	 *		checkout process.
 	 *
-	 * @param string $urltarget The html target/framename of the SuccessURL.
+	 * @param ?string $urltarget The html target/framename of the SuccessURL.
 	 *		Only _top, _self and _parent are suported.
 	 *
-	 * @param float $suggestedminamount The minimum amount the end-user is
+	 * @param ?float $suggestedminamount The minimum amount the end-user is
 	 *		allowed to deposit in the currency specified by Currency. Only
 	 *		digits. Use dot (.) as decimal separator.
 	 *
-	 * @param float $suggestedmaxamount The maximum amount the end-user is
+	 * @param ?float $suggestedmaxamount The maximum amount the end-user is
 	 *		allowed to deposit in the currency specified by Currency. Only
 	 *		digits. Use dot (.) as decimal separator.
 	 *
-	 * @param string $integrationmodule Version information for your
+	 * @param ?string $integrationmodule Version information for your
 	 *		integration module. This is for informational purposes only and can
 	 *		be useful when troubleshooting problems. Should contain enough
 	 *		version information to be useful.
 	 *
-	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 * @param ?boolean $holdnotifications Do not deliver notifications for this
 	 *		order. This is a parameter available when using test.trustly.com
 	 *		and can be used for manually delivering notifications to your local
 	 *		system during development. Intead you can get you notifications on
@@ -1186,7 +1186,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string $currency The currency of the end-user's account in the
 	 *		merchant's system.
 	 *
-	 * @param string $shopperstatement The text to show on the end-user's bank
+	 * @param ?string $shopperstatement The text to show on the end-user's bank
 	 *		statement.
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse

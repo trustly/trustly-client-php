@@ -167,11 +167,11 @@ abstract class Trustly_Api {
 	 *
 	 * @link https://eu.developers.trustly.com/doc/reference/authentication
 	 *
-	 * @param string $method Method in the API call
+	 * @param ?string $method Method in the API call
 	 *
-	 * @param string $uuid UUID in the API call
+	 * @param ?string $uuid UUID in the API call
 	 *
-	 * @param string $signature in the API call
+	 * @param ?string $signature in the API call
 	 *
 	 * @param array $data in the API call
 	 *
@@ -243,14 +243,14 @@ abstract class Trustly_Api {
 	 * @throws InvalidArgumentException If the public key for the API host
 	 *		cannot be loaded.
 	 *
-	 * @param string $host API host used for communication. Fully qualified
+	 * @param ?string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
 	 *		either 'test.trustly.com' or 'trustly.com'. NULL means do not change.
 	 *
-	 * @param integer $port Port on API host used for communicaiton. Normally
+	 * @param ?integer $port Port on API host used for communicaiton. Normally
 	 *		443 for https, or 80 for http. NULL means do not change.
 	 *
-	 * @param bool $is_https Indicator wether the port on the API host expects
+	 * @param ?bool $is_https Indicator wether the port on the API host expects
 	 *		https. NULL means do not change.
 	 */
 	public function setHost($host=NULL, $port=NULL, $is_https=NULL) {
@@ -275,9 +275,9 @@ abstract class Trustly_Api {
 	/**
 	 * Setup and return a curl handle for submitting data to the API peer.
 	 *
-	 * @param string $url The URL to communicate with
+	 * @param ?string $url The URL to communicate with
 	 *
-	 * @param string $postdata The (optional) data to post.
+	 * @param ?string $postdata The (optional) data to post.
 	 *
 	 * @return Array($body, $response_code)
 	 */
@@ -392,7 +392,7 @@ abstract class Trustly_Api {
 	/**
 	 * Return a URL to the API to the given request path.
 	 *
-	 * @param Trustly_Data_Request $request Data to send in the request
+	 * @param ?Trustly_Data_Request $request Data to send in the request
 	 *
 	 * @return URL to the API peer with the given query path.
 	 */
@@ -484,7 +484,7 @@ abstract class Trustly_Api {
 	/**
 	 * Return a boolean value formatted for communicating with the API.
 	 *
-	 * @param boolean $value Boolean value to encode
+	 * @param ?boolean $value Boolean value to encode
 	 *
 	 * @return API encoded boolean value
 	 */
@@ -506,7 +506,7 @@ abstract class Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
-	 * @param Trustly_Data_Request $request Data to send in the request
+	 * @param ?Trustly_Data_Request $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */

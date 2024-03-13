@@ -84,7 +84,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get value from or the entire params payload.
 	 *
-	 * @param string $name Name of the params parameter to obtain. Leave blank
+	 * @param ?string $name Name of the params parameter to obtain. Leave blank
 	 *		to get the entire payload
 	 *
 	 * @return mixed The value for the params parameter or the entire payload
@@ -110,7 +110,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * Get the value of a parameter in the params->data section of the
 	 * notification response.
 	 *
-	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 * @param ?string $name The name of the parameter. Leave as NULL to get the
 	 *		entire payload.
 	 *
 	 * @return mixed The value sought after or the entire payload depending on

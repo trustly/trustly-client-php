@@ -64,7 +64,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	 *
 	 * @param string $response_body RAW response body from the API call
 	 *
-	 * @param integer $response_code HTTP response code from the API call
+	 * @param ?integer $response_code HTTP response code from the API call
 	 */
 	public function __construct($response_body, $response_code=NULL) {
 		parent::__construct();
@@ -165,7 +165,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get data from the result section of the response
 	 *
-	 * @param string $name Name of the result parameter to fetch. NULL value
+	 * @param ?string $name Name of the result parameter to fetch. NULL value
 	 *		will return entire result section.
 	 *
 	 * @return mixed The value for parameter $name or the entire result block
