@@ -116,7 +116,7 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	/**
 	 * Get error code (if any) from the API call
 	 *
-	 * @return integer The error code (numerical)
+	 * @return ?integer The error code (numerical)
 	 */
 	public function getErrorCode() {
 		if($this->isError() && isset($this->response_result['data']['code'])) {
@@ -129,7 +129,7 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	/**
 	 * Get error message (if any) from the API call
 	 *
-	 * @return string The error message
+	 * @return ?string The error message
 	 */
 	public function getErrorMessage() {
 		if($this->isError() && isset($this->response_result['data']['message'])) {

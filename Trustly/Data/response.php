@@ -135,7 +135,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get error message (if any) from the API response
 	 *
-	 * @return string The error message
+	 * @return ?string The error message
 	 */
 	public function getErrorMessage() {
 		if($this->isError()) {
@@ -150,7 +150,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get error code (if any) from the API response
 	 *
-	 * @return integer The error code (numerical)
+	 * @return ?integer The error code (numerical)
 	 */
 	public function getErrorCode() {
 		if($this->isError()) {
@@ -188,7 +188,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Convenience function for getting the uuid in the response
 	 *
-	 * @param string uuid
+	 * @return ?string uuid
 	 */
 	public function getUUID() {
 		if(isset($this->response_result['uuid'])) {
@@ -201,7 +201,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get the method from the response
 	 *
-	 * @return string method name
+	 * @return ?string method name
 	 */
 	public function getMethod() {
 		if(isset($this->response_result['method'])) {
@@ -214,7 +214,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get the signature from the response
 	 *
-	 * @return string signature
+	 * @return ?string signature
 	 */
 	public function getSignature() {
 		if(isset($this->response_result['signature'])) {

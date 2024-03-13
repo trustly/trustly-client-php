@@ -149,7 +149,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	/**
 	 * Get the UUID value from the outgoing call.
 	 *
-	 * @return string The UUID value
+	 * @return ?string The UUID value
 	 */
 	public function getUUID() {
 		if(isset($this->payload['params']['UUID'])) {
@@ -173,7 +173,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	/**
 	 * Get the Method value from the outgoing call.
 	 *
-	 * @return string The Method value.
+	 * @return ?string The Method value.
 	 */
 	public function getMethod() {
 		return $this->get('method');
