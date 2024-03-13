@@ -37,7 +37,7 @@
 class Trustly_Data {
 	/**
 	 * Data payload
-	 * @var array
+	 * @var array<mixed>
 	 */
 	protected $payload = array();
 
@@ -171,7 +171,9 @@ class Trustly_Data {
 	 * pretty printer
 	 *
 	 * @param mixed $data Payload to sort. Will be sorted in place
-	 * */
+	 *
+	 * @return void
+	 */
 	private function sortRecursive(&$data) {
 		if(is_array($data)) {
 			foreach($data as $k => $v) {
