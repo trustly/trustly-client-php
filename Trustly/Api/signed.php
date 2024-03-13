@@ -53,7 +53,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $username Username for the processing account used at Trustly.
 	 *
-	 * @param string $password Password for the processing account used at Trustly.
+	 * @param string $password Password for the processing account used at Trustly.
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
@@ -263,30 +263,28 @@ class Trustly_Api_Signed extends Trustly_Api {
 
 
 	/**
-	 * Generate a somewhat unique outgoing message id
+	 * Generate a unique outgoing message id
 	 *
-	 * @see http://php.net/manual/en/function.uniqid.php#94959
+	 * @see https://stackoverflow.com/a/15875555
 	 *
 	 * @return string "UUID v4"
+     * @throws Trustly_DataException Upon being unable to generate
+     * the 128 bits of random data required for creating the UUID
 	 */
 	protected function generateUUID() {
 		/*
 		*/
-	 	return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-		      // 32 bits for "time_low"
-		      mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-		      // 16 bits for "time_mid"
-		      mt_rand(0, 0xffff),
-		      // 16 bits for "time_hi_and_version",
-		      // four most significant bits holds version number 4
-		      mt_rand(0, 0x0fff) | 0x4000,
-		      // 16 bits, 8 bits for "clk_seq_hi_res",
-		      // 8 bits for "clk_seq_low",
-		      // two most significant bits holds zero and one for variant DCE1.1
-		      mt_rand(0, 0x3fff) | 0x8000,
-		      // 48 bits for "node"
-		      mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-		    );
+        $bytes = openssl_random_pseudo_bytes(16);
+        if (!$bytes) {
+            throw new Trustly_DataException('Failed to generate request UUID');
+        }
+        assert(strlen($bytes) === 16);
+
+        $bytes[6] = chr(ord($bytes[6]) & 0x0f | 0x40); // set version to 0100
+        $bytes[8] = chr(ord($bytes[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+        $data = str_split(bin2hex($bytes), 4);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', $data);
 	}
 
 
@@ -437,6 +435,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string $accountid Enable express deposit for a recurring user by providing
 	 *		the "accountid" from a previous Account notification, resulting
 	 *		in the previously used account being preselected
+	 * @param bool $requestKYC Flag to pass whether we request KYC check or not (Pay N Play feature)
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
@@ -450,7 +449,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$email=NULL, $shippingaddresscountry=NULL,
 		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
 		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
-		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL, $accountid=NULL) {
+		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL,
+    $accountid=NULL, $requestKYC=NULL
+  ) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -493,6 +494,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 			}
 			if ($accountid) {
 				$attributes['AccountID'] = $accountid;
+      }
+			if($requestKYC) {
+				$attributes['RequestKYC'] = 1;
 			}
 
 			$request = new Trustly_Data_JSONRPCRequest('Deposit', $data, $attributes);
@@ -934,7 +938,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
-		$messageid, $amount, $currency, $holdnotifications=NULL) {
+		$messageid, $amount, $currency, $holdnotifications=NULL) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -1162,7 +1166,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @see https://trustly.com/en/developer/api#/charge
 	 *
 	 * @param string $accountid The AccountID received from an account
-	 *		notification with granted direct debit mandate from which the money 
+	 *		notification with granted direct debit mandate from which the money
 	 *		should be sent.
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
