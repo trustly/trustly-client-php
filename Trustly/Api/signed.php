@@ -450,8 +450,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
 		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
 		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL,
-    $accountid=NULL, $requestKYC=NULL
-  ) {
+        $accountid=NULL, $requestKYC=NULL
+    ) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
