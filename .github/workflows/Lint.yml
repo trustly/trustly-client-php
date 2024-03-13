@@ -50,3 +50,9 @@ jobs:
 
       - name: Check dependencies
         run: composer install
+
+      - name: PHPStan
+        if: ${{ startsWith(matrix.php, '7.') || startsWith(matrix.php, '8.') }}
+        run: |
+          composer require --dev phpstan/phpstan
+          vendor/bin/phpstan analyze --no-progress
