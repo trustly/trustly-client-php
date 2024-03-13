@@ -109,7 +109,7 @@ abstract class Trustly_Api {
 	 *		hostname. When integrating with our public API this is typically
 	 *		either 'test.trustly.com' or 'trustly.com'.
 	 *
-	 * @param integer $port Port on API host used for communicaiton. Normally
+	 * @param integer $port Port on API host used for communication. Normally
 	 *		443 for https, or 80 for http.
 	 *
 	 * @return boolean Indicating success or failure of loading the key for the current host.
@@ -137,7 +137,7 @@ abstract class Trustly_Api {
 	/**
 	 * Serializes the given data in a form suitable for creating a signature.
 	 *
-	 * @link https://trustly.com/en/developer/api#/signature
+	 * @link https://eu.developers.trustly.com/doc/reference/authentication
 	 *
 	 * @param array $data Input data to serialize
 	 *
@@ -165,7 +165,7 @@ abstract class Trustly_Api {
 	 * verify if the $signature is indeed valid for the $method, $uuid and
 	 * $data.
 	 *
-	 * @link https://trustly.com/en/developer/api#/signature
+	 * @link https://eu.developers.trustly.com/doc/reference/authentication
 	 *
 	 * @param string $method Method in the API call
 	 *

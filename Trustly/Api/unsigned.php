@@ -66,7 +66,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *		hostname. When integrating with our public API this is typically
 	 *		either 'test.trustly.com' or 'trustly.com'.
 	 *
-	 * @param integer $port Port on API host used for communicaiton. Normally
+	 * @param integer $port Port on API host used for communication. Normally
 	 *		443 for https, or 80 for http.
 	 *
 	 * @param bool $is_https Indicator wether the port on the API host expects

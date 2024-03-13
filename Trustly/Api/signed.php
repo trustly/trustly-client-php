@@ -105,7 +105,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	/**
 	 * Use this RSA private key for signing outgoing requests.
 	 *
-	 * @see https://trustly.com/en/developer/api#/signature
+	 * @see https://eu.developers.trustly.com/doc/reference/authentication
 	 *
 	 * @param string $cert Loaded private RSA key as a string
 	 */
@@ -320,7 +320,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Initiates a new deposit by generating a new OrderID and returning the
 	 * url where the end-user can complete the deposit.
 	 *
-	 * @see https://trustly.com/en/developer/api#/deposit
+	 * @see https://eu.developers.trustly.com/doc/reference/deposit
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
 	 *		payment should be sent to. This URL should be hard to guess and not
@@ -450,8 +450,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$shippingaddresspostalcode=NULL, $shippingaddresscity=NULL,
 		$shippingaddressline1=NULL, $shippingaddressline2=NULL,
 		$shippingaddress=NULL, $unchangeablenationalidentificationnumber=NULL,
-    $accountid=NULL, $requestKYC=NULL
-  ) {
+        $accountid=NULL, $requestKYC=NULL
+    ) {
 
 			$data = array(
 				'NotificationURL' => $notificationurl,
@@ -508,7 +508,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * Refunds the customer on a previous deposit.
 	 *
-	 * @see https://trustly.com/en/developer/api#/refund
+	 * @see https://eu.developers.trustly.com/doc/reference/refund
 	 *
 	 * @param integer $orderid The OrderID of the initial deposit.
 	 *
@@ -538,7 +538,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Initiates a new withdrawal returning the url where the end-user can
 	 * complete the process.
 	 *
-	 * @see https://trustly.com/en/developer/api#/withdraw
+	 * @see https://eu.developers.trustly.com/doc/reference/withdraw
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
 	 *		payment should be sent to. This URL should be hard to guess and not
@@ -672,7 +672,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * integration manager at Trustly if you want to enable automatic approval
 	 * of the withdrawals.
 	 *
-	 * @see https://trustly.com/en/developer/api#/approvwwithdrawal
+	 * @see https://eu.developers.trustly.com/doc/reference/approvewithdrawal
 	 *
 	 * @param integer $orderid The OrderID of the withdrawal to approve.
 	 *
@@ -695,7 +695,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * integration manager at Trustly if you want to enable automatic approval
 	 * of the withdrawals
 	 *
-	 * @see https://trustly.com/en/developer/api#/denywithdrawal
+	 * @see https://eu.developers.trustly.com/doc/reference/denywithdrawal
 	 *
 	 * @param integer $orderid The OrderID of the withdrawal to deny.
 	 *
@@ -717,7 +717,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Initiates a new order where the end-user can select and verify one of
 	 * his/her bank accounts.
 	 *
-	 * @see https://trustly.com/en/developer/api#/selectaccount
+	 * @see https://eu.developers.trustly.com/doc/reference/selectaccount
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
 	 *		order should be sent to. This URL should be hard to guess and not
@@ -810,7 +810,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Registers and verifies the format of an account to be used in
 	 * AccountPayout.
 	 *
-	 * @see https://trustly.com/en/developer/api#/registeraccount
+	 * @see https://eu.developers.trustly.com/doc/reference/registeraccount
 	 *
 	 * @param string $enduserid ID, username, hash or anything uniquely
 	 *		identifying the end-user holding this account. Preferably the same
@@ -903,7 +903,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * account notification which is sent after a SelectAccount order has been
 	 * completed.
 	 *
-	 * @see https://trustly.com/en/developer/api#/accountpayout
+	 * @see https://eu.developers.trustly.com/doc/reference/accountpayout
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
 	 *		payment should be sent to. This URL should be hard to guess and not
@@ -967,7 +967,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Initiates a new P2P transfer by generating a new OrderID and returning
 	 * an URL to which the end-user should be redirected.
 	 *
-	 * @see https://trustly.com/en/developer/api#/p2p
+	 * @see https://eu.developers.trustly.com/doc/reference/p2p
 	 *
 	 * @param string $notificationurl The URL to which notifications for this
 	 *		payment should be sent to. This URL should be hard to guess and not
@@ -1104,7 +1104,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * Captures a previously completed Deposit where
 	 * Deposit.Attributes.AuthorizeOnly was set to 1
 	 *
-	 * @see https://trustly.com/en/developer/api#/capture
+	 * @see https://eu.developers.trustly.com/doc/reference/capture
 	 *
 	 * @param integer $orderid The OrderID of the deposit to capture
 	 *
@@ -1138,7 +1138,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * Voids a previously completed Deposit where Deposit.Attributes.AuthorizeOnly was set to 1.
 	 *
-	 * @see https://trustly.com/en/developer/api#/void
+	 * @see https://eu.developers.trustly.com/doc/reference/void
 	 *
 	 * @param integer $orderid The OrderID of the deposit to void
 	 *
@@ -1163,7 +1163,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * Initiates a new drect debit charge.
 	 *
-	 * @see https://trustly.com/en/developer/api#/charge
+	 * @see https://eu.developers.trustly.com/doc/reference/charge
 	 *
 	 * @param string $accountid The AccountID received from an account
 	 *		notification with granted direct debit mandate from which the money
@@ -1216,7 +1216,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * Get a list of withdrawals from an executed order.
 	 *
-	 * @see https://trustly.com/en/developer/api#/getwithdrawals
+	 * @see https://eu.developers.trustly.com/doc/reference/getwithdrawals
 	 *
 	 * @param integer $orderid The OrderID of the order to query
 	 *
@@ -1228,7 +1228,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 			'OrderID' => $orderid,
 		);
 
-		$request = new Trustly_Data_JSONRPCRequest('getWithdrawals', $data);
+		$request = new Trustly_Data_JSONRPCRequest('GetWithdrawals', $data);
 		return $this->call($request);
 	}
 

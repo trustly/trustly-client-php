@@ -6,7 +6,7 @@ PHP. It implements the standard Payments API as well as gives stubs for
 executing calls against the API used by the backoffice.
 
 For full documentation on the Trustly API internals visit our developer
-website: http://trustly.com/developer . All information about software flows and
+website: https://eu.developers.trustly.com/. All information about software flows and
 call patters can be found on that site. The documentation within this code will
 only cover the code itself, not how you use the Trustly API.
 
@@ -25,7 +25,7 @@ Overview
 The code provided wrappers for calling the trustly API. Create an instance of
 the API call with you merchant criterias and use the stubs in that class for
 calling the API. The API will default to communicate with https://trustly.com,
-override the `host` parameter for the constructor to comminicate with
+override the `host` parameter for the constructor to communicate with
 test.trustly.com instead.
 
 When processing an incoming notification the `handleNotification()` method of the
@@ -86,13 +86,13 @@ Example deposit call
                     NULL,                                       /* URLTarget */
                     NULL,                                       /* SuggestedMinAmount */
                     NULL,                                       /* SuggestedMaxAmount */
-                    'trustly-client-php example/1.0'            /* IntegrationModule */
+                    'trustly-client-php example/1.0',           /* IntegrationModule */
                     FALSE,                                      /* HoldNotifications */
                     'john.doe@example.com',                     /* Email */
                     'SE',                                       /* ShippingAddressCountry */
                     '12345',                                    /* ShippingAddressPostalCode */
                     'ExampleCity',                              /* ShippingAddressCity */
-                    '123 Main St'                               /* ShippingAddressLine1 */
+                    '123 Main St',                              /* ShippingAddressLine1 */
                     'C/O Careholder',                           /* ShippingAddressLine2 */
                     NULL                                        /* ShippingAddress */
                 );
