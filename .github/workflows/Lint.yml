@@ -55,4 +55,4 @@ jobs:
         if: ${{ startsWith(matrix.php, '7.') || startsWith(matrix.php, '8.') }}
         run: |
           composer require --dev phpstan/phpstan
-          vendor/bin/phpstan analyze Trustly --no-progress --level 2
+          vendor/bin/phpstan analyze Trustly --no-progress --level 3
