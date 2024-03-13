@@ -67,6 +67,9 @@ abstract class Trustly_Api {
 	 */
 	public $last_request = NULL;
 
+	/** @var mixed */
+	public $trustly_publickey = NULL;
+
 	/**
 	 * API Constructor
 	 *

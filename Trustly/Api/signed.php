@@ -41,6 +41,12 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 */
 	private $merchant_privatekey = NULL;
 
+	/** @var string */
+	public $api_username;
+
+	/** @var string */
+	public $api_password;
+
 	/**
 	 * Constructor.
 	 *
