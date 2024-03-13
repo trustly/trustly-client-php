@@ -252,6 +252,8 @@ abstract class Trustly_Api {
 	 *
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https. NULL means do not change.
+	 *
+	 * @return void
 	 */
 	public function setHost($host=NULL, $port=NULL, $is_https=NULL) {
 		if(!isset($host)) {
@@ -279,7 +281,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $postdata The (optional) data to post.
 	 *
-	 * @return Array($body, $response_code)
+	 * @return array{string, int} Array($body, $response_code)
 	 */
 	public function post($url=NULL, $postdata=NULL) {
 		/* Do note that that if you are going to POST JSON you need to set the
@@ -465,6 +467,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param Trustly_Data_Request $request Outgoing data request.
 	 *
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function call($request) {
 		if($this->insertCredentials($request) !== TRUE) {
@@ -524,6 +527,8 @@ abstract class Trustly_Api {
 	 * @param string $body The body recieved in response to the request
 	 *
 	 * @param integer $response_code the HTTP response code for the call
+	 *
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	abstract protected function handleResponse($request, $body, $response_code);
 
@@ -535,6 +540,8 @@ abstract class Trustly_Api {
 	 *
 	 * @param Trustly_Data_Request $request Request to be used in the outgoing
 	 *		call
+	 *
+	 * @return bool
 	 */
 	abstract protected function insertCredentials($request);
 
