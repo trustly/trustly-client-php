@@ -113,7 +113,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @see https://eu.developers.trustly.com/doc/reference/authentication
 	 *
-	 * @param string $cert Loaded private RSA key as a string
+	 * @param string|false $cert Loaded private RSA key as a string
+	 *
+	 * @return bool
 	 */
 	public function useMerchantPrivateKey($cert) {
 		if($cert !== FALSE) {
