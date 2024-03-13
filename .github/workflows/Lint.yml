@@ -1,0 +1,52 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['5.3', '5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Lint
+        run: |
+          error=0
+          for file in $(find Trustly -type f -name "*.php"); do
+            php -l -n $file | grep -v "No syntax errors detected" && error=1
+          done
+          if [ $error -eq 1 ]; then
+            echo "Syntax errors were found."
+            exit 1
+          else
+            echo "No syntax errors were detected."
+          fi
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/composer/files
+          key: ${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ matrix.php }}-
+
+      - name: Check dependencies
+        run: composer install
