@@ -174,7 +174,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $uuid UUID in the API call
 	 *
-	 * @param string $signature in the API call
+	 * @param ?string $signature in the API call
 	 *
 	 * @param array $data in the API call
 	 *
@@ -487,9 +487,9 @@ abstract class Trustly_Api {
 	/**
 	 * Return a boolean value formatted for communicating with the API.
 	 *
-	 * @param boolean $value Boolean value to encode
+	 * @param ?boolean $value Boolean value to encode
 	 *
-	 * @return API encoded boolean value
+	 * @return ?string API encoded boolean value
 	 */
 	protected function apiBool($value) {
 		if(isset($value)) {
