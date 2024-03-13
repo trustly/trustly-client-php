@@ -298,13 +298,13 @@ abstract class Trustly_Api {
 		curl_setopt($curl, CURLOPT_PORT, $this->api_port);
 
 		if($this->api_is_https) {
-			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
+			if(defined('CURLOPT_PROTOCOLS')) {
 				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 			}
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
 		} else {
-			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
+			if(defined('CURLOPT_PROTOCOLS')) {
 				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
 			}
 		}
