@@ -248,7 +248,7 @@ function deposit() {
              *
              * All of the parameters below are document in the API 
              * documentationf or the deposit call visit 
-             * https://trustly.com/en/developer/api#/deposit for information on 
+             * https://eu.developers.trustly.com/doc/reference/deposit for information on
              * the specifics of all of the parameters. A few tips below.
              *
              * EndUserID - Make sure this is something unique per enduser in 
