@@ -43,9 +43,9 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $method Method name for the call
+	 * @param ?string $method Method name for the call
 	 *
-	 * @param array $payload Call payload
+	 * @param ?array<mixed> $payload Call payload
 	 */
 	public function __construct($method=NULL, $payload=NULL) {
 		parent::__construct();

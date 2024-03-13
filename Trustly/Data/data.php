@@ -83,7 +83,7 @@ class Trustly_Data {
 	 * Get the specific data value from the payload or the full payload if
 	 * no value is supplied
 	 *
-	 * @param string $name The optional data parameter to get. If NULL then the
+	 * @param ?string $name The optional data parameter to get. If NULL then the
 	 * entire payload will be returned.
 	 *
 	 * @return mixed value

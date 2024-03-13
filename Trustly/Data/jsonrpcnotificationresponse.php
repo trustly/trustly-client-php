@@ -42,7 +42,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * @param Trustly_Data_JSONRPCNotificationRequest $request Incoming
 	 *		notification request to which we are responding
 	 *
-	 * @param boolean $success Set to true to indicate that the notification
+	 * @param ?boolean $success Set to true to indicate that the notification
 	 *		was successfully processed.
 	 */
 	public function __construct($request, $success=NULL) {
@@ -70,7 +70,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	/**
 	 * Set the success status in the response.
 	 *
-	 * @param boolean $success Set to true to indicate that the notification
+	 * @param ?boolean $success Set to true to indicate that the notification
 	 *		was successfully processed.
 	 *
 	 * @return ?boolean $success
@@ -120,7 +120,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * Get the value of a parameter in the result section of the notification
 	 * response.
 	 *
-	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 * @param ?string $name The name of the parameter. Leave as NULL to get the
 	 *		entire payload.
 	 *
 	 * @return mixed The value sought after or the entire payload depending on
@@ -148,7 +148,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * Get the value of a parameter in the result->data section of the
 	 * notification response.
 	 *
-	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 * @param ?string $name The name of the parameter. Leave as NULL to get the
 	 *		entire payload.
 	 *
 	 * @return mixed The value sought after or the entire payload depending on
