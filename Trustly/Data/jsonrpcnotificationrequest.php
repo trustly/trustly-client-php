@@ -52,7 +52,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 *		request seems to be valid but is for a JSON RPC version we do not
 	 *		support.
 	 *
-	 * @param string $notification RAW incoming notification body
+	 * @param string $notification_body RAW incoming notification body
 	 */
 	public function __construct($notification_body) {
 		parent::__construct();
