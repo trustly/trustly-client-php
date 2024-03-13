@@ -313,7 +313,7 @@ abstract class Trustly_Api {
 		curl_setopt($curl, CURLOPT_URL, $url);
 
 		$body = curl_exec($curl);
-		if($body === FALSE) {
+		if(!is_string($body)) {
 			$error = curl_error($curl);
 			if($error === NULL) {
 				$error = 'Failed to connect to the Trusly API';
