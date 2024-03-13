@@ -378,7 +378,7 @@ abstract class Trustly_Api {
 	/**
 	 * Return a properly formed url to communicate with this API.
 	 *
-	 * @return URL pointing to the API peer.
+	 * @return string URL pointing to the API peer.
 	 */
 	public function baseURL() {
 		if($this->api_is_https) {
@@ -394,7 +394,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param Trustly_Data_Request $request Data to send in the request
 	 *
-	 * @return URL to the API peer with the given query path.
+	 * @return string URL to the API peer with the given query path.
 	 */
 	public function url($request=NULL) {
 		return $this->baseURL() . $this->urlPath($request);
