@@ -217,7 +217,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param boolean $success Indicator if we should respond with processing
 	 *		success or failure to the notification.
 	 *
-	 * @return Trustly_Data_JSONRPCNotificationResponse response object.
+	 * @return Trustly_Data_JSONRPCNotificationResponse|false response object.
 	 */
 	public function notificationResponse($request, $success=TRUE) {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
