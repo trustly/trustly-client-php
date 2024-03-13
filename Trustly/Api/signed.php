@@ -1217,7 +1217,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 			'OrderID' => $orderid,
 		);
 
-		$request = new Trustly_Data_JSONRPCRequest('getWithdrawals', $data);
+		$request = new Trustly_Data_JSONRPCRequest('GetWithdrawals', $data);
 		return $this->call($request);
 	}
 
