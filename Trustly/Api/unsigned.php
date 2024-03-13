@@ -41,16 +41,16 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * newSessionCookie after which the $session_uuid is used instead.
 	 * @var string
 	 */
-	private $api_username = NULL;
+	private $api_username;
 	/**
 	 * Login password when using the API. Used only in the first API call to
 	 * newSessionCookie after which the $session_uuid is used instead.
 	 * @var string
 	 */
-	private $api_password = NULL;
+	private $api_password;
 	/**
 	 * Session UUID used for authenticating calls.
-	 * @var string
+	 * @var ?string
 	 */
 	private $session_uuid = NULL;
 
