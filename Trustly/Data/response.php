@@ -37,21 +37,21 @@ class Trustly_Data_Response extends Trustly_Data {
 
 	/**
 	 * Raw copy of the incoming response body
-	 * @var integer
+	 * @var ?string
 	 */
-	var $response_body = NULL;
+	public $response_body = NULL;
 
 	/**
 	 * The response HTTP code
-	 * @var integer
+	 * @var ?integer
 	 */
-	var $response_code = NULL;
+	public $response_code = NULL;
 
 	/**
 	 * Shortcut to the part of the result being actually interesting. The guts will contain all returned data.
 	 * @var mixed
 	 */
-	var $response_result = NULL;
+	public $response_result = NULL;
 
 
 	/**
@@ -67,8 +67,6 @@ class Trustly_Data_Response extends Trustly_Data {
 	 * @param integer $response_code HTTP response code from the API call
 	 */
 	public function __construct($response_body, $response_code=NULL) {
-		parent::__construct();
-
 		$this->response_code = $response_code;
 		$this->response_body = $response_body;
 
