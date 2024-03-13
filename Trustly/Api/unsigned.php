@@ -208,7 +208,8 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		$filterkeys=NULL, $limit=100, $offset=0, $params=NULL, $sortby=NULL,
 		$sortorder=NULL) {
 
-		return $this->call('GetViewStable', array(
+		$request = new Trustly_Data_JSONRPCRequest('GetViewStable');
+		return $this->call($request, array(
 			'DateOrder' => $dateorder,
 			'Datestamp' => $datestamp,
 			'FilterKeys' => $filterkeys,
@@ -229,15 +230,13 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * the outgoing call. Take care when supplying the arguments for the call
 	 * so they match the function prototype properly.
 	 *
-	 * @param string $method API method to call
+	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $params Outgoing call params
+	 * @param ?array<string, mixed> $params Outgoing call params
 	 *
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 */
-	public function call($method, $params=NULL)  {
-		$request = new Trustly_Data_JSONRPCRequest($method);
-
+	public function call($request, $params=NULL) {
 		if(isset($params)) {
 			foreach($params as $key => $value) {
 				$request->setParam($key, $value);
