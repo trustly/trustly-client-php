@@ -91,7 +91,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 *
 	 * @param string $signature Signature of the outgoing data.
 	 *
-	 * @return string $signature
+	 * @return void
 	 */
 	public function setSignature($signature) {
 		$this->setResult('signature', $signature);
