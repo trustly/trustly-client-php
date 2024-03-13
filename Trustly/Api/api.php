@@ -44,13 +44,13 @@ abstract class Trustly_Api {
 	 *
 	 * @var string FQHN
 	 */
-	protected $api_host = NULL;
+	protected $api_host;
 	/**
 	 * API port used for communication.
 	 *
 	 * @var integer Normally either 443 (https) or 80 (http)
 	 */
-	protected $api_port = NULL;
+	protected $api_port;
 	/**
 	 * Inidicator wether the API host is communicating using https
 	 *
@@ -63,7 +63,7 @@ abstract class Trustly_Api {
 	 *
 	 * @see Trustly_Api::getLastRequest()
 	 *
-	 * @var array Last API call in data form.
+	 * @var ?Trustly_Data_Request Last API call in data form.
 	 */
 	public $last_request = NULL;
 
@@ -407,7 +407,7 @@ abstract class Trustly_Api {
 	/**
 	 * Return the last request that we attempted to make via this API
 	 *
-	 * @return array Last request data structure.
+	 * @return ?Trustly_Data_Request Last request data structure.
 	 */
 	public function getLastRequest() {
 		return $this->last_request;

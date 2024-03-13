@@ -40,7 +40,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * The RAW incoming notification body
 	 * @var string
 	 */
-	var $notification_body = NULL;
+	public $notification_body;
 
 
 	/**
@@ -55,8 +55,6 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * @param string $notification_body RAW incoming notification body
 	 */
 	public function __construct($notification_body) {
-		parent::__construct();
-
 		$this->notification_body = $notification_body;
 
 		if(empty($notification_body)) {
