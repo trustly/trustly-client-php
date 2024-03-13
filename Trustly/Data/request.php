@@ -75,7 +75,9 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Convenience function for setting the uuid in the call
 	 *
-	 * @param string uuid
+	 * @param string $uuid
+	 *
+	 * @return void
 	 */
 	public function setUUID($uuid) {
 		$this->set('uuid', $uuid);
@@ -95,7 +97,9 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Set the medhod in the call
 	 *
-	 * @param string method name
+	 * @param string $method method name
+	 *
+	 * @return void
 	 */
 	public function setMethod($method) {
 		$this->method = $method;

@@ -521,7 +521,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param float $amount The amount to refund the customer with exactly two
 	 *		decimals. Only digits. Use dot (.) as decimal separator.
 	 *
-	 * @param string currency The currency of the amount to refund the
+	 * @param string $currency The currency of the amount to refund the
 	 *		customer.
 	 *
 	 * @return Trustly_Data_JSONRPCSignedResponse

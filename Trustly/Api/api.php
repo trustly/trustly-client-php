@@ -226,7 +226,7 @@ abstract class Trustly_Api {
 	 * Trustly_Data_JSONRPCNotificationRequest) has been signed with the
 	 * correct key originating from the host
 	 *
-	 * @param Trustly_Data_JSONRPCNotificationRequest incoming notification
+	 * @param Trustly_Data_JSONRPCNotificationRequest $notification incoming notification
 	 *
 	 * @return boolean Indicating if the data was indeed properly signed by the
 	 *		API we think we are talking to
