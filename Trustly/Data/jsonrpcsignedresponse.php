@@ -88,7 +88,7 @@ class Trustly_Data_JSONRPCSignedResponse extends Trustly_Data_JSONRPCResponse {
 	/**
 	 * Get data from the data section of the response
 	 *
-	 * @param string $name Name of the data parameter to fetch. NULL value will
+	 * @param ?string $name Name of the data parameter to fetch. NULL value will
 	 *		return entire data section.
 	 *
 	 * @return mixed The value for parameter $name or the entire data block if

@@ -87,7 +87,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
+	 * @param ?Trustly_Data_JSONRPCRequest $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */
@@ -181,11 +181,11 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @param string $viewname Name of view
 	 *
-	 * @param string $dateorder 'OLDER'|'NEVER' or NULL
+	 * @param ?string $dateorder 'OLDER'|'NEVER' or NULL
 	 *
-	 * @param string $datestamp Order used in relation with $dateorder
+	 * @param ?string $datestamp Order used in relation with $dateorder
 	 *
-	 * @param array $filterkeys Array of arrays of filters to apply to the data.
+	 * @param ?array<array<string>> $filterkeys Array of arrays of filters to apply to the data.
 	 *		Arrays in the array consists of 1. Key name, 2. Key value, 3.
 	 *		Operator, 4. Key value 2. Operator is one of 'NOT', 'BETWEEN' (in
 	 *		which case Key value 2 must be set), 'LIKE', 'DECRYPTED', 'IN'
@@ -195,11 +195,11 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @param integer $offset Skip these many records in the start of the request
 	 *
-	 * @param string $params Parameters for the view
+	 * @param ?string $params Parameters for the view
 	 *
-	 * @param string $sortby Column to sort by
+	 * @param ?string $sortby Column to sort by
 	 *
-	 * @param string $sortorder Sort order ASC or DESC
+	 * @param ?string $sortorder Sort order ASC or DESC
 	 *
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 *
