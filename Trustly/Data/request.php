@@ -36,7 +36,7 @@
 class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Call method name
-	 * @var string
+	 * @var ?string
 	 */
 	var $method = NULL;
 
@@ -62,7 +62,7 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Convenience function for getting the uuid from the call
 	 *
-	 * @return string uuid
+	 * @return ?string uuid
 	 */
 	public function getUUID() {
 		if(isset($this->payload['uuid'])) {
@@ -85,7 +85,7 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Get the method in the outgoing call
 	 *
-	 * @return string method name
+	 * @return ?string method name
 	 */
 	public function getMethod() {
 		return $this->method;

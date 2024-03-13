@@ -54,9 +54,9 @@ class Trustly_Data {
 	 * values. This is used to keep the requests cleaner rather then
 	 * supplying NULL values in the payload
 	 *
-	 * @param array $data data to clean
+	 * @param mixed $data data to clean
 	 *
-	 * @return array cleaned data
+	 * @return mixed cleaned data
 	 */
 	public function vacuum($data) {
 		if(is_null($data)) {
@@ -106,7 +106,7 @@ class Trustly_Data {
 	 *
 	 * @param string $str String to process
 	 *
-	 * @return string UTF-8 variant of string
+	 * @return ?string UTF-8 variant of string
 	 */
 	public static function ensureUTF8($str) {
 		if($str == NULL) {

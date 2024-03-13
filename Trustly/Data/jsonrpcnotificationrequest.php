@@ -135,7 +135,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the UUID from the request.
 	 *
-	 * @return string The UUID value
+	 * @return ?string The UUID value
 	 */
 	public function getUUID() {
 		return $this->getParams('uuid');
@@ -145,7 +145,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the Method from the request.
 	 *
-	 * @return string The Method value.
+	 * @return ?string The Method value.
 	 */
 	public function getMethod() {
 		return $this->get('method');
@@ -155,7 +155,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the Signature from the request.
 	 *
-	 * @return string The Signature value.
+	 * @return ?string The Signature value.
 	 */
 	public function getSignature() {
 		return $this->getParams('signature');
@@ -165,7 +165,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the JSON RPC version from the request.
 	 *
-	 * @return string The Version.
+	 * @return ?string The Version.
 	 */
 	public function getVersion() {
 		return $this->get('version');
