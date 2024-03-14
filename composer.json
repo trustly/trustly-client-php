@@ -10,7 +10,6 @@
 	],
 	"require": {
 		"ext-json": "*",
-		"ext-bcmath": "*",
 		"ext-openssl": "*",
 		"ext-curl": "*",
 		"ext-mbstring": "*",
