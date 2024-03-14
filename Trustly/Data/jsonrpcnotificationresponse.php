@@ -42,13 +42,10 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * @param Trustly_Data_JSONRPCNotificationRequest $request Incoming
 	 *		notification request to which we are responding
 	 *
-	 * @param boolean $success Set to true to indicate that the notification
+	 * @param ?boolean $success Set to true to indicate that the notification
 	 *		was successfully processed.
 	 */
 	public function __construct($request, $success=NULL) {
-
-		parent::__construct();
-
 		$uuid = $request->getUUID();
 		$method = $request->getMethod();
 
@@ -70,10 +67,10 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	/**
 	 * Set the success status in the response.
 	 *
-	 * @param boolean $success Set to true to indicate that the notification
+	 * @param ?boolean $success Set to true to indicate that the notification
 	 *		was successfully processed.
 	 *
-	 * @return $success
+	 * @return ?boolean $success
 	 */
 	public function setSuccess($success=NULL) {
 		$status = 'OK';
@@ -91,7 +88,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 *
 	 * @param string $signature Signature of the outgoing data.
 	 *
-	 * @return string $signature
+	 * @return void
 	 */
 	public function setSignature($signature) {
 		$this->setResult('signature', $signature);
@@ -120,7 +117,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * Get the value of a parameter in the result section of the notification
 	 * response.
 	 *
-	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 * @param ?string $name The name of the parameter. Leave as NULL to get the
 	 *		entire payload.
 	 *
 	 * @return mixed The value sought after or the entire payload depending on
@@ -148,7 +145,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * Get the value of a parameter in the result->data section of the
 	 * notification response.
 	 *
-	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 * @param ?string $name The name of the parameter. Leave as NULL to get the
 	 *		entire payload.
 	 *
 	 * @return mixed The value sought after or the entire payload depending on
@@ -198,7 +195,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	/**
 	 * Get the Method value from the response.
 	 *
-	 * @return string The Method value.
+	 * @return ?string The Method value.
 	 */
 	public function getMethod() {
 		return $this->getResult('method');
@@ -208,7 +205,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	/**
 	 * Get the UUID value from the response.
 	 *
-	 * @return string The UUID value
+	 * @return ?string The UUID value
 	 */
 	public function getUUID() {
 		return $this->getResult('uuid');

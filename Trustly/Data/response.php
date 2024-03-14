@@ -37,21 +37,21 @@ class Trustly_Data_Response extends Trustly_Data {
 
 	/**
 	 * Raw copy of the incoming response body
-	 * @var integer
+	 * @var ?string
 	 */
-	var $response_body = NULL;
+	public $response_body = NULL;
 
 	/**
 	 * The response HTTP code
-	 * @var integer
+	 * @var ?integer
 	 */
-	var $response_code = NULL;
+	public $response_code = NULL;
 
 	/**
 	 * Shortcut to the part of the result being actually interesting. The guts will contain all returned data.
 	 * @var mixed
 	 */
-	var $response_result = NULL;
+	public $response_result = NULL;
 
 
 	/**
@@ -64,11 +64,9 @@ class Trustly_Data_Response extends Trustly_Data {
 	 *
 	 * @param string $response_body RAW response body from the API call
 	 *
-	 * @param integer $response_code HTTP response code from the API call
+	 * @param ?integer $response_code HTTP response code from the API call
 	 */
 	public function __construct($response_body, $response_code=NULL) {
-		parent::__construct();
-
 		$this->response_code = $response_code;
 		$this->response_body = $response_body;
 
@@ -135,7 +133,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get error message (if any) from the API response
 	 *
-	 * @return string The error message
+	 * @return ?string The error message
 	 */
 	public function getErrorMessage() {
 		if($this->isError()) {
@@ -150,7 +148,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get error code (if any) from the API response
 	 *
-	 * @return integer The error code (numerical)
+	 * @return ?integer The error code (numerical)
 	 */
 	public function getErrorCode() {
 		if($this->isError()) {
@@ -165,7 +163,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get data from the result section of the response
 	 *
-	 * @param string $name Name of the result parameter to fetch. NULL value
+	 * @param ?string $name Name of the result parameter to fetch. NULL value
 	 *		will return entire result section.
 	 *
 	 * @return mixed The value for parameter $name or the entire result block
@@ -188,7 +186,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Convenience function for getting the uuid in the response
 	 *
-	 * @param string uuid
+	 * @return ?string uuid
 	 */
 	public function getUUID() {
 		if(isset($this->response_result['uuid'])) {
@@ -201,7 +199,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get the method from the response
 	 *
-	 * @return string method name
+	 * @return ?string method name
 	 */
 	public function getMethod() {
 		if(isset($this->response_result['method'])) {
@@ -214,7 +212,7 @@ class Trustly_Data_Response extends Trustly_Data {
 	/**
 	 * Get the signature from the response
 	 *
-	 * @return string signature
+	 * @return ?string signature
 	 */
 	public function getSignature() {
 		if(isset($this->response_result['signature'])) {

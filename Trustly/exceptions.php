@@ -47,13 +47,15 @@ class Trustly_JSONRPCVersionException extends Exception { }
  * indication that message contents are being tampered with.
  */
 class Trustly_SignatureException extends Exception {
+	/** @var mixed */
+	public $signature_data = NULL;
 
 	/**
 	 * Constructor
 	 *
 	 * @param string $message Exception message
 	 *
-	 * @param array $data Data that was signed with an invalid signature
+	 * @param mixed $data Data that was signed with an invalid signature
 	 */
 	public function __construct($message, $data=NULL) {
 		parent::__construct($message);
@@ -65,6 +67,8 @@ class Trustly_SignatureException extends Exception {
 	 * Get the data that had an invalid signature. This is the only way to get
 	 * data from anything with a bad signature. This should be used for
 	 * DEBUGGING ONLY. You should NEVER rely on the contents.
+	 *
+	 * @return mixed
 	 */
 	public function getBadData() {
 		return $this->signature_data;

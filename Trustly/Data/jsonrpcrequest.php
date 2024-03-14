@@ -41,7 +41,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 * @throws Trustly_DataException If the combination of $data and
 	 *		$attributes is invalid
 	 *
-	 * @param string $method Outgoing call API method
+	 * @param ?string $method Outgoing call API method
 	 *
 	 * @param mixed $data Outputgoing call Data (if any). This can be either an
 	 *		array or a simple non-complex value.
@@ -149,7 +149,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	/**
 	 * Get the UUID value from the outgoing call.
 	 *
-	 * @return string The UUID value
+	 * @return ?string The UUID value
 	 */
 	public function getUUID() {
 		if(isset($this->payload['params']['UUID'])) {
@@ -163,17 +163,17 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 *
 	 * @param string $method The name of the API method this call is for
 	 *
-	 * @return string $method
+	 * @return void
 	 */
 	public function setMethod($method) {
-		return $this->set('method', $method);
+		$this->set('method', $method);
 	}
 
 
 	/**
 	 * Get the Method value from the outgoing call.
 	 *
-	 * @return string The Method value.
+	 * @return ?string The Method value.
 	 */
 	public function getMethod() {
 		return $this->get('method');
@@ -202,7 +202,7 @@ class Trustly_Data_JSONRPCRequest extends Trustly_Data_Request {
 	 * Get the value of one parameter in the params->Data section of the
 	 * request. Or the entire Data section if no name is given.
 	 *
-	 * @param string $name Name of the Data param to obtain. Leave as NULL to
+	 * @param ?string $name Name of the Data param to obtain. Leave as NULL to
 	 *		get the entire structure.
 	 *
 	 * @return mixed The value or the entire Data depending on $name

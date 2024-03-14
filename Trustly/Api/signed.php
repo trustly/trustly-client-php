@@ -37,9 +37,15 @@
 class Trustly_Api_Signed extends Trustly_Api {
 	/**
 	 * Loaded merchant private key resource
-	 * @var resource from openssl with the loaded privatekey
+	 * @var mixed from openssl with the loaded privatekey
 	 */
 	private $merchant_privatekey = NULL;
+
+	/** @var string */
+	public $api_username;
+
+	/** @var string */
+	public $api_password;
 
 	/**
 	 * Constructor.
@@ -70,7 +76,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		parent::__construct($host, $port, $is_https);
 
 		$this->api_username = $username;
-		$this->api_password  = $password;
+		$this->api_password = $password;
 		if($merchant_privatekey != NULL) {
 			if(strpos($merchant_privatekey, "\n") !== FALSE) {
 				if($this->useMerchantPrivateKey($merchant_privatekey) === FALSE) {
@@ -107,7 +113,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @see https://eu.developers.trustly.com/doc/reference/authentication
 	 *
-	 * @param string $cert Loaded private RSA key as a string
+	 * @param string|false $cert Loaded private RSA key as a string
+	 *
+	 * @return bool
 	 */
 	public function useMerchantPrivateKey($cert) {
 		if($cert !== FALSE) {
@@ -124,7 +132,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @throws Trustly_SignatureException if private key has not been loaded
 	 *		yet or if we for some other reason fail to sign the request.
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $request Request to sign.
+	 * @param Trustly_Data_JSONRPCRequest|Trustly_Data_JSONRPCNotificationResponse $request Request to sign.
+	 *
+	 * @return string
 	 */
 	public function signMerchantRequest($request) {
 		if(!isset($this->merchant_privatekey)) {
@@ -166,9 +176,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$request->setData('Password', $this->api_password);
 
 		$signature = $this->signMerchantRequest($request);
-		if($signature === FALSE) {
-			return FALSE;
-		}
 		$request->setParam('Signature', $signature);
 
 		return TRUE;
@@ -194,7 +201,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @return Trustly_Data_JSONRPCSignedResponse
 	 */
 	protected function handleResponse($request, $body, $response_code) {
-		$response = new Trustly_Data_JSONRPCSignedResponse($body, $response_code);
+		$response = new Trustly_Data_JSONRPCSignedResponse($body);
 
 		if($this->verifyTrustlySignedResponse($response) !== TRUE) {
 			throw new Trustly_SignatureException('Incomming message signature is not valid', $response);
@@ -223,9 +230,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
 
 		$signature = $this->signMerchantRequest($response);
-		if($signature === FALSE) {
-			return FALSE;
-		}
 		$response->setSignature($signature);
 
 		return $response;
@@ -239,7 +243,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
+	 * @param ?Trustly_Data_JSONRPCRequest $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */
@@ -251,6 +255,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 
 	/**
 	 * Quirks mode implementation of clearing all pending openssl error messages.
+	 *
+	 * @return void
 	 */
 	private function clearOpenSSLError() {
 		/* Not really my favourite part of this library implementation. As
@@ -303,7 +309,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse Response from the API.
+	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 */
 	public function call($request) {
 		$uuid = $request->getUUID();
@@ -437,7 +443,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		in the previously used account being preselected
 	 * @param bool $requestKYC Flag to pass whether we request KYC check or not (Pay N Play feature)
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
@@ -515,10 +521,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param float $amount The amount to refund the customer with exactly two
 	 *		decimals. Only digits. Use dot (.) as decimal separator.
 	 *
-	 * @param string currency The currency of the amount to refund the
+	 * @param string $currency The currency of the amount to refund the
 	 *		customer.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function refund($orderid, $amount, $currency) {
 
@@ -617,7 +623,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $address The account holders address
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function withdraw($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $currency=NULL, $country=NULL,
@@ -676,7 +682,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the withdrawal to approve.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function approveWithdrawal($orderid) {
 
@@ -699,7 +705,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the withdrawal to deny.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function denyWithdrawal($orderid) {
 
@@ -767,7 +773,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param boolean $requestdirectdebitmandate Initiate a direct debit
 	 *		mandate request for the selected account.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
@@ -860,7 +866,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $address The account holders address
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function registerAccount($enduserid, $clearinghouse, $banknumber,
 		$accountnumber, $firstname, $lastname, $mobilephone=NULL,
@@ -935,7 +941,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		system during development. Intead you can get you notifications on
 	 *		https://test.trustly.com/notifications.html
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
 		$messageid, $amount, $currency, $holdnotifications=NULL) {
@@ -980,76 +986,80 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $messageid Your unique ID for the deposit.
 	 *
-	 * @param string $locale The end-users localization preference in the
+	 * @param ?string $locale The end-users localization preference in the
 	 *		format [language[_territory]]. Language is the ISO 639-1 code and
 	 *		territory the ISO 3166-1-alpha-2 code.
 	 *
-	 * @param float $amount with exactly two decimals in the currency specified
+	 * @param ?float $amount with exactly two decimals in the currency specified
 	 *		by Currency. Do not use this attribute in combination with
 	 *		SuggestedMinAmount or SuggestedMaxAmount. Only digits. Use dot (.)
 	 *		as decimal separator.
 	 *
-	 * @param string $currency The currency of the end-user's account in the
+	 * @param ?string $currency The currency of the end-user's account in the
 	 *		merchant's system.
 	 *
-	 * @param string $country The ISO 3166-1-alpha-2 code of the end-user's
+	 * @param ?string $country The ISO 3166-1-alpha-2 code of the end-user's
 	 *		country. This will be used for preselecting the correct country for
 	 *		the end-user in the iframe.
 	 *
-	 * @param string $mobilephone The mobile phonenumber to the end-user in
+	 * @param ?string $mobilephone The mobile phonenumber to the end-user in
 	 *		international format. This is used for KYC and AML routines.
 	 *
-	 * @param string $firstname The end-user's firstname. Useful for some banks
+	 * @param ?string $firstname The end-user's firstname. Useful for some banks
 	 *		for identifying transactions.
 	 *
-	 * @param string $lastname The end-user's lastname. Useful for some banks
+	 * @param ?string $lastname The end-user's lastname. Useful for some banks
 	 *		for identifying transactions.
 	 *
-	 * @param string $nationalidentificationnumber The end-user's social
+	 * @param ?string $nationalidentificationnumber The end-user's social
 	 *		security number / personal number / birth number / etc. Useful for
 	 *		some banks for identifying transactions and KYC/AML.
 	 *
-	 * @param string $shopperstatement The text to show on the end-user's bank
+	 * @param ?string $shopperstatement The text to show on the end-user's bank
 	 *		statement.
 	 *
-	 * @param string $ip The IP-address of the end-user.
+	 * @param ?string $ip The IP-address of the end-user.
 	 *
-	 * @param string $successurl The URL to which the end-user should be
+	 * @param ?string $successurl The URL to which the end-user should be
 	 *		redirected after a successful deposit. Do not put any logic on that
 	 *		page since it's not guaranteed that the end-user will in fact visit
 	 *		it.
 	 *
-	 * @param string $failurl The URL to which the end-user should be
+	 * @param ?string $failurl The URL to which the end-user should be
 	 *		redirected after a failed deposit. Do not put any logic on that
 	 *		page since it's not guaranteed that the end-user will in fact visit
 	 *		it.
 	 *
-	 * @param string $templateurl The URL to your template page for the
+	 * @param ?string $templateurl The URL to your template page for the
 	 *		checkout process.
 	 *
-	 * @param string $urltarget The html target/framename of the SuccessURL.
+	 * @param ?string $urltarget The html target/framename of the SuccessURL.
 	 *		Only _top, _self and _parent are suported.
 	 *
-	 * @param float $suggestedminamount The minimum amount the end-user is
+	 * @param ?float $suggestedminamount The minimum amount the end-user is
 	 *		allowed to deposit in the currency specified by Currency. Only
 	 *		digits. Use dot (.) as decimal separator.
 	 *
-	 * @param float $suggestedmaxamount The maximum amount the end-user is
+	 * @param ?float $suggestedmaxamount The maximum amount the end-user is
 	 *		allowed to deposit in the currency specified by Currency. Only
 	 *		digits. Use dot (.) as decimal separator.
 	 *
-	 * @param string $integrationmodule Version information for your
+	 * @param ?string $integrationmodule Version information for your
 	 *		integration module. This is for informational purposes only and can
 	 *		be useful when troubleshooting problems. Should contain enough
 	 *		version information to be useful.
 	 *
-	 * @param boolean $holdnotifications Do not deliver notifications for this
+	 * @param ?boolean $holdnotifications Do not deliver notifications for this
 	 *		order. This is a parameter available when using test.trustly.com
 	 *		and can be used for manually delivering notifications to your local
 	 *		system during development. Intead you can get you notifications on
 	 *		https://test.trustly.com/notifications.html
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @param mixed $authorizeonly
+	 *
+	 * @param mixed $templatedata
+	 *
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function p2p($notificationurl,$enduserid, $messageid,
 		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
@@ -1115,7 +1125,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $currency The currency of the amount
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function capture($orderid, $amount, $currency) {
 
@@ -1142,7 +1152,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the deposit to void
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function void($orderid) {
 
@@ -1186,10 +1196,10 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string $currency The currency of the end-user's account in the
 	 *		merchant's system.
 	 *
-	 * @param string $shopperstatement The text to show on the end-user's bank
+	 * @param ?string $shopperstatement The text to show on the end-user's bank
 	 *		statement.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function charge($accountid, $notificationurl, $enduserid, $messageid,
 		$amount, $currency, $shopperstatement=NULL) {
@@ -1220,7 +1230,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the order to query
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function getWithdrawals($orderid) {
 

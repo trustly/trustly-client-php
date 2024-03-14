@@ -40,7 +40,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * The RAW incoming notification body
 	 * @var string
 	 */
-	var $notification_body = NULL;
+	public $notification_body;
 
 
 	/**
@@ -52,11 +52,9 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 *		request seems to be valid but is for a JSON RPC version we do not
 	 *		support.
 	 *
-	 * @param string $notification RAW incoming notification body
+	 * @param string $notification_body RAW incoming notification body
 	 */
 	public function __construct($notification_body) {
-		parent::__construct();
-
 		$this->notification_body = $notification_body;
 
 		if(empty($notification_body)) {
@@ -84,7 +82,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get value from or the entire params payload.
 	 *
-	 * @param string $name Name of the params parameter to obtain. Leave blank
+	 * @param ?string $name Name of the params parameter to obtain. Leave blank
 	 *		to get the entire payload
 	 *
 	 * @return mixed The value for the params parameter or the entire payload
@@ -110,7 +108,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	 * Get the value of a parameter in the params->data section of the
 	 * notification response.
 	 *
-	 * @param string $name The name of the parameter. Leave as NULL to get the
+	 * @param ?string $name The name of the parameter. Leave as NULL to get the
 	 *		entire payload.
 	 *
 	 * @return mixed The value sought after or the entire payload depending on
@@ -135,7 +133,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the UUID from the request.
 	 *
-	 * @return string The UUID value
+	 * @return ?string The UUID value
 	 */
 	public function getUUID() {
 		return $this->getParams('uuid');
@@ -145,7 +143,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the Method from the request.
 	 *
-	 * @return string The Method value.
+	 * @return ?string The Method value.
 	 */
 	public function getMethod() {
 		return $this->get('method');
@@ -155,7 +153,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the Signature from the request.
 	 *
-	 * @return string The Signature value.
+	 * @return ?string The Signature value.
 	 */
 	public function getSignature() {
 		return $this->getParams('signature');
@@ -165,7 +163,7 @@ class Trustly_Data_JSONRPCNotificationRequest extends Trustly_Data {
 	/**
 	 * Get the JSON RPC version from the request.
 	 *
-	 * @return string The Version.
+	 * @return ?string The Version.
 	 */
 	public function getVersion() {
 		return $this->get('version');

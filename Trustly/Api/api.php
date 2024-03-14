@@ -44,13 +44,13 @@ abstract class Trustly_Api {
 	 *
 	 * @var string FQHN
 	 */
-	protected $api_host = NULL;
+	protected $api_host;
 	/**
 	 * API port used for communication.
 	 *
 	 * @var integer Normally either 443 (https) or 80 (http)
 	 */
-	protected $api_port = NULL;
+	protected $api_port;
 	/**
 	 * Inidicator wether the API host is communicating using https
 	 *
@@ -63,9 +63,12 @@ abstract class Trustly_Api {
 	 *
 	 * @see Trustly_Api::getLastRequest()
 	 *
-	 * @var array Last API call in data form.
+	 * @var ?Trustly_Data_Request Last API call in data form.
 	 */
 	public $last_request = NULL;
+
+	/** @var mixed */
+	public $trustly_publickey = NULL;
 
 	/**
 	 * API Constructor
@@ -89,9 +92,9 @@ abstract class Trustly_Api {
 	public function __construct($host='trustly.com', $port=443, $is_https=TRUE) {
 		$this->api_is_https = $is_https;
 
-		if($this->loadTrustlyPublicKey($host, $port, $is_https) === FALSE) {
+		if($this->loadTrustlyPublicKey($host, $port) === FALSE) {
 			$error = openssl_error_string();
-			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
+			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".($error?", error $error":''));
 		}
 
 		/* Make sure the curl extension is loaded so we can open URL's */
@@ -139,9 +142,9 @@ abstract class Trustly_Api {
 	 *
 	 * @link https://eu.developers.trustly.com/doc/reference/authentication
 	 *
-	 * @param array $data Input data to serialize
+	 * @param mixed $data Input data to serialize
 	 *
-	 * @return array The input data in a serialized form
+	 * @return string The input data in a serialized form
 	 */
 	public function serializeData($data) {
 		if(is_array($data)) {
@@ -167,13 +170,13 @@ abstract class Trustly_Api {
 	 *
 	 * @link https://eu.developers.trustly.com/doc/reference/authentication
 	 *
-	 * @param string $method Method in the API call
+	 * @param ?string $method Method in the API call
 	 *
-	 * @param string $uuid UUID in the API call
+	 * @param ?string $uuid UUID in the API call
 	 *
-	 * @param string $signature in the API call
+	 * @param ?string $signature in the API call
 	 *
-	 * @param array $data in the API call
+	 * @param mixed $data in the API call
 	 *
 	 * @return boolean Indicating wether or not the host key was used for
 	 *		signing this data.
@@ -204,7 +207,7 @@ abstract class Trustly_Api {
 	 * Trustly_Data_Response) has been signed with the correct key when
 	 * originating from the host
 	 *
-	 * @param Trustly_Data_Response $response Response from the API call.
+	 * @param Trustly_Data_JSONRPCSignedResponse $response Response from the API call.
 	 *
 	 * @return boolean Indicating if the data was indeed properly signed by the
 	 *		API we think we are talking to
@@ -223,7 +226,7 @@ abstract class Trustly_Api {
 	 * Trustly_Data_JSONRPCNotificationRequest) has been signed with the
 	 * correct key originating from the host
 	 *
-	 * @param Trustly_Data_JSONRPCNotificationRequest incoming notification
+	 * @param Trustly_Data_JSONRPCNotificationRequest $notification incoming notification
 	 *
 	 * @return boolean Indicating if the data was indeed properly signed by the
 	 *		API we think we are talking to
@@ -243,15 +246,17 @@ abstract class Trustly_Api {
 	 * @throws InvalidArgumentException If the public key for the API host
 	 *		cannot be loaded.
 	 *
-	 * @param string $host API host used for communication. Fully qualified
+	 * @param ?string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
 	 *		either 'test.trustly.com' or 'trustly.com'. NULL means do not change.
 	 *
-	 * @param integer $port Port on API host used for communicaiton. Normally
+	 * @param ?integer $port Port on API host used for communicaiton. Normally
 	 *		443 for https, or 80 for http. NULL means do not change.
 	 *
-	 * @param bool $is_https Indicator wether the port on the API host expects
+	 * @param ?bool $is_https Indicator wether the port on the API host expects
 	 *		https. NULL means do not change.
+	 *
+	 * @return void
 	 */
 	public function setHost($host=NULL, $port=NULL, $is_https=NULL) {
 		if(!isset($host)) {
@@ -264,7 +269,7 @@ abstract class Trustly_Api {
 
 		if($this->loadTrustlyPublicKey($host, $port) === FALSE) {
 			$error = openssl_error_string();
-			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
+			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".($error?", error $error":''));
 		}
 
 		if(isset($is_https)) {
@@ -275,11 +280,11 @@ abstract class Trustly_Api {
 	/**
 	 * Setup and return a curl handle for submitting data to the API peer.
 	 *
-	 * @param string $url The URL to communicate with
+	 * @param ?string $url The URL to communicate with
 	 *
-	 * @param string $postdata The (optional) data to post.
+	 * @param ?string $postdata The (optional) data to post.
 	 *
-	 * @return Array($body, $response_code)
+	 * @return array{string, int} Array($body, $response_code)
 	 */
 	public function post($url=NULL, $postdata=NULL) {
 		/* Do note that that if you are going to POST JSON you need to set the
@@ -295,13 +300,13 @@ abstract class Trustly_Api {
 		curl_setopt($curl, CURLOPT_PORT, $this->api_port);
 
 		if($this->api_is_https) {
-			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
+			if(defined('CURLOPT_PROTOCOLS')) {
 				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 			}
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
 		} else {
-			if(@CURLOPT_PROTOCOLS != 'CURLOPT_PROTOCOLS') {
+			if(defined('CURLOPT_PROTOCOLS')) {
 				curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
 			}
 		}
@@ -313,9 +318,9 @@ abstract class Trustly_Api {
 		curl_setopt($curl, CURLOPT_URL, $url);
 
 		$body = curl_exec($curl);
-		if($body === FALSE) {
+		if(!is_string($body)) {
 			$error = curl_error($curl);
-			if($error === NULL) {
+			if(!$error) {
 				$error = 'Failed to connect to the Trusly API';
 			}
 			throw new Trustly_ConnectionException($error);
@@ -378,7 +383,7 @@ abstract class Trustly_Api {
 	/**
 	 * Return a properly formed url to communicate with this API.
 	 *
-	 * @return URL pointing to the API peer.
+	 * @return string URL pointing to the API peer.
 	 */
 	public function baseURL() {
 		if($this->api_is_https) {
@@ -392,9 +397,9 @@ abstract class Trustly_Api {
 	/**
 	 * Return a URL to the API to the given request path.
 	 *
-	 * @param Trustly_Data_Request $request Data to send in the request
+	 * @param ?Trustly_Data_Request $request Data to send in the request
 	 *
-	 * @return URL to the API peer with the given query path.
+	 * @return string URL to the API peer with the given query path.
 	 */
 	public function url($request=NULL) {
 		return $this->baseURL() . $this->urlPath($request);
@@ -404,7 +409,7 @@ abstract class Trustly_Api {
 	/**
 	 * Return the last request that we attempted to make via this API
 	 *
-	 * @return array Last request data structure.
+	 * @return ?Trustly_Data_Request Last request data structure.
 	 */
 	public function getLastRequest() {
 		return $this->last_request;
@@ -465,6 +470,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param Trustly_Data_Request $request Outgoing data request.
 	 *
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function call($request) {
 		if($this->insertCredentials($request) !== TRUE) {
@@ -473,6 +479,9 @@ abstract class Trustly_Api {
 		$this->last_request = $request;
 
 		$jsonstr = $request->json();
+		if($jsonstr === FALSE) {
+			throw new Trustly_DataException('Unable to json encode payload');
+		}
 
 		$url = $this->url($request);
 		list($body, $response_code) = $this->post($url, $jsonstr);
@@ -484,9 +493,9 @@ abstract class Trustly_Api {
 	/**
 	 * Return a boolean value formatted for communicating with the API.
 	 *
-	 * @param boolean $value Boolean value to encode
+	 * @param ?boolean $value Boolean value to encode
 	 *
-	 * @return API encoded boolean value
+	 * @return ?string API encoded boolean value
 	 */
 	protected function apiBool($value) {
 		if(isset($value)) {
@@ -506,7 +515,7 @@ abstract class Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
-	 * @param Trustly_Data_Request $request Data to send in the request
+	 * @param ?Trustly_Data_Request $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */
@@ -524,6 +533,8 @@ abstract class Trustly_Api {
 	 * @param string $body The body recieved in response to the request
 	 *
 	 * @param integer $response_code the HTTP response code for the call
+	 *
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	abstract protected function handleResponse($request, $body, $response_code);
 
@@ -535,6 +546,8 @@ abstract class Trustly_Api {
 	 *
 	 * @param Trustly_Data_Request $request Request to be used in the outgoing
 	 *		call
+	 *
+	 * @return bool
 	 */
 	abstract protected function insertCredentials($request);
 

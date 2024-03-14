@@ -41,16 +41,16 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * newSessionCookie after which the $session_uuid is used instead.
 	 * @var string
 	 */
-	private $api_username = NULL;
+	private $api_username;
 	/**
 	 * Login password when using the API. Used only in the first API call to
 	 * newSessionCookie after which the $session_uuid is used instead.
 	 * @var string
 	 */
-	private $api_password = NULL;
+	private $api_password;
 	/**
 	 * Session UUID used for authenticating calls.
-	 * @var string
+	 * @var ?string
 	 */
 	private $session_uuid = NULL;
 
@@ -87,7 +87,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
+	 * @param ?Trustly_Data_JSONRPCRequest $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */
@@ -113,7 +113,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 */
 	protected function handleResponse($request, $body, $response_code) {
 			/* No signature here, just build the response object */
-		return new Trustly_Data_JSONRPCResponse($body, $response_code);
+		return new Trustly_Data_JSONRPCResponse($body);
 	}
 
 
@@ -141,7 +141,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * @return boolean indicating wether we have a sessionuuid
 	 */
 	protected function hasSessionUUID() {
-		return (bool)isset($this->session_uuid);
+		return isset($this->session_uuid);
 	}
 
 
@@ -163,10 +163,8 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 			 * missing session uuid here and call this function if it is not set */
 		$response = parent::call($request);
 
-		if(isset($response)) {
-			if($response->isSuccess()) {
-				$this->session_uuid = $response->getResult('sessionuuid');
-			}
+		if($response->isSuccess()) {
+			$this->session_uuid = $response->getResult('sessionuuid');
 		}
 		if(!isset($this->session_uuid)) {
 			throw new Trustly_AuthentificationException();
@@ -181,11 +179,11 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @param string $viewname Name of view
 	 *
-	 * @param string $dateorder 'OLDER'|'NEVER' or NULL
+	 * @param ?string $dateorder 'OLDER'|'NEVER' or NULL
 	 *
-	 * @param string $datestamp Order used in relation with $dateorder
+	 * @param ?string $datestamp Order used in relation with $dateorder
 	 *
-	 * @param array $filterkeys Array of arrays of filters to apply to the data.
+	 * @param ?array<array<string>> $filterkeys Array of arrays of filters to apply to the data.
 	 *		Arrays in the array consists of 1. Key name, 2. Key value, 3.
 	 *		Operator, 4. Key value 2. Operator is one of 'NOT', 'BETWEEN' (in
 	 *		which case Key value 2 must be set), 'LIKE', 'DECRYPTED', 'IN'
@@ -195,11 +193,11 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @param integer $offset Skip these many records in the start of the request
 	 *
-	 * @param string $params Parameters for the view
+	 * @param ?string $params Parameters for the view
 	 *
-	 * @param string $sortby Column to sort by
+	 * @param ?string $sortby Column to sort by
 	 *
-	 * @param string $sortorder Sort order ASC or DESC
+	 * @param ?string $sortorder Sort order ASC or DESC
 	 *
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 *
@@ -208,7 +206,8 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 		$filterkeys=NULL, $limit=100, $offset=0, $params=NULL, $sortby=NULL,
 		$sortorder=NULL) {
 
-		return $this->call('GetViewStable', array(
+		$request = new Trustly_Data_JSONRPCRequest('GetViewStable');
+		return $this->call($request, array(
 			'DateOrder' => $dateorder,
 			'Datestamp' => $datestamp,
 			'FilterKeys' => $filterkeys,
@@ -229,15 +228,13 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * the outgoing call. Take care when supplying the arguments for the call
 	 * so they match the function prototype properly.
 	 *
-	 * @param string $method API method to call
+	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $params Outgoing call params
+	 * @param ?array<string, mixed> $params Outgoing call params
 	 *
 	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 */
-	public function call($method, $params=NULL)  {
-		$request = new Trustly_Data_JSONRPCRequest($method);
-
+	public function call($request, $params=NULL) {
 		if(isset($params)) {
 			foreach($params as $key => $value) {
 				$request->setParam($key, $value);

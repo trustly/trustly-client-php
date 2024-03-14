@@ -36,20 +36,18 @@
 class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Call method name
-	 * @var string
+	 * @var ?string
 	 */
-	var $method = NULL;
+	public $method = NULL;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string $method Method name for the call
+	 * @param ?string $method Method name for the call
 	 *
-	 * @param array $payload Call payload
+	 * @param ?array<mixed> $payload Call payload
 	 */
 	public function __construct($method=NULL, $payload=NULL) {
-		parent::__construct();
-
 		$vpayload = $this->vacuum($payload);
 		if(isset($vpayload)) {
 			$this->payload = $vpayload;
@@ -62,7 +60,7 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Convenience function for getting the uuid from the call
 	 *
-	 * @return string uuid
+	 * @return ?string uuid
 	 */
 	public function getUUID() {
 		if(isset($this->payload['uuid'])) {
@@ -75,7 +73,9 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Convenience function for setting the uuid in the call
 	 *
-	 * @param string uuid
+	 * @param string $uuid
+	 *
+	 * @return void
 	 */
 	public function setUUID($uuid) {
 		$this->set('uuid', $uuid);
@@ -85,7 +85,7 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Get the method in the outgoing call
 	 *
-	 * @return string method name
+	 * @return ?string method name
 	 */
 	public function getMethod() {
 		return $this->method;
@@ -95,7 +95,9 @@ class Trustly_Data_Request extends Trustly_Data {
 	/**
 	 * Set the medhod in the call
 	 *
-	 * @param string method name
+	 * @param string $method method name
+	 *
+	 * @return void
 	 */
 	public function setMethod($method) {
 		$this->method = $method;

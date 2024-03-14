@@ -37,26 +37,18 @@
 class Trustly_Data {
 	/**
 	 * Data payload
-	 * @var array
+	 * @var array<mixed>
 	 */
-	protected $payload = NULL;
-
-	/**
-	 * Constructur.
-	 */
-	public function __construct() {
-		$this->payload = array();
-	}
-
+	protected $payload = array();
 
 	/**
 	 * Utility function to vacuum the supplied data end remove unset
 	 * values. This is used to keep the requests cleaner rather then
 	 * supplying NULL values in the payload
 	 *
-	 * @param array $data data to clean
+	 * @param mixed $data data to clean
 	 *
-	 * @return array cleaned data
+	 * @return mixed cleaned data
 	 */
 	public function vacuum($data) {
 		if(is_null($data)) {
@@ -83,7 +75,7 @@ class Trustly_Data {
 	 * Get the specific data value from the payload or the full payload if
 	 * no value is supplied
 	 *
-	 * @param string $name The optional data parameter to get. If NULL then the
+	 * @param ?string $name The optional data parameter to get. If NULL then the
 	 * entire payload will be returned.
 	 *
 	 * @return mixed value
@@ -106,7 +98,7 @@ class Trustly_Data {
 	 *
 	 * @param string $str String to process
 	 *
-	 * @return string UTF-8 variant of string
+	 * @return ?string UTF-8 variant of string
 	 */
 	public static function ensureUTF8($str) {
 		if($str == NULL) {
@@ -128,6 +120,8 @@ class Trustly_Data {
 	 * @param string $name
 	 *
 	 * @param mixed $value
+	 *
+	 * @return void
 	 */
 	public function set($name, $value) {
 		$this->payload[$name] = Trustly_Data::ensureUTF8($value);
@@ -158,7 +152,7 @@ class Trustly_Data {
 	 * @param boolean $pretty Format the output in a prettified easy-to-read
 	 *		formatting
 	 *
-	 * @return string The current payload in JSON
+	 * @return string|false The current payload in JSON
 	 */
 	public function json($pretty=FALSE) {
 		if($pretty) {
@@ -179,7 +173,9 @@ class Trustly_Data {
 	 * pretty printer
 	 *
 	 * @param mixed $data Payload to sort. Will be sorted in place
-	 * */
+	 *
+	 * @return void
+	 */
 	private function sortRecursive(&$data) {
 		if(is_array($data)) {
 			foreach($data as $k => $v) {
