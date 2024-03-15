@@ -14,7 +14,7 @@
 		"ext-openssl": "*",
 		"ext-curl": "*",
 		"ext-mbstring": "*",
-		"php": ">=5.2.0"
+		"php": ">=5.3.0"
 	},
 	"autoload": {
 		"files": ["Trustly.php"]
