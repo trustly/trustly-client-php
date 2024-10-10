@@ -399,8 +399,8 @@ function notification() {
         if(isset($notification)) {
             /* The method will reveal what type of incoming notification this 
              * is. Depending on the type of notification the contents will 
-             * differ. Read more of the different notifications and exakt 
-             * contents at https://trustly.com/en/developer/api */
+             * differ. Read more of the different notifications and exact
+             * contents at https://eu.developers.trustly.com/doc/reference/notifications-overview */
             $method = $notification->getMethod();
             /* The orderid will always be present in the notifications. This 
              * and the 'messageid' parameter is used to connect the order to 

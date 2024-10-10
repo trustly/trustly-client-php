@@ -57,15 +57,15 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
-	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *		either 'test.trustly.com' or 'api.trustly.com'.
 	 *
 	 * @param integer $port Port on API host used for communicaiton. Normally
 	 *		443 for https, or 80 for http.
 	 *
-	 * @param bool $is_https Indicator wether the port on the API host expects
+	 * @param bool $is_https Indicator whether the port on the API host expects
 	 *		https.
 	 */
-	public function __construct($merchant_privatekey, $username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($merchant_privatekey, $username, $password, $host='api.trustly.com', $port=443, $is_https=TRUE) {
 
 		parent::__construct($host, $port, $is_https);
 
@@ -239,12 +239,21 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * See specific class implementing the call for more information.
 	 *
+	 * @param string $host The host for the API call
 	 * @param Trustly_Data_JSONRPCRequest $request Data to send in the request
 	 *
 	 * @return string The URL path
 	 */
-	protected function urlPath($request=NULL) {
-		$url = '/api/1';
+	protected function urlPath($host=NULL, $request=NULL) {
+        switch ($host) {
+            case 'test.trustly.com':
+            case 'trustly.com':
+                $url = '/api/1';
+                break;
+            default:
+                $url = '/1';
+                break;
+        }
 		return $url;
 	}
 

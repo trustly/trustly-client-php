@@ -64,7 +64,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
-	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *		either 'test.trustly.com' or 'api.trustly.com'.
 	 *
 	 * @param integer $port Port on API host used for communication. Normally
 	 *		443 for https, or 80 for http.
@@ -72,7 +72,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 **/
-	public function __construct($username, $password, $host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($username, $password, $host='api.trustly.com', $port=443, $is_https=TRUE) {
 		parent::__construct($host, $port, $is_https);
 
 		$this->api_username = $username;
@@ -91,7 +91,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 *
 	 * @return string The URL path
 	 */
-	protected function urlPath($request=NULL) {
+	protected function urlPath($host=NULL, $request=NULL) {
 		return '/api/Legacy';
 	}
 

@@ -24,7 +24,7 @@ Overview
 
 The code provided wrappers for calling the trustly API. Create an instance of
 the API call with you merchant criterias and use the stubs in that class for
-calling the API. The API will default to communicate with https://trustly.com,
+calling the API. The API will default to communicate with https://api.trustly.com,
 override the `host` parameter for the constructor to communicate with
 test.trustly.com instead.
 
@@ -58,7 +58,7 @@ Example deposit call
 
     require_once('Trustly.php');
 
-    /* Change 'test.trustly.com' to 'trustly.com' below to use the live environment */
+    /* Change 'test.trustly.com' to 'api.trustly.com' below to use the live environment */
     $api = new Trustly_Api_Signed(
                     $trustly_rsa_private_key,
                     $trustly_username,
