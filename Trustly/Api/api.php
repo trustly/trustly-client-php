@@ -78,7 +78,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
-	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *		either 'test.trustly.com' or 'api.trustly.com'.
 	 *
 	 * @param integer $port Port on API host used for communicaiton. Normally
 	 *		443 for https, or 80 for http.
@@ -86,7 +86,7 @@ abstract class Trustly_Api {
 	 * @param bool $is_https Indicator wether the port on the API host expects
 	 *		https.
 	 */
-	public function __construct($host='trustly.com', $port=443, $is_https=TRUE) {
+	public function __construct($host='api.trustly.com', $port=443, $is_https=TRUE) {
 		$this->api_is_https = $is_https;
 
 		if($this->loadTrustlyPublicKey($host, $port, $is_https) === FALSE) {
@@ -107,7 +107,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
-	 *		either 'test.trustly.com' or 'trustly.com'.
+	 *		either 'test.trustly.com' or 'api.trustly.com'.
 	 *
 	 * @param integer $port Port on API host used for communication. Normally
 	 *		443 for https, or 80 for http.
@@ -245,7 +245,7 @@ abstract class Trustly_Api {
 	 *
 	 * @param string $host API host used for communication. Fully qualified
 	 *		hostname. When integrating with our public API this is typically
-	 *		either 'test.trustly.com' or 'trustly.com'. NULL means do not change.
+	 *		either 'test.trustly.com' or 'api.trustly.com'. NULL means do not change.
 	 *
 	 * @param integer $port Port on API host used for communicaiton. Normally
 	 *		443 for https, or 80 for http. NULL means do not change.
@@ -397,7 +397,7 @@ abstract class Trustly_Api {
 	 * @return URL to the API peer with the given query path.
 	 */
 	public function url($request=NULL) {
-		return $this->baseURL() . $this->urlPath($request);
+		return $this->baseURL() . $this->urlPath($this->api_host, $request);
 	}
 
 
@@ -510,7 +510,7 @@ abstract class Trustly_Api {
 	 *
 	 * @return string The URL path
 	 */
-	abstract protected function urlPath($request=NULL);
+	abstract protected function urlPath($host="api.trustly.com", $request=NULL);
 
 	/**
 	 * Callback for handling the response from an API call. This call is
