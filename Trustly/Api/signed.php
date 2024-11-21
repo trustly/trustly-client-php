@@ -124,7 +124,9 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @throws Trustly_SignatureException if private key has not been loaded
 	 *		yet or if we for some other reason fail to sign the request.
 	 *
-	 * @param Trustly_Data_JSONRPCRequest $request Request to sign.
+	 * @param Trustly_Data_JSONRPCRequest|Trustly_Data_JSONRPCNotificationResponse $request Request to sign.
+	 *
+	 * @return string
 	 */
 	public function signMerchantRequest($request) {
 		if(!isset($this->merchant_privatekey)) {
@@ -166,9 +168,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$request->setData('Password', $this->api_password);
 
 		$signature = $this->signMerchantRequest($request);
-		if($signature === FALSE) {
-			return FALSE;
-		}
 		$request->setParam('Signature', $signature);
 
 		return TRUE;
@@ -223,9 +222,6 @@ class Trustly_Api_Signed extends Trustly_Api {
 		$response = new Trustly_Data_JSONRPCNotificationResponse($request, $success);
 
 		$signature = $this->signMerchantRequest($response);
-		if($signature === FALSE) {
-			return FALSE;
-		}
 		$response->setSignature($signature);
 
 		return $response;
