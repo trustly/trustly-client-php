@@ -89,7 +89,7 @@ abstract class Trustly_Api {
 	public function __construct($host='api.trustly.com', $port=443, $is_https=TRUE) {
 		$this->api_is_https = $is_https;
 
-		if($this->loadTrustlyPublicKey($host, $port, $is_https) === FALSE) {
+		if($this->loadTrustlyPublicKey($host, $port) === FALSE) {
 			$error = openssl_error_string();
 			throw new InvalidArgumentException("Cannot load Trustly public key file for host $host".(isset($error)?", error $error":''));
 		}

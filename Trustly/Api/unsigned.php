@@ -113,7 +113,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 */
 	protected function handleResponse($request, $body, $response_code) {
 			/* No signature here, just build the response object */
-		return new Trustly_Data_JSONRPCResponse($body, $response_code);
+		return new Trustly_Data_JSONRPCResponse($body);
 	}
 
 
