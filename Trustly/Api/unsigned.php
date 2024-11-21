@@ -163,10 +163,8 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 			 * missing session uuid here and call this function if it is not set */
 		$response = parent::call($request);
 
-		if(isset($response)) {
-			if($response->isSuccess()) {
-				$this->session_uuid = $response->getResult('sessionuuid');
-			}
+		if($response->isSuccess()) {
+			$this->session_uuid = $response->getResult('sessionuuid');
 		}
 		if(!isset($this->session_uuid)) {
 			throw new Trustly_AuthentificationException();
