@@ -128,6 +128,8 @@ class Trustly_Data {
 	 * @param string $name
 	 *
 	 * @param mixed $value
+	 *
+	 * @return void
 	 */
 	public function set($name, $value) {
 		$this->payload[$name] = Trustly_Data::ensureUTF8($value);
