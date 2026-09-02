@@ -16,7 +16,7 @@ directly into your own project and use it.
 If you find problem in the code or want to extend it feel free to fork it and send us
 a pull request.
 
-This code should work with PHP 5 (>= 5.2.0). PHP modules needed are: bcmath,
+This code should work with PHP 5 (>= 5.3.0). PHP modules needed are: bcmath,
 openssl, curl, mbstring and json.
 
 Overview
