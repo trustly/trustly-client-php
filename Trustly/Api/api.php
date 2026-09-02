@@ -193,9 +193,9 @@ abstract class Trustly_Api {
 		$serial_data = $method . $uuid . $this->serializeData($data);
 		$raw_signature = base64_decode($signature);
 		if (version_compare(phpversion(), '5.2.0', '<')) {
-			return (boolean)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey);
+			return (bool)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey);
 		} else {
-			return (boolean)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey, OPENSSL_ALGO_SHA1);
+			return (bool)openssl_verify($serial_data, $raw_signature, $this->trustly_publickey, OPENSSL_ALGO_SHA1);
 		}
 	}
 
