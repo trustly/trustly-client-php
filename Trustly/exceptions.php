@@ -47,6 +47,8 @@ class Trustly_JSONRPCVersionException extends Exception { }
  * indication that message contents are being tampered with.
  */
 class Trustly_SignatureException extends Exception {
+	/** @var mixed */
+	public $signature_data = NULL;
 
 	/**
 	 * Constructor
