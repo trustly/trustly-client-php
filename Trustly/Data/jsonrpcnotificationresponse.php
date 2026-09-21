@@ -73,7 +73,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 * @param boolean $success Set to true to indicate that the notification
 	 *		was successfully processed.
 	 *
-	 * @return $success
+	 * @return ?boolean $success
 	 */
 	public function setSuccess($success=NULL) {
 		$status = 'OK';
@@ -198,7 +198,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	/**
 	 * Get the Method value from the response.
 	 *
-	 * @return string The Method value.
+	 * @return ?string The Method value.
 	 */
 	public function getMethod() {
 		return $this->getResult('method');
@@ -208,7 +208,7 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	/**
 	 * Get the UUID value from the response.
 	 *
-	 * @return string The UUID value
+	 * @return ?string The UUID value
 	 */
 	public function getUUID() {
 		return $this->getResult('uuid');
