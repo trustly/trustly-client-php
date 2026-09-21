@@ -39,15 +39,7 @@ class Trustly_Data {
 	 * Data payload
 	 * @var array
 	 */
-	protected $payload = NULL;
-
-	/**
-	 * Constructur.
-	 */
-	public function __construct() {
-		$this->payload = array();
-	}
-
+	protected $payload = array();
 
 	/**
 	 * Utility function to vacuum the supplied data end remove unset

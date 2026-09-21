@@ -37,7 +37,7 @@
 class Trustly_Api_Signed extends Trustly_Api {
 	/**
 	 * Loaded merchant private key resource
-	 * @var resource from openssl with the loaded privatekey
+	 * @var mixed from openssl with the loaded privatekey
 	 */
 	private $merchant_privatekey = NULL;
 
@@ -70,7 +70,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 		parent::__construct($host, $port, $is_https);
 
 		$this->api_username = $username;
-		$this->api_password  = $password;
+		$this->api_password = $password;
 		if($merchant_privatekey != NULL) {
 			if(strpos($merchant_privatekey, "\n") !== FALSE) {
 				if($this->useMerchantPrivateKey($merchant_privatekey) === FALSE) {

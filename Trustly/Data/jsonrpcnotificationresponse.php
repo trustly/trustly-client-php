@@ -46,9 +46,6 @@ class Trustly_Data_JSONRPCNotificationResponse extends Trustly_Data {
 	 *		was successfully processed.
 	 */
 	public function __construct($request, $success=NULL) {
-
-		parent::__construct();
-
 		$uuid = $request->getUUID();
 		$method = $request->getMethod();
 
