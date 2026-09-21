@@ -141,7 +141,7 @@ class Trustly_Api_Unsigned extends Trustly_Api {
 	 * @return boolean indicating wether we have a sessionuuid
 	 */
 	protected function hasSessionUUID() {
-		return (bool)isset($this->session_uuid);
+		return isset($this->session_uuid);
 	}
 
 
