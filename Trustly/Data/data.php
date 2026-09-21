@@ -158,7 +158,7 @@ class Trustly_Data {
 	 * @param boolean $pretty Format the output in a prettified easy-to-read
 	 *		formatting
 	 *
-	 * @return string The current payload in JSON
+	 * @return string|false The current payload in JSON
 	 */
 	public function json($pretty=FALSE) {
 		if($pretty) {

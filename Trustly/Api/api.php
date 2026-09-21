@@ -473,6 +473,9 @@ abstract class Trustly_Api {
 		$this->last_request = $request;
 
 		$jsonstr = $request->json();
+		if($jsonstr === FALSE) {
+			throw new Trustly_DataException('Unable to json encode payload');
+		}
 
 		$url = $this->url($request);
 		list($body, $response_code) = $this->post($url, $jsonstr);
