@@ -312,7 +312,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param Trustly_Data_JSONRPCRequest $request Outgoing request
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse Response from the API.
+	 * @return Trustly_Data_JSONRPCResponse Response from the API.
 	 */
 	public function call($request) {
 		$uuid = $request->getUUID();
@@ -446,7 +446,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		in the previously used account being preselected
 	 * @param bool $requestKYC Flag to pass whether we request KYC check or not (Pay N Play feature)
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function deposit($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
@@ -527,7 +527,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string currency The currency of the amount to refund the
 	 *		customer.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function refund($orderid, $amount, $currency) {
 
@@ -626,7 +626,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $address The account holders address
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function withdraw($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $currency=NULL, $country=NULL,
@@ -685,7 +685,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the withdrawal to approve.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function approveWithdrawal($orderid) {
 
@@ -708,7 +708,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the withdrawal to deny.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function denyWithdrawal($orderid) {
 
@@ -776,7 +776,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param boolean $requestdirectdebitmandate Initiate a direct debit
 	 *		mandate request for the selected account.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function selectAccount($notificationurl, $enduserid, $messageid,
 		$locale=NULL, $country=NULL, $ip=NULL, $successurl=NULL, $urltarget=NULL,
@@ -869,7 +869,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param string $address The account holders address
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function registerAccount($enduserid, $clearinghouse, $banknumber,
 		$accountnumber, $firstname, $lastname, $mobilephone=NULL,
@@ -944,7 +944,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		system during development. Intead you can get you notifications on
 	 *		https://test.trustly.com/notifications.html
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function accountPayout($notificationurl, $accountid, $enduserid,
 		$messageid, $amount, $currency, $holdnotifications=NULL) {
@@ -1058,7 +1058,11 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *		system during development. Intead you can get you notifications on
 	 *		https://test.trustly.com/notifications.html
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @param mixed $authorizeonly
+	 *
+	 * @param mixed $templatedata
+	 *
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function p2p($notificationurl,$enduserid, $messageid,
 		$locale=NULL, $amount=NULL, $currency=NULL, $country=NULL,
@@ -1124,7 +1128,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $currency The currency of the amount
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function capture($orderid, $amount, $currency) {
 
@@ -1151,7 +1155,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the deposit to void
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function void($orderid) {
 
@@ -1198,7 +1202,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 * @param string $shopperstatement The text to show on the end-user's bank
 	 *		statement.
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function charge($accountid, $notificationurl, $enduserid, $messageid,
 		$amount, $currency, $shopperstatement=NULL) {
@@ -1229,7 +1233,7 @@ class Trustly_Api_Signed extends Trustly_Api {
 	 *
 	 * @param integer $orderid The OrderID of the order to query
 	 *
-	 * @return Trustly_Data_JSONRPCSignedResponse
+	 * @return Trustly_Data_JSONRPCResponse
 	 */
 	public function getWithdrawals($orderid) {
 
