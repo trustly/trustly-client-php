@@ -139,9 +139,9 @@ abstract class Trustly_Api {
 	 *
 	 * @link https://eu.developers.trustly.com/doc/reference/authentication
 	 *
-	 * @param array $data Input data to serialize
+	 * @param mixed $data Input data to serialize
 	 *
-	 * @return array The input data in a serialized form
+	 * @return string The input data in a serialized form
 	 */
 	public function serializeData($data) {
 		if(is_array($data)) {
