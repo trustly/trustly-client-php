@@ -65,6 +65,8 @@ class Trustly_SignatureException extends Exception {
 	 * Get the data that had an invalid signature. This is the only way to get
 	 * data from anything with a bad signature. This should be used for
 	 * DEBUGGING ONLY. You should NEVER rely on the contents.
+	 *
+	 * @return mixed
 	 */
 	public function getBadData() {
 		return $this->signature_data;

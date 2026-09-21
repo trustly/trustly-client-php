@@ -260,6 +260,8 @@ class Trustly_Api_Signed extends Trustly_Api {
 
 	/**
 	 * Quirks mode implementation of clearing all pending openssl error messages.
+	 *
+	 * @return void
 	 */
 	private function clearOpenSSLError() {
 		/* Not really my favourite part of this library implementation. As
